@@ -226,3 +226,7 @@ if not DEBUG:
 # Auto-allow Render hosts
 if os.environ.get('RENDER'):
     ALLOWED_HOSTS.append(os.environ.get('RENDER_EXTERNAL_HOSTNAME'))
+
+# Auto-allow Vercel hosts
+if os.environ.get('VERCEL'):
+    ALLOWED_HOSTS.append('.vercel.app')
