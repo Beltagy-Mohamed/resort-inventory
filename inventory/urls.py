@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from inventory.views import media
 
 urlpatterns = [
     path("media/dynamic_qr/<str:product_code>.png", media.dynamic_qr, name="dynamic_qr"),
