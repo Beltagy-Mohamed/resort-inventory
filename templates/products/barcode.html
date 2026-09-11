@@ -1,0 +1,35 @@
+{% load static i18n %}
+
+<!DOCTYPE html>
+
+<html lang="{{ LANGUAGE_CODE }}" dir="{% if LANGUAGE_CODE == 'ar' %}rtl{% else %}ltr{% endif %}">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>{% trans "Barcode" %} - {{ product.product_code }}</title>
+
+<link rel="stylesheet" href="{% static 'css/print.css' %}">
+
+</head>
+
+<body>
+
+<div class="print-label">
+
+    <h2>{{ product.name }}</h2>
+
+    <div class="product-code">{{ product.product_code }}</div>
+
+    <img src="{{ product.barcode.url }}" alt="Barcode" class="barcode-img">
+
+    <button class="print-btn" onclick="window.print()">
+        {% trans "Print Barcode" %}
+    </button>
+
+</div>
+
+</body>
+
+</html>

@@ -1,0 +1,54 @@
+{% extends "layout/base.html" %}
+{% load i18n %}
+
+{% block title %}
+{% trans "Delete Product" %}
+{% endblock %}
+
+{% block content %}
+
+<div class="delete-card">
+
+    <h2>{% trans "Confirm product deletion" %}</h2>
+
+    <p>
+
+        {% trans "Are you sure you want to delete this product?" %}
+
+        <strong>{{ product.name }}</strong>
+
+    </p>
+
+    <p>
+
+        {% trans "Code" %}:
+
+        <strong>{{ product.product_code }}</strong>
+
+    </p>
+
+    <form method="post">
+
+        {% csrf_token %}
+
+        <button class="btn-danger">
+
+            <i class="bi bi-trash3"></i>
+
+            {% trans "Delete" %}
+
+        </button>
+
+        <a
+            href="{% url 'product_detail' product.product_code %}"
+            class="btn-save">
+
+            {% trans "Cancel" %}
+
+        </a>
+
+    </form>
+
+</div>
+
+{% endblock %}

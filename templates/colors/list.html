@@ -1,0 +1,86 @@
+{% extends "layout/base.html" %}
+{% load static i18n %}
+
+{% block title %}
+{% trans "Colors" %}
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/products.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <h1>{% trans "Colors" %}</h1>
+
+    <a href="{% url 'add_color' %}" class="btn-save">
+        + {% trans "Add Color" %}
+    </a>
+
+</div>
+
+<div class="table-container">
+<table class="products-table">
+
+    <thead>
+
+        <tr>
+
+            <th>#</th>
+            <th>{% trans "Color" %}</th>
+            <th>{% trans "Actions" %}</th>
+
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+        {% for color in colors %}
+
+        <tr>
+
+            <td>{{ forloop.counter }}</td>
+
+            <td data-label="{% trans 'Name' %}">{{ color.name }}</td>
+
+            <td data-label="{% trans 'Actions' %}"><a
+                    href="{% url 'edit_color' color.id %}"
+                    class="action-btn">
+
+                    <i class="bi bi-pencil-square"></i>
+
+                </a>
+
+                <a
+                    href="{% url 'delete_color' color.id %}"
+                    class="action-btn delete-btn">
+
+                    <i class="bi bi-trash3"></i>
+
+                </a></td>
+
+        </tr>
+
+        {% empty %}
+
+        <tr>
+
+            <td colspan="3">
+
+                {% trans "No colors" %}
+
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </tbody>
+
+</table>
+</div>
+
+{% endblock %}

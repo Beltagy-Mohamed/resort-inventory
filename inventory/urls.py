@@ -1,0 +1,182 @@
+from django.urls import path
+from . import views
+
+urlpatterns = [
+
+    # Dashboard
+    path(
+        "",
+        views.dashboard,
+        name="dashboard"
+    ),
+
+    # ===========================
+    # Products
+    # ===========================
+
+    path(
+        "products/",
+        views.products_list,
+        name="products_list"
+    ),
+
+    path(
+        "products/add/",
+        views.add_product,
+        name="add_product"
+    ),
+
+    path(
+        "products/low-stock/",
+        views.low_stock_products,
+        name="low_stock_products",
+    ),
+
+    path(
+        "products/<str:product_code>/",
+        views.product_detail,
+        name="product_detail"
+    ),
+
+    path(
+        "products/<str:product_code>/edit/",
+        views.edit_product,
+        name="edit_product"
+    ),
+
+    path(
+        "products/<str:product_code>/delete/",
+        views.delete_product,
+        name="delete_product"
+    ),
+
+    path(
+        "products/<str:product_code>/print/",
+        views.print_qr,
+        name="print_qr"
+    ),
+path(
+    "products/<str:product_code>/barcode/",
+    views.print_barcode,
+    name="print_barcode",
+),
+path(
+    "products/<str:product_code>/label/",
+    views.print_label,
+    name="print_label",
+),
+    # ===========================
+    # Categories
+    # ===========================
+
+    path(
+        "categories/",
+        views.categories_list,
+        name="categories_list"
+    ),
+
+    path(
+        "categories/add/",
+        views.add_category,
+        name="add_category"
+    ),
+
+    path(
+        "categories/<int:pk>/edit/",
+        views.edit_category,
+        name="edit_category"
+    ),
+
+    path(
+        "categories/<int:pk>/delete/",
+        views.delete_category,
+        name="delete_category"
+    ),
+
+    # ===========================
+    # Colors
+    # ===========================
+
+    path(
+        "colors/",
+        views.colors_list,
+        name="colors_list"
+    ),
+
+    path(
+        "colors/add/",
+        views.add_color,
+        name="add_color"
+    ),
+
+    path(
+        "colors/<int:pk>/edit/",
+        views.edit_color,
+        name="edit_color"
+    ),
+
+    path(
+        "colors/<int:pk>/delete/",
+        views.delete_color,
+        name="delete_color"
+    ),
+
+    # ===========================
+    # Sizes
+    # ===========================
+
+    path(
+        "sizes/",
+        views.sizes_list,
+        name="sizes_list"
+    ),
+
+    path(
+        "sizes/add/",
+        views.add_size,
+        name="add_size"
+    ),
+
+    path(
+        "sizes/<int:pk>/edit/",
+        views.edit_size,
+        name="edit_size"
+    ),
+
+    path(
+        "sizes/<int:pk>/delete/",
+        views.delete_size,
+        name="delete_size"
+    ),
+
+    # ===========================
+    # Inventory Transactions
+    # ===========================
+
+    path(
+        "transactions/",
+        views.transactions_list,
+        name="transactions_list"
+    ),
+
+    path(
+        "transactions/add/",
+        views.add_transaction,
+        name="add_transaction"
+    ),
+    path(
+    "reports/inventory/",
+    views.inventory_report,
+    name="inventory_report",
+),
+path(
+    "activity/",
+    views.activity_logs,
+    name="activity_logs",
+),
+path(
+    "settings/",
+    views.system_settings,
+    name="system_settings",
+),
+]

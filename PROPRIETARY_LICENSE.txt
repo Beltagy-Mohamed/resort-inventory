@@ -1,0 +1,48 @@
+PROPRIETARY SOURCE REVIEW LICENSE
+Inventory System — Source Review / Delivery Copy
+==================================================
+
+1. OWNERSHIP
+   All source code, documentation, database schemas, business logic,
+   and other materials in this package ("the Software") are the
+   exclusive intellectual property of the copyright holder ("the
+   Owner"). No part of this delivery constitutes a transfer,
+   assignment, or license of ownership in the Software.
+
+2. PURPOSE OF THIS COPY
+   This package is provided strictly for SOURCE REVIEW purposes: to
+   allow the recipient to inspect, evaluate, and understand the
+   codebase. It is explicitly NOT a complete, production-ready, or
+   deployable copy of the system. Certain modules containing
+   proprietary business logic have been deliberately withheld — see
+   README_DELIVERY.md for the specific list and rationale.
+
+3. WHAT THIS DELIVERY DOES NOT GRANT
+   Receipt of this package does NOT grant the recipient any right to:
+     a. Deploy, host, resell, sublicense, or redistribute the
+        Software, in whole or in part, to any third party;
+     b. Represent the Software, in whole or in part, as the
+        recipient's own work or property;
+     c. Reconstruct, reverse-engineer, or independently re-implement
+        the withheld proprietary modules from the remaining source;
+     d. Use the Software for any commercial or production purpose
+        without a separate written agreement with the Owner.
+
+4. NO WARRANTY
+   This package is provided "AS IS" for review purposes only, without
+   warranty of any kind, express or implied, including but not
+   limited to fitness for a particular purpose or non-infringement.
+   The Owner makes no representation that this copy will build, run,
+   or deploy successfully, as it is not intended to.
+
+5. GOVERNING TERMS
+   Any further use, licensing, purchase, or transfer of rights in the
+   Software must be governed by a separate, explicit written
+   agreement signed by the Owner. Absent such an agreement, all
+   rights in the Software remain reserved to the Owner.
+
+6. CONTACT
+   For licensing inquiries, a production-ready deployment, or
+   questions about this copy, contact the Owner directly.
+
+All rights reserved.

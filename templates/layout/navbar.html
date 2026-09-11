@@ -1,0 +1,85 @@
+{% load i18n %}
+
+<header class="navbar">
+
+    <button type="button" class="mobile-hamburger" id="mobile-hamburger" ><i class="bi bi-list"></i></button>
+    <div class="logo">
+        Resort Inventory
+    </div>
+
+    {% if user.is_authenticated %}
+
+    <div class="topbar-search">
+        <form method="get" action="{% url 'products_list' %}">
+            <input
+                type="text"
+                name="search"
+                placeholder="{% trans 'Search by name or product code...' %}">
+            <button type="submit" class="topbar-search-btn" title="{% trans 'Search' %}">
+                <i class="bi bi-search" aria-hidden="true"></i>
+                <span>{% trans "Search" %}</span>
+            </button>
+        </form>
+    </div>
+
+    <div class="navbar-user">
+
+        <form method="post" action="{% url 'set_language' %}" class="language-form">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ request.get_full_path }}">
+            <input type="hidden" name="language" value="{% if LANGUAGE_CODE == 'ar' %}en{% else %}ar{% endif %}">
+            <button type="submit" class="language-toggle" title="{% trans 'Change language' %}">
+                {% if LANGUAGE_CODE == 'ar' %}EN{% else %}ع{% endif %}
+            </button>
+        </form>
+
+        <button type="button" class="theme-toggle" id="theme-toggle" aria-label="{% trans 'Toggle dark mode' %}" title="{% trans 'Toggle dark mode' %}">
+            <i class="bi bi-moon-stars" aria-hidden="true"></i>
+        </button>
+
+        <div class="notif-bell-wrap">
+
+            <button type="button" class="notif-bell" onclick="document.getElementById('notif-dropdown').classList.toggle('open')" title="{% trans 'Notifications' %}">
+                <i class="bi bi-bell"></i>
+                {% if nav_low_stock_count or nav_out_of_stock_count %}
+                <span class="notif-badge">{{ nav_low_stock_count|add:nav_out_of_stock_count }}</span>
+                {% endif %}
+            </button>
+
+            <div id="notif-dropdown" class="notif-dropdown">
+
+                {% if nav_alert_products %}
+
+                    {% for p in nav_alert_products %}
+                    <a href="{% url 'product_detail' p.product_code %}" class="notif-item">
+                        <strong>{{ p.name }}</strong>
+                        <span>{{ p.stock_status_text }} — الكمية: {{ p.quantity }}</span>
+                    </a>
+                    {% endfor %}
+
+                    <a href="{% url 'low_stock_products' %}" class="notif-viewall">
+                        {% trans "View all" %}
+                    </a>
+
+                {% else %}
+                    <div class="notif-empty">{% trans "No notifications" %}</div>
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        <span class="navbar-username">
+            <i class="bi bi-person-circle"></i>
+            {{ user.username }}
+        </span>
+
+        <form method="post" action="{% url 'logout' %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="logout-btn">{% trans "Log out" %}</button>
+        </form>
+
+    </div>
+    {% endif %}
+
+</header>

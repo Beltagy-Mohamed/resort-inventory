@@ -1,0 +1,40 @@
+{% extends "layout/base.html" %}
+{% load static i18n %}
+
+{% block title %}
+{% trans "Edit Category" %}
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/products.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<h1>{% trans "Edit Category" %}</h1>
+
+<form method="post" class="product-form">
+
+    {% csrf_token %}
+
+    <div class="form-group">
+
+        <label>{{ form.name.label }}</label>
+
+        {{ form.name }}
+
+    </div>
+
+    <div class="form-group category-color-field">
+        <label>{{ form.color.label }}</label>
+        {{ form.color }}
+        <small>{% trans "Choose the category color used in dashboard charts." %}</small>
+    </div>
+
+    <button type="submit" class="btn-save">
+        {% trans "Save changes" %}
+    </button>
+
+</form>
+
+{% endblock %}

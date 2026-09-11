@@ -1,0 +1,136 @@
+{% extends "layout/base.html" %}
+{% load static i18n %}
+
+{% block title %}
+{% trans "Inventory transactions" %}
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/products.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <h1>{% trans "Inventory transactions" %}</h1>
+
+</div>
+
+<div class="search-bar">
+
+    <form method="get">
+
+        <input
+            type="text"
+            name="search"
+            value="{{ search }}"
+            placeholder="{% trans 'Search by product or code' %}">
+
+        <select name="type">
+
+            <option value="">
+                {% trans "All transactions" %}
+            </option>
+
+            <option value="IN"
+                {% if transaction_type == "IN" %}
+                selected
+                {% endif %}>
+
+                {% trans "Received" %}
+
+            </option>
+
+            <option value="OUT"
+                {% if transaction_type == "OUT" %}
+                selected
+                {% endif %}>
+
+                {% trans "Issued" %}
+
+            </option>
+
+            <option value="ADJUST"
+                {% if transaction_type == "ADJUST" %}
+                selected
+                {% endif %}>
+
+                {% trans "Adjustment" %}
+
+            </option>
+
+        </select>
+
+        <button class="btn-save">
+
+            {% trans "Search" %}
+
+        </button>
+
+    </form>
+
+</div>
+
+<div class="table-container">
+<table class="products-table">
+
+<thead>
+
+<tr>
+
+<th>{% trans "Product" %}</th>
+
+<th>{% trans "Code" %}</th>
+
+<th>{% trans "Type" %}</th>
+
+<th>{% trans "Quantity" %}</th>
+
+<th>{% trans "Date" %}</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+{% for t in page_obj %}
+
+<tr>
+
+<td style="background:red;color:white;">
+    {{ t.product.name }}
+</td>
+
+<td style="background:blue;color:white;">
+    {{ t.product.product_code }}
+</td>
+<td>{{ t.get_transaction_type_display }}</td>
+
+<td>{{ t.quantity }}</td>
+
+<td>{{ t.created_at|date:"Y-m-d H:i" }}</td>
+
+</tr>
+
+{% empty %}
+
+<tr>
+
+<td colspan="5">
+
+{% trans "No transactions" %}
+
+</td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+</div>
+
+{% endblock %}

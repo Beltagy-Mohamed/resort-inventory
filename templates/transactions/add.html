@@ -1,0 +1,68 @@
+{% extends "layout/base.html" %}
+{% load static i18n %}
+
+{% block title %}
+{% trans "Inventory transaction" %}
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/products.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <h1>{% trans "Add inventory transaction" %}</h1>
+
+</div>
+
+<form method="post" class="product-form">
+
+    {% csrf_token %}
+
+    <div class="form-grid">
+
+        <div class="form-group">
+
+            <label>{% trans "Product" %}</label>
+
+            {{ form.product }}
+
+        </div>
+
+        <div class="form-group">
+
+            <label>{% trans "Transaction type" %}</label>
+
+            {{ form.transaction_type }}
+
+        </div>
+
+        <div class="form-group">
+
+            <label>{% trans "Quantity" %}</label>
+
+            {{ form.quantity }}
+
+        </div>
+
+    </div>
+
+    <div class="form-group">
+
+        <label>{% trans "Notes" %}</label>
+
+        {{ form.notes }}
+
+    </div>
+
+    <button class="btn-save">
+
+        {% trans "Save transaction" %}
+
+    </button>
+
+</form>
+
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends "layout/base.html" %}
+
+{% block title %}
+حذف اللون
+{% endblock %}
+
+{% block content %}
+
+<h2>
+
+هل تريد حذف اللون
+
+<b>{{ color.name }}</b>
+
+؟
+
+</h2>
+
+<form method="post">
+
+    {% csrf_token %}
+
+    <button class="btn-save">
+
+        نعم، احذف
+
+    </button>
+
+    <a href="{% url 'colors_list' %}">
+
+        إلغاء
+
+    </a>
+
+</form>
+
+{% endblock %}

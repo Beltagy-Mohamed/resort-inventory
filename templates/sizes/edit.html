@@ -1,0 +1,30 @@
+{% extends "layout/base.html" %}
+{% load static %}
+
+{% block title %}
+تعديل المقاس
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/products.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<h1>تعديل المقاس</h1>
+
+<form method="post" class="product-form">
+
+    {% csrf_token %}
+
+    {{ form.as_p }}
+
+    <button class="btn-save">
+
+        حفظ التعديل
+
+    </button>
+
+</form>
+
+{% endblock %}

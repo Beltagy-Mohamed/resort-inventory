@@ -1,0 +1,205 @@
+{% extends "layout/base.html" %}
+{% load static i18n %}
+
+{% block title %}
+{{ product.name }}
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/product-detail.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="detail-header">
+
+    <a href="{% url 'products_list' %}" class="back-btn">
+        <i class="bi bi-arrow-left"></i>
+        {% trans "Back" %}
+    </a>
+
+    <div class="detail-heading">
+        <span class="eyebrow">{% trans "Product details" %}</span>
+        <h1>{{ product.name }}</h1>
+        <span class="detail-code">{{ product.product_code }}</span>
+    </div>
+
+    <span class="stock-status stock-{{ product.stock_status }}">
+        {% if product.stock_status == "available" %}
+            {% trans "Available" %}
+        {% elif product.stock_status == "low" %}
+            {% trans "Low" %}
+        {% else %}
+            {% trans "Out of stock" %}
+        {% endif %}
+    </span>
+
+</div>
+
+<div class="detail-wrapper">
+
+    <div class="qr-card">
+
+        <div class="qr-card-heading">
+            <span class="eyebrow">{% trans "Product code" %}</span>
+            <i class="bi bi-qr-code" aria-hidden="true"></i>
+        </div>
+
+        {% if product.qr_code %}
+            <img src="{{ product.qr_code.url }}" alt="QR Code">
+        {% else %}
+            <div class="qr-placeholder">
+                <i class="bi bi-box-seam" aria-hidden="true"></i>
+                <span>{% trans "QR code not generated" %}</span>
+            </div>
+        {% endif %}
+
+        <strong class="product-code">{{ product.product_code }}</strong>
+
+        <div class="quantity-highlight">
+            <span>{% trans "Current quantity" %}</span>
+            <strong>{{ product.quantity }}</strong>
+        </div>
+
+    </div>
+
+    <div class="info-card">
+
+        <div class="section-heading">
+            <div>
+                <span class="eyebrow">{% trans "Overview" %}</span>
+                <h2>{% trans "Product information" %}</h2>
+            </div>
+            <i class="bi bi-info-circle" aria-hidden="true"></i>
+        </div>
+
+        <div class="info-grid">
+
+        <div class="info-row">
+            <span>{% trans "Name" %}</span>
+            <strong>{{ product.name }}</strong>
+        </div>
+
+        <div class="info-row">
+            <span>{% trans "Category" %}</span>
+            <strong>{{ product.category }}</strong>
+        </div>
+
+        <div class="info-row">
+            <span>{% trans "Color" %}</span>
+            <strong>{{ product.color }}</strong>
+        </div>
+
+        <div class="info-row">
+            <span>{% trans "Size" %}</span>
+            <strong>{{ product.size }}</strong>
+        </div>
+
+        <div class="info-row">
+            <span>{% trans "Price" %}</span>
+            <strong>{{ product.price }} {{ system_settings.currency }}</strong>
+        </div>
+
+        <div class="info-row">
+            <span>{% trans "Quantity" %}</span>
+            <strong>{{ product.quantity }}</strong>
+        </div>
+
+        <div class="info-row">
+            <span>{% trans "Description" %}</span>
+            <strong>{% if product.description %}{{ product.description }}{% else %}{% trans "No description" %}{% endif %}</strong>
+        </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<div class="detail-actions" aria-label="{% trans 'Product actions' %}">
+
+    <a href="{% url 'edit_product' product.product_code %}" class="action-btn">
+        <i class="bi bi-pencil-square"></i>
+        {% trans "Edit" %}
+    </a>
+
+    <a href="{% url 'print_qr' product.product_code %}" class="action-btn">
+        <i class="bi bi-qr-code"></i>
+        {% trans "Print QR" %}
+    </a>
+
+    <a href="{% url 'print_barcode' product.product_code %}" class="action-btn">
+        <i class="bi bi-upc-scan"></i>
+        {% trans "Print Barcode" %}
+    </a>
+
+    <a href="{% url 'print_label' product.product_code %}" class="action-btn">
+        <i class="bi bi-tag"></i>
+        {% trans "Print label" %}
+    </a>
+
+    <a href="{% url 'delete_product' product.product_code %}" class="action-btn delete-btn">
+        <i class="bi bi-trash3"></i>
+        {% trans "Delete" %}
+    </a>
+
+</div>
+
+<section class="transactions-panel">
+<div class="section-heading">
+    <div>
+        <span class="eyebrow">{% trans "Activity" %}</span>
+        <h2>{% trans "Latest transactions" %}</h2>
+    </div>
+    <i class="bi bi-arrow-left-right" aria-hidden="true"></i>
+</div>
+
+<table class="products-table">
+
+    <thead>
+
+        <tr>
+
+            <th>{% trans "Type" %}</th>
+
+            <th>{% trans "Quantity" %}</th>
+
+            <th>{% trans "Date" %}</th>
+
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+        {% for t in transactions %}
+
+        <tr>
+
+            <td>{{ t.get_transaction_type_display }}</td>
+
+            <td>{{ t.quantity }}</td>
+
+            <td>{{ t.created_at|date:"Y-m-d H:i" }}</td>
+
+        </tr>
+
+        {% empty %}
+
+        <tr>
+
+            <td colspan="3">
+                {% trans "No transactions" %}
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </tbody>
+
+</table>
+
+</section>
+
+{% endblock %}

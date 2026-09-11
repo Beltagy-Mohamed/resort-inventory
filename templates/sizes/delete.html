@@ -1,0 +1,37 @@
+{% extends "layout/base.html" %}
+
+{% block title %}
+حذف المقاس
+{% endblock %}
+
+{% block content %}
+
+<h2>
+
+هل تريد حذف المقاس
+
+<b>{{ size.name }}</b>
+
+؟
+
+</h2>
+
+<form method="post">
+
+    {% csrf_token %}
+
+    <button class="btn-save">
+
+        نعم، احذف
+
+    </button>
+
+    <a href="{% url 'sizes_list' %}">
+
+        إلغاء
+
+    </a>
+
+</form>
+
+{% endblock %}

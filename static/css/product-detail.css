@@ -1,0 +1,375 @@
+.detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.back-btn {
+    text-decoration: none;
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.detail-wrapper {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 20px;
+}
+
+.qr-card,
+.info-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 22px;
+    box-shadow: var(--shadow-sm);
+}
+
+.qr-card {
+    text-align: center;
+    align-self: start;
+}
+
+.qr-card img {
+    width: 190px;
+    max-width: 100%;
+    border-radius: var(--radius-sm);
+}
+
+.qr-card .product-code {
+    display: block;
+    margin-top: 12px;
+    font-size: 15px;
+    color: var(--text-muted);
+}
+
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border-soft);
+    font-size: 13.5px;
+}
+
+.info-row:last-child {
+    border-bottom: none;
+}
+
+.info-row strong {
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.detail-actions {
+    margin-top: 20px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 900px) {
+    .detail-wrapper {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Product details: a focused overview layout built on the shared glass system. */
+.detail-header {
+    display: grid;
+    grid-template-columns: minmax(90px, 1fr) minmax(260px, 2fr) minmax(130px, 1fr);
+    align-items: center;
+    gap: 24px;
+    max-width: 1100px;
+    margin: 0 auto 28px;
+}
+
+.back-btn {
+    width: fit-content;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border: 1px solid var(--glass-border);
+    border-radius: 999px;
+    background: var(--glass-light);
+    color: var(--text-muted);
+    box-shadow: var(--glass-shadow);
+    transition: transform .16s ease, color .16s ease, border-color .16s ease;
+}
+
+.back-btn:hover {
+    color: var(--resort-teal);
+    border-color: var(--resort-gold);
+    transform: translateX(-3px);
+}
+
+.detail-heading {
+    min-width: 0;
+}
+
+.detail-heading h1 {
+    margin: 3px 0 2px;
+    overflow: hidden;
+    color: var(--text);
+    font-size: clamp(26px, 3vw, 40px);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.eyebrow {
+    display: block;
+    color: var(--text-muted);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+
+.detail-code {
+    color: var(--text-faint);
+    font-family: var(--font-mono);
+    font-size: 12px;
+}
+
+.stock-status {
+    justify-self: end;
+    padding: 9px 15px;
+    border: 1px solid currentColor;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.stock-available {
+    background: var(--success-soft);
+    color: var(--success);
+}
+
+.stock-low {
+    background: var(--warning-soft);
+    color: var(--warning);
+}
+
+.stock-out {
+    background: var(--danger-soft);
+    color: var(--danger);
+}
+
+.detail-wrapper {
+    grid-template-columns: minmax(230px, 280px) minmax(0, 1fr);
+    max-width: 1100px;
+    margin: 0 auto;
+    gap: 22px;
+}
+
+.qr-card,
+.info-card,
+.transactions-panel {
+    background: var(--glass-light);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--glass-shadow);
+    backdrop-filter: blur(18px) saturate(125%);
+    -webkit-backdrop-filter: blur(18px) saturate(125%);
+}
+
+.qr-card,
+.info-card {
+    padding: 26px;
+}
+
+.qr-card-heading,
+.section-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.qr-card-heading > i,
+.section-heading > i {
+    color: var(--resort-gold);
+    font-size: 20px;
+}
+
+.qr-card img {
+    display: block;
+    width: min(190px, 100%);
+    margin: 26px auto 18px;
+    border: 8px solid rgba(255, 255, 255, .72);
+    border-radius: 18px;
+    box-shadow: 0 12px 26px rgba(58, 84, 87, .12);
+}
+
+.qr-placeholder {
+    min-height: 190px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin: 26px 0 18px;
+    border: 1px dashed var(--glass-border);
+    border-radius: 18px;
+    color: var(--text-faint);
+    text-align: center;
+}
+
+.qr-placeholder i {
+    color: var(--resort-gold);
+    font-size: 34px;
+}
+
+.qr-card .product-code {
+    display: block;
+    margin: 0;
+    color: var(--text);
+    font-size: 15px;
+    text-align: center;
+}
+
+.quantity-highlight {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 24px;
+    padding-top: 18px;
+    border-top: 1px solid var(--border-soft);
+    color: var(--text-muted);
+    font-size: 12px;
+}
+
+.quantity-highlight strong {
+    color: var(--resort-teal);
+    font-family: var(--font-mono);
+    font-size: 25px;
+}
+
+html[data-theme="dark"] .quantity-highlight strong {
+    color: var(--resort-gold);
+}
+
+.section-heading h2 {
+    margin: 4px 0 0;
+    color: var(--text);
+    font-size: 19px;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 26px;
+    margin-top: 22px;
+}
+
+.info-row {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border-soft);
+}
+
+.info-row span {
+    color: var(--text-muted);
+    font-size: 12px;
+}
+
+.info-row strong {
+    width: 100%;
+    overflow: hidden;
+    color: var(--text);
+    font-size: 15px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.detail-actions {
+    max-width: 1100px;
+    margin: 22px auto 30px;
+    padding: 14px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius);
+    background: rgba(255, 255, 255, .28);
+    box-shadow: var(--shadow-sm);
+}
+
+.detail-actions .action-btn:first-child {
+    background: var(--resort-teal);
+    color: #fff;
+    border-color: var(--resort-teal);
+}
+
+html[data-theme="dark"] .detail-actions .action-btn:first-child {
+    background: var(--resort-gold);
+    color: #203638;
+    border-color: var(--resort-gold);
+}
+
+.transactions-panel {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 26px;
+}
+
+.transactions-panel table {
+    margin-top: 20px;
+}
+
+@media (max-width: 900px) {
+    .detail-header {
+        grid-template-columns: 1fr auto;
+    }
+
+    .detail-heading {
+        order: -1;
+        grid-column: 1 / -1;
+    }
+
+    .stock-status {
+        justify-self: start;
+    }
+}
+
+@media (max-width: 600px) {
+    .detail-header {
+        display: flex;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 14px;
+    }
+
+    .stock-status {
+        align-self: flex-start;
+    }
+
+    .detail-heading h1 {
+        font-size: 28px;
+    }
+
+    .qr-card,
+    .info-card,
+    .transactions-panel {
+        padding: 20px;
+    }
+
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .detail-actions {
+        padding: 10px;
+    }
+
+    .detail-actions .action-btn {
+        flex: 1 1 calc(50% - 10px);
+        justify-content: center;
+    }
+}

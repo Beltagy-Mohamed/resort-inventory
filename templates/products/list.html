@@ -1,0 +1,267 @@
+{% extends "layout/base.html" %}
+{% load static i18n %}
+
+{% block title %}
+{% trans "Products" %}
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/products.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <h1>{% trans "Products" %}</h1>
+
+    <a href="{% url 'add_product' %}" class="btn-save">
+        + {% trans "Add Product" %}
+    </a>
+
+</div>
+
+<div class="search-bar">
+
+    <form method="get">
+
+        <input
+            type="text"
+            name="search"
+            placeholder="{% trans 'Search by name or code...' %}"
+            value="{{ search }}">
+
+        <select name="status">
+
+            <option value="">
+                {% trans "All products" %}
+            </option>
+
+            <option
+                value="available"
+                {% if status == "available" %}selected{% endif %}>
+                {% trans "Available" %}
+            </option>
+
+            <option
+                value="low"
+                {% if status == "low" %}selected{% endif %}>
+                {% trans "Low" %}
+            </option>
+
+            <option
+                value="out"
+                {% if status == "out" %}selected{% endif %}>
+                {% trans "Out of stock" %}
+            </option>
+
+        </select>
+
+        <button type="submit">
+            {% trans "Search" %}
+        </button>
+
+    </form>
+
+</div>
+
+<div class="table-container">
+<table class="products-table">
+
+    <thead>
+
+        <tr>
+
+            <th>{% trans "QR" %}</th>
+
+            <th>{% trans "Code" %}</th>
+
+            <th>{% trans "Name" %}</th>
+
+            <th>{% trans "Category" %}</th>
+
+            <th>{% trans "Price" %}</th>
+
+            <th>{% trans "Quantity" %}</th>
+
+            <th>{% trans "Status" %}</th>
+
+            <th>{% trans "Actions" %}</th>
+
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+        {% for product in page_obj %}
+
+        <tr>
+
+            <td data-label="{% trans 'QR' %}">
+                {% if product.qr_code %}
+
+                    <a
+                        href="{{ product.qr_code.url }}"
+                        target="_blank">
+
+                        <img
+                            src="{{ product.qr_code.url }}"
+                            class="qr-thumb"
+                            alt="QR">
+
+                    </a>
+
+                {% endif %}
+
+            </td>
+
+            <td data-label="{% trans 'Code' %}">{{ product.product_code }}</td>
+
+            <td data-label="{% trans 'Name' %}">{{ product.name }}</td>
+
+            <td data-label="{% trans 'Category' %}">{{ product.category }}</td>
+
+            <td data-label="{% trans 'Price' %}">{{ product.price }} {{ system_settings.currency }}</td>
+
+            <td data-label="{% trans 'Quantity' %}">{{ product.quantity }}</td>
+
+            <td data-label="{% trans 'Status' %}">
+
+                {% if product.stock_status == "available" %}
+
+                    <span class="badge badge-success">
+                        {% trans "Available" %}
+                    </span>
+
+                {% elif product.stock_status == "low" %}
+
+                    <span class="badge badge-warning">
+                        {% trans "Low" %}
+                    </span>
+
+                {% else %}
+
+                    <span class="badge badge-danger">
+                        {% trans "Out of stock" %}
+                    </span>
+
+                {% endif %}
+
+            </td>
+
+            <td data-label="{% trans 'Actions' %}">
+
+                <a
+                    href="{% url 'product_detail' product.product_code %}"
+                    class="action-btn"
+                    title="{% trans 'View' %}">
+
+                    <i class="bi bi-eye"></i>
+
+                </a>
+
+                <a
+                    href="{% url 'edit_product' product.product_code %}"
+                    class="action-btn"
+                    title="{% trans 'Edit' %}">
+
+                    <i class="bi bi-pencil-square"></i>
+
+                </a>
+
+                <a
+                    href="{% url 'delete_product' product.product_code %}"
+                    class="action-btn"
+                    title="{% trans 'Delete' %}">
+
+                    <i class="bi bi-trash3"></i>
+
+                </a>
+
+                <a
+                    href="{% url 'print_qr' product.product_code %}"
+                    class="action-btn"
+                    title="{% trans 'Print' %}">
+
+                    <i class="bi bi-printer"></i>
+
+                </a>
+
+                <a
+                    href="{% url 'print_label' product.product_code %}"
+                    class="action-btn"
+                    title="{% trans 'Print label' %}">
+
+                    <i class="bi bi-tag"></i>
+
+                </a>
+
+            </td>
+
+        </tr>
+
+        {% empty %}
+
+        <tr>
+
+            <td colspan="8">
+
+                <h3>
+                    {% trans "No products yet" %}
+                </h3>
+
+                <br>
+
+                <a
+                    href="{% url 'add_product' %}"
+                    class="btn-save">
+
+                    {% trans "Add first product" %}
+
+                </a>
+
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </tbody>
+
+</table>
+</div>
+
+<div class="pagination">
+
+    {% if page_obj.has_previous %}
+
+        <a href="?page={{ page_obj.previous_page_number }}&search={{ search }}&status={{ status }}">
+            {% trans "Previous" %}
+        </a>
+
+    {% endif %}
+
+    <span>
+
+        {% trans "Page" %}
+
+        {{ page_obj.number }}
+
+        {% trans "of" %}
+
+        {{ page_obj.paginator.num_pages }}
+
+    </span>
+
+    {% if page_obj.has_next %}
+
+        <a href="?page={{ page_obj.next_page_number }}&search={{ search }}&status={{ status }}">
+            {% trans "Next" %}
+        </a>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

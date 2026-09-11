@@ -1,0 +1,46 @@
+{% extends "layout/base.html" %}
+{% load i18n %}
+
+{% block title %}
+{% trans "Delete Category" %}
+{% endblock %}
+
+{% block content %}
+
+<div class="delete-card">
+
+    <h2>{% trans "Delete Category" %}</h2>
+
+    <p>
+
+        {% trans "Are you sure you want to delete this category?" %}
+
+        <strong>{{ category.name }}</strong>؟
+
+    </p>
+
+    <form method="post">
+
+        {% csrf_token %}
+
+        <button
+            type="submit"
+            class="btn-delete">
+
+            {% trans "Yes, delete" %}
+
+        </button>
+
+        <a
+            href="{% url 'categories_list' %}"
+            class="btn-save">
+
+            {% trans "Cancel" %}
+
+        </a>
+
+    </form>
+
+</div>
+
+{% endblock %}

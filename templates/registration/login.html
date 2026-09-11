@@ -1,0 +1,185 @@
+{% load static i18n %}
+
+<!DOCTYPE html>
+
+<html lang="{{ LANGUAGE_CODE }}" dir="{% if LANGUAGE_CODE == 'ar' %}rtl{% else %}ltr{% endif %}">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+<title>{% trans "Log in" %} - {% trans "Resort Inventory" %}</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="{% static 'css/base.css' %}">
+
+<style>
+
+body{
+    background:
+        radial-gradient(circle at 15% 15%, rgba(193, 154, 107, .28), transparent 30%),
+        radial-gradient(circle at 85% 85%, rgba(58, 84, 87, .55), transparent 36%),
+        #dfeae6;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.login-card{
+    width: 100%;
+    max-width: 380px;
+    background: rgba(255, 255, 255, .66);
+    border: 1px solid rgba(255, 255, 255, .78);
+    border-radius: 30px;
+    box-shadow: 0 24px 70px rgba(58, 84, 87, .2);
+    backdrop-filter: blur(24px) saturate(130%);
+    -webkit-backdrop-filter: blur(24px) saturate(130%);
+    padding: 44px 38px 38px;
+}
+
+.login-brand{
+    text-align: center;
+    margin-bottom: 26px;
+}
+
+.login-brand .icon{
+    width: 58px;
+    height: 58px;
+    border-radius: 20px;
+    background: var(--resort-teal);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 25px;
+    margin: 0 auto 18px;
+    box-shadow: 0 12px 24px rgba(58, 84, 87, .22);
+}
+
+.login-card h1{
+    font-size: 22px;
+    text-align: center;
+    margin-bottom: 30px;
+    color: var(--text);
+}
+
+.login-card button{
+    width: 100%;
+    margin-top: 6px;
+}
+
+.login-card .product-form {
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    backdrop-filter: none;
+    padding: 0;
+}
+
+.login-card .product-form input {
+    min-height: 48px;
+    background: rgba(255, 255, 255, .54);
+    border-radius: 16px;
+}
+
+.login-card .btn-save {
+    min-height: 50px;
+    margin-top: 10px;
+    background: var(--resort-teal);
+}
+
+@media (max-height: 760px) {
+    .login-card {
+        padding: 30px 34px 26px;
+    }
+
+    .login-brand {
+        margin-bottom: 14px;
+    }
+
+    .login-brand .icon {
+        width: 52px;
+        height: 52px;
+        margin-bottom: 12px;
+    }
+
+    .login-card h1 {
+        margin-bottom: 20px;
+    }
+
+    .login-card .form-group {
+        margin-bottom: 13px;
+    }
+
+    .login-card .product-form input {
+        min-height: 44px;
+    }
+
+    .login-card .btn-save {
+        min-height: 46px;
+    }
+}
+
+</style>
+
+</head>
+
+<body>
+
+<form method="post" action="{% url 'set_language' %}" class="login-language-form">
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+    <input type="hidden" name="language" value="{% if LANGUAGE_CODE == 'ar' %}en{% else %}ar{% endif %}">
+    <button type="submit">{% if LANGUAGE_CODE == 'ar' %}EN{% else %}ع{% endif %}</button>
+</form>
+
+<div class="login-card">
+
+    <div class="login-brand">
+        <div class="icon"><i class="bi bi-box-seam"></i></div>
+    </div>
+
+    <h1>{% trans "Log in to Resort Inventory" %}</h1>
+
+    <form method="post" class="product-form" style="border:none; box-shadow:none; padding:0; max-width:none;">
+
+        {% csrf_token %}
+
+        {% if form.non_field_errors %}
+            <div class="alert error">
+                {% for error in form.non_field_errors %}
+                    {{ error }}
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <div class="form-group">
+            <label for="id_username">{% trans "Username" %}</label>
+            {{ form.username }}
+        </div>
+
+        <div class="form-group">
+            <label for="id_password">{% trans "Password" %}</label>
+            {{ form.password }}
+        </div>
+
+        <button type="submit" class="btn-save">{% trans "Log in" %}</button>
+
+    </form>
+
+</div>
+
+</body>
+
+</html>

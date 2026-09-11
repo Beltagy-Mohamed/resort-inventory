@@ -1,0 +1,474 @@
+msgid ""
+msgstr ""
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "Resort Inventory"
+msgstr "مخزون المنتجع"
+
+msgid "Search by name or product code..."
+msgstr "البحث بالاسم أو كود المنتج..."
+
+msgid "Change language"
+msgstr "تغيير اللغة"
+
+msgid "Toggle dark mode"
+msgstr "تبديل الوضع الليلي"
+
+msgid "Notifications"
+msgstr "التنبيهات"
+
+msgid "View all"
+msgstr "عرض الكل"
+
+msgid "No notifications"
+msgstr "لا توجد تنبيهات"
+
+msgid "Log out"
+msgstr "تسجيل الخروج"
+
+msgid "Collapse sidebar"
+msgstr "طي القائمة الجانبية"
+
+msgid "Dashboard"
+msgstr "لوحة التحكم"
+
+msgid "Inventory"
+msgstr "المخزون"
+
+msgid "Products"
+msgstr "المنتجات"
+
+msgid "Add Product"
+msgstr "إضافة منتج"
+
+msgid "Categories"
+msgstr "الفئات"
+
+msgid "Colors"
+msgstr "الألوان"
+
+msgid "Sizes"
+msgstr "المقاسات"
+
+msgid "Transactions"
+msgstr "الحركات"
+
+msgid "Reports"
+msgstr "التقارير"
+
+msgid "Inventory Report"
+msgstr "تقرير المخزون"
+
+msgid "Low Stock"
+msgstr "منخفض المخزون"
+
+msgid "Activity Log"
+msgstr "سجل النشاط"
+
+msgid "Management"
+msgstr "الإدارة"
+
+msgid "Barcode / Labels"
+msgstr "الباركود / الملصقات"
+
+msgid "Users & Permissions"
+msgstr "المستخدمون والصلاحيات"
+
+msgid "Settings"
+msgstr "الإعدادات"
+
+msgid "Home"
+msgstr "الرئيسية"
+
+msgid "Add"
+msgstr "إضافة"
+
+msgid "More"
+msgstr "المزيد"
+
+msgid "Log in"
+msgstr "تسجيل الدخول"
+
+msgid "Log in to Resort Inventory"
+msgstr "تسجيل الدخول إلى مخزون المنتجع"
+
+msgid "Username"
+msgstr "اسم المستخدم"
+
+msgid "Password"
+msgstr "كلمة المرور"
+
+msgid "Search by name or code..."
+msgstr "ابحث بالاسم أو الكود..."
+
+msgid "All products"
+msgstr "كل المنتجات"
+
+msgid "Available"
+msgstr "متوفر"
+
+msgid "Low"
+msgstr "منخفض"
+
+msgid "Out of stock"
+msgstr "نفد"
+
+msgid "Search"
+msgstr "بحث"
+
+msgid "QR"
+msgstr "QR"
+
+msgid "Code"
+msgstr "الكود"
+
+msgid "Name"
+msgstr "الاسم"
+
+msgid "Category"
+msgstr "التصنيف"
+
+msgid "Price"
+msgstr "السعر"
+
+msgid "Quantity"
+msgstr "الكمية"
+
+msgid "Status"
+msgstr "الحالة"
+
+msgid "Actions"
+msgstr "الإجراءات"
+
+msgid "Total Quantity"
+msgstr "إجمالي الكمية"
+
+msgid "Inventory Value"
+msgstr "قيمة المخزون"
+
+msgid "Out Of Stock"
+msgstr "نفد المخزون"
+
+msgid "Today's Transactions"
+msgstr "حركات اليوم"
+
+msgid "Latest Products"
+msgstr "أحدث المنتجات"
+
+msgid "No Products Found"
+msgstr "لا توجد منتجات"
+
+msgid "Add Category"
+msgstr "إضافة تصنيف"
+
+msgid "Category name"
+msgstr "اسم التصنيف"
+
+msgid "Product count"
+msgstr "عدد المنتجات"
+
+msgid "Edit"
+msgstr "تعديل"
+
+msgid "Delete"
+msgstr "حذف"
+
+msgid "No categories"
+msgstr "لا توجد تصنيفات"
+
+msgid "Add first category"
+msgstr "إضافة أول تصنيف"
+
+msgid "Add Color"
+msgstr "إضافة لون"
+
+msgid "Color"
+msgstr "اللون"
+
+msgid "No colors"
+msgstr "لا توجد ألوان"
+
+msgid "Add Size"
+msgstr "إضافة مقاس"
+
+msgid "Size"
+msgstr "المقاس"
+
+msgid "No sizes"
+msgstr "لا توجد مقاسات"
+
+msgid "Time"
+msgstr "الوقت"
+
+msgid "Action"
+msgstr "العملية"
+
+msgid "Product"
+msgstr "المنتج"
+
+msgid "Description"
+msgstr "الوصف"
+
+msgid "No activity"
+msgstr "لا توجد أنشطة"
+
+msgid "Previous"
+msgstr "السابق"
+
+msgid "Page"
+msgstr "صفحة"
+
+msgid "of"
+msgstr "من"
+
+msgid "Next"
+msgstr "التالي"
+
+msgid "System settings"
+msgstr "إعدادات النظام"
+
+msgid "Save settings"
+msgstr "حفظ الإعدادات"
+
+msgid "Inventory transaction"
+msgstr "حركة مخزنية"
+
+msgid "Add inventory transaction"
+msgstr "إضافة حركة مخزنية"
+
+msgid "Transaction type"
+msgstr "نوع الحركة"
+
+msgid "Notes"
+msgstr "ملاحظات"
+
+msgid "Save transaction"
+msgstr "حفظ الحركة"
+
+msgid "Inventory transactions"
+msgstr "حركات المخزون"
+
+msgid "Search by product or code"
+msgstr "ابحث بالمنتج أو الكود"
+
+msgid "All transactions"
+msgstr "كل الحركات"
+
+msgid "Received"
+msgstr "استلام"
+
+msgid "Issued"
+msgstr "صرف"
+
+msgid "Adjustment"
+msgstr "جرد"
+
+msgid "Type"
+msgstr "النوع"
+
+msgid "Date"
+msgstr "التاريخ"
+
+msgid "No transactions"
+msgstr "لا توجد حركات"
+
+msgid "Print report"
+msgstr "طباعة التقرير"
+
+msgid "Search..."
+msgstr "بحث..."
+
+msgid "All Categories"
+msgstr "كل التصنيفات"
+
+msgid "All Status"
+msgstr "كل الحالات"
+
+msgid "Minimum"
+msgstr "الحد الأدنى"
+
+msgid "Value"
+msgstr "القيمة"
+
+msgid "Total Products"
+msgstr "إجمالي المنتجات"
+
+msgid "Product name"
+msgstr "اسم المنتج"
+
+msgid "Minimum stock"
+msgstr "الحد الأدنى للمخزون"
+
+msgid "Color name"
+msgstr "اسم اللون"
+
+msgid "Size name"
+msgstr "اسم المقاس"
+
+msgid "Add new product"
+msgstr "إضافة منتج جديد"
+
+msgid "Save product"
+msgstr "حفظ المنتج"
+
+msgid "Add new category"
+msgstr "إضافة تصنيف جديد"
+
+msgid "Save category"
+msgstr "حفظ التصنيف"
+
+msgid "Edit Category"
+msgstr "تعديل التصنيف"
+
+msgid "Save changes"
+msgstr "حفظ التعديلات"
+
+msgid "Delete Product"
+msgstr "حذف المنتج"
+
+msgid "Confirm product deletion"
+msgstr "تأكيد حذف المنتج"
+
+msgid "Are you sure you want to delete this product?"
+msgstr "هل أنت متأكد من حذف المنتج؟"
+
+msgid "Cancel"
+msgstr "إلغاء"
+
+msgid "Back"
+msgstr "رجوع"
+
+msgid "Product details"
+msgstr "تفاصيل المنتج"
+
+msgid "No description"
+msgstr "لا يوجد وصف"
+
+msgid "Print QR"
+msgstr "طباعة QR"
+
+msgid "Print Barcode"
+msgstr "طباعة Barcode"
+
+msgid "Print label"
+msgstr "طباعة الملصق"
+
+msgid "Latest transactions"
+msgstr "آخر الحركات"
+
+msgid "Print product"
+msgstr "طباعة المنتج"
+
+msgid "Current quantity"
+msgstr "الكمية الحالية"
+
+msgid "Print"
+msgstr "طباعة"
+
+msgid "Barcode"
+msgstr "Barcode"
+
+msgid "Product label"
+msgstr "ملصق المنتج"
+
+msgid "Low-stock products"
+msgstr "المنتجات منخفضة المخزون"
+
+msgid "No low-stock products"
+msgstr "لا توجد منتجات منخفضة"
+
+msgid "View"
+msgstr "عرض"
+
+msgid "No products yet"
+msgstr "لا توجد منتجات حتى الآن"
+
+msgid "Add first product"
+msgstr "إضافة أول منتج"
+
+msgid "A clear view of your inventory health"
+msgstr "رؤية واضحة لحالة مخزونك"
+
+msgid "View period"
+msgstr "الفترة"
+
+msgid "This month"
+msgstr "هذا الشهر"
+
+msgid "This year"
+msgstr "هذه السنة"
+
+msgid "Latest Transactions"
+msgstr "أحدث الحركات"
+
+msgid "No Transactions Found"
+msgstr "لا توجد حركات"
+
+msgid "Products By Category"
+msgstr "المنتجات حسب الفئة"
+
+msgid "Transactions in the last 7 days"
+msgstr "الحركات خلال آخر 7 أيام"
+
+msgid "Low-stock alerts"
+msgstr "تنبيهات المخزون المنخفض"
+
+msgid "Out-of-stock products"
+msgstr "منتجات نفدت من المخزون"
+
+msgid "No out-of-stock products"
+msgstr "لا توجد منتجات منتهية"
+
+msgid "Quick shortcuts"
+msgstr "اختصارات سريعة"
+
+msgid "Period movement summary"
+msgstr "ملخص حركة الفترة"
+
+msgid "Period activity"
+msgstr "نشاط الفترة"
+
+msgid "transactions"
+msgstr "حركة"
+
+msgid "Compared with previous period"
+msgstr "مقارنة بالفترة السابقة"
+
+msgid "units in"
+msgstr "وحدة واردة"
+
+msgid "units out"
+msgstr "وحدة صادرة"
+
+msgid "Net movement"
+msgstr "صافي الحركة"
+
+msgid "units balance"
+msgstr "صافي الوحدات"
+
+msgid "Inventory movement this year"
+msgstr "حركة المخزون خلال السنة الحالية"
+
+msgid "Inventory movement this month"
+msgstr "حركة المخزون خلال الشهر الحالي"
+
+msgid "Capital allocation"
+msgstr "توزيع رأس المال"
+
+msgid "Inventory value by category"
+msgstr "قيمة المخزون حسب الفئة"
+
+msgid "Operational focus"
+msgstr "التركيز التشغيلي"
+
+msgid "Most active products"
+msgstr "أكثر المنتجات حركة"
+
+msgid "No activity in this period"
+msgstr "لا توجد حركة خلال هذه الفترة"
+
+msgid "All categories"
+msgstr "كل الفئات"

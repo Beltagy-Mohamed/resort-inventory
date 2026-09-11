@@ -1,0 +1,107 @@
+{% extends "layout/base.html" %}
+{% load static i18n %}
+
+{% block title %}
+{% trans "Activity Log" %}
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/products.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<h1>{% trans "Activity Log" %}</h1>
+
+<table class="products-table">
+
+    <thead>
+
+        <tr>
+
+            <th>{% trans "Time" %}</th>
+
+            <th>{% trans "Action" %}</th>
+
+            <th>{% trans "Product" %}</th>
+
+            <th>{% trans "Description" %}</th>
+
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+        {% for log in logs %}
+
+        <tr>
+
+            <td data-label="{% trans 'Date' %}">{{ log.created_at|date:"Y-m-d H:i" }}</td>
+
+            <td>{{ log.get_action_display }}</td>
+
+            <td>
+
+                {% if log.product %}
+
+                    {{ log.product.name }}
+
+                {% else %}
+
+                    —
+
+                {% endif %}
+
+            </td>
+
+            <td>{{ log.description }}</td>
+
+        </tr>
+
+        {% empty %}
+
+        <tr>
+
+            <td colspan="4">
+
+                {% trans "No activity" %}
+
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </tbody>
+
+</table>
+
+<div class="pagination">
+
+    {% if page_obj.has_previous %}
+
+        <a href="?page={{ page_obj.previous_page_number }}">
+            {% trans "Previous" %}
+        </a>
+
+    {% endif %}
+
+    <span>
+        {% trans "Page" %}
+        {{ page_obj.number }}
+        {% trans "of" %}
+        {{ page_obj.paginator.num_pages }}
+    </span>
+
+    {% if page_obj.has_next %}
+
+        <a href="?page={{ page_obj.next_page_number }}">
+            {% trans "Next" %}
+        </a>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

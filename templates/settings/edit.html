@@ -1,0 +1,42 @@
+{% extends "layout/base.html" %}
+{% load static i18n %}
+
+{% block title %}
+{% trans "Settings" %}
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/products.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<h1>{% trans "System settings" %}</h1>
+
+<form method="post" class="product-form">
+
+    {% csrf_token %}
+
+    <div class="form-group">
+
+        <label>{{ form.company_name.label }}</label>
+
+        {{ form.company_name }}
+
+    </div>
+
+    <div class="form-group">
+
+        <label>{{ form.currency.label }}</label>
+
+        {{ form.currency }}
+
+    </div>
+
+    <button type="submit" class="btn-save">
+        {% trans "Save settings" %}
+    </button>
+
+</form>
+
+{% endblock %}

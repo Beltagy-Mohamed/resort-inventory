@@ -1,0 +1,613 @@
+{% extends "layout/base.html" %}
+{% load static i18n %}
+
+{% block title %}
+{% trans "Dashboard" %}
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/dashboard.css' %}?v=6">
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <div>
+        <h1>{% trans "Dashboard" %}</h1>
+        <p class="dashboard-subtitle">{% trans "A clear view of your inventory health" %}</p>
+    </div>
+
+    <form method="get" class="dashboard-filters">
+        <label for="dashboard-period">{% trans "View period" %}</label>
+        <select id="dashboard-period" name="period" onchange="this.form.submit()">
+            <option value="month" {% if dashboard_period == "month" %}selected{% endif %}>
+                {% trans "This month" %}
+            </option>
+            <option value="year" {% if dashboard_period == "year" %}selected{% endif %}>
+                {% trans "This year" %}
+            </option>
+        </select>
+        <label for="dashboard-category">{% trans "Category" %}</label>
+        <select id="dashboard-category" name="category" onchange="this.form.submit()">
+            <option value="">{% trans "All categories" %}</option>
+            {% for category in dashboard_categories %}
+                <option value="{{ category.id }}" {% if dashboard_category == category.id %}selected{% endif %}>
+                    {{ category.name }}
+                </option>
+            {% endfor %}
+        </select>
+    </form>
+
+</div>
+
+<div class="cards">
+
+    <div class="card products-card">
+
+        <div class="card-icon">
+            <i class="bi bi-box-seam"></i>
+        </div>
+
+        <div>
+
+            <h3>{% trans "Products" %}</h3>
+
+            <h2>{{ products_count }}</h2>
+
+        </div>
+
+    </div>
+
+    <div class="card categories-card">
+
+        <div class="card-icon">
+            <i class="bi bi-grid"></i>
+        </div>
+
+        <div>
+
+            <h3>{% trans "Categories" %}</h3>
+
+            <h2>{{ categories_count }}</h2>
+
+        </div>
+
+    </div>
+
+    <div class="card quantity-card">
+
+        <div class="card-icon">
+            <i class="bi bi-boxes"></i>
+        </div>
+
+        <div>
+
+            <h3>{% trans "Total Quantity" %}</h3>
+
+            <h2>{{ total_quantity }}</h2>
+
+        </div>
+
+    </div>
+
+    <div class="card value-card">
+
+        <div class="card-icon">
+            <i class="bi bi-cash-stack"></i>
+        </div>
+
+        <div>
+
+            <h3>{% trans "Inventory Value" %}</h3>
+
+            <h2>{{ inventory_value }} {{ system_settings.currency }}</h2>
+
+        </div>
+
+    </div>
+
+    <div class="card low-card">
+
+        <div class="card-icon">
+            <i class="bi bi-exclamation-triangle"></i>
+        </div>
+
+        <div>
+
+            <h3>{% trans "Low Stock" %}</h3>
+
+            <h2>{{ low_stock }}</h2>
+
+        </div>
+
+    </div>
+
+    <div class="card danger-card">
+
+        <div class="card-icon">
+            <i class="bi bi-x-octagon-fill"></i>
+        </div>
+
+        <div>
+
+            <h3>{% trans "Out Of Stock" %}</h3>
+
+            <h2>{{ out_of_stock }}</h2>
+
+        </div>
+
+    </div>
+
+    <div class="card transaction-card">
+
+        <div class="card-icon">
+            <i class="bi bi-arrow-left-right"></i>
+        </div>
+
+        <div>
+
+            <h3>{% trans "Today's Transactions" %}</h3>
+
+            <h2>{{ today_transactions }}</h2>
+
+        </div>
+
+    </div>
+
+</div>
+
+<section class="movement-summary" aria-label="{% trans 'Period movement summary' %}">
+    <div class="insight-card insight-primary">
+        <span class="eyebrow">{% trans "Period activity" %}</span>
+        <strong>{{ period_transactions }}</strong>
+        <span>{% trans "transactions" %}</span>
+        <small>{% trans "Compared with previous period" %}: {{ activity_change }}%</small>
+    </div>
+    <div class="insight-card">
+        <span class="eyebrow">{% trans "Received" %}</span>
+        <strong>{{ received_quantity }}</strong>
+        <span>{% trans "units in" %}</span>
+    </div>
+    <div class="insight-card">
+        <span class="eyebrow">{% trans "Issued" %}</span>
+        <strong>{{ issued_quantity }}</strong>
+        <span>{% trans "units out" %}</span>
+    </div>
+    <div class="insight-card">
+        <span class="eyebrow">{% trans "Net movement" %}</span>
+        <strong>{{ net_movement }}</strong>
+        <span>{% trans "units balance" %}</span>
+    </div>
+</section>
+
+<div class="dashboard-grid active-products-grid">
+
+    <div class="dashboard-card">
+
+        <h2>{% trans "Latest Products" %}</h2>
+
+        <div class=table-container>
+<table class="products-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>{% trans "Code" %}</th>
+
+                    <th>{% trans "Name" %}</th>
+
+                    <th>{% trans "Quantity" %}</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for product in latest_products %}
+
+                <tr>
+
+                    <td>{{ product.product_code }}</td>
+
+                    <td>{{ product.name }}</td>
+
+                    <td>{{ product.quantity }}</td>
+
+                </tr>
+
+                {% empty %}
+
+                <tr>
+
+                    <td colspan="3">
+
+                        {% trans "No Products Found" %}
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+</div>
+
+    </div>
+
+    <div class="dashboard-card">
+
+        <h2>{% trans "Latest Transactions" %}</h2>
+
+        <div class=table-container>
+<table class="products-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>{% trans "Product" %}</th>
+
+                    <th>{% trans "Type" %}</th>
+
+                    <th>{% trans "Quantity" %}</th>
+
+                    <th>{% trans "Date" %}</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for transaction in latest_transactions %}
+
+                <tr>
+
+                    <td>{{ transaction.product.name }}</td>
+
+                    <td>{{ transaction.get_transaction_type_display }}</td>
+
+                    <td>{{ transaction.quantity }}</td>
+
+                    <td>{{ transaction.created_at|date:"Y-m-d H:i" }}</td>
+
+                </tr>
+
+                {% empty %}
+
+                <tr>
+
+                    <td colspan="4">
+
+                        {% trans "No Transactions Found" %}
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+</div>
+
+    </div>
+
+</div>
+
+<div class="dashboard-card">
+
+    <h2>{% trans "Products By Category" %}</h2>
+
+    <canvas id="categoryChart"></canvas>
+
+</div>
+
+<div class="dashboard-chart-grid">
+<div class="dashboard-card movement-chart-card">
+
+    <h2>{% if dashboard_period == "year" %}{% trans "Inventory movement this year" %}{% else %}{% trans "Inventory movement this month" %}{% endif %}</h2>
+
+    <canvas id="transactionsChart"></canvas>
+
+</div>
+
+<div class="dashboard-card category-chart-card">
+        <div class="section-heading">
+            <div>
+                <span class="eyebrow">{% trans "Capital allocation" %}</span>
+                <h2>{% trans "Inventory value by category" %}</h2>
+            </div>
+            <i class="bi bi-pie-chart" aria-hidden="true"></i>
+        </div>
+        <canvas id="categoryValueChart"></canvas>
+</div>
+</div>
+
+<div class="dashboard-grid">
+    <div class="dashboard-card">
+        <div class="section-heading">
+            <div>
+                <span class="eyebrow">{% trans "Operational focus" %}</span>
+                <h2>{% trans "Most active products" %}</h2>
+            </div>
+            <i class="bi bi-activity" aria-hidden="true"></i>
+        </div>
+        <div class="active-products-list">
+            {% for product in top_active_products %}
+                <a href="{% url 'product_detail' product.product_code %}" class="active-product-row">
+                    <span>
+                        <strong>{{ product.name }}</strong>
+                        <small>{{ product.product_code }}</small>
+                    </span>
+                    <b>{{ product.movement_count }}</b>
+                </a>
+            {% empty %}
+                <p class="empty-state">{% trans "No activity in this period" %}</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<div class="dashboard-grid alerts-grid">
+
+    <div class="dashboard-card alert-card low-stock-alert">
+
+        <div class="alert-header">
+            <h2>
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                {% trans "Low-stock alerts" %}
+            </h2>
+
+            <a href="{% url 'low_stock_products' %}" class="view-all">
+                {% trans "View all" %}
+            </a>
+        </div>
+
+        {% for product in low_stock_products %}
+
+            <div class="alert-item">
+
+                <div class="alert-info">
+
+                    <strong>{{ product.name }}</strong>
+
+                    <small>
+                        {{ product.product_code }}
+                    </small>
+
+                </div>
+
+                <span class="alert-badge warning">
+
+                    {{ product.quantity }}
+
+                </span>
+
+            </div>
+
+        {% empty %}
+
+            <p class="empty-state">
+
+                {% trans "No low-stock products" %} 🎉
+
+            </p>
+
+        {% endfor %}
+
+    </div>
+
+    <div class="dashboard-card alert-card out-stock-alert">
+
+        <div class="alert-header">
+            <h2>
+                <i class="bi bi-x-octagon-fill"></i>
+                {% trans "Out-of-stock products" %}
+            </h2>
+        </div>
+
+        {% for product in out_of_stock_products %}
+
+            <div class="alert-item">
+
+                <div class="alert-info">
+
+                    <strong>{{ product.name }}</strong>
+
+                    <small>
+                        {{ product.product_code }}
+                    </small>
+
+                </div>
+
+                <span class="alert-badge danger">
+
+                    {% trans "Out of stock" %}
+
+                </span>
+
+            </div>
+
+        {% empty %}
+
+            <p class="empty-state">
+
+                {% trans "No out-of-stock products" %} 🎉
+
+            </p>
+
+        {% endfor %}
+
+    </div>
+
+</div>
+<hr>
+
+<div class="dashboard-card">
+
+    <h2>⚡ {% trans "Quick shortcuts" %}</h2>
+
+    <div class="quick-actions">
+
+        <a href="{% url 'add_product' %}" class="quick-btn">
+            ➕ {% trans "Add Product" %}
+        </a>
+
+        <a href="{% url 'transactions_list' %}" class="quick-btn">
+            🔄 {% trans "Inventory transactions" %}
+        </a>
+
+        <a href="{% url 'inventory_report' %}" class="quick-btn">
+            📈 {% trans "Inventory Report" %}
+        </a>
+
+        <a href="{% url 'low_stock_products' %}" class="quick-btn">
+            ⚠ {% trans "Low Stock" %}
+        </a>
+
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+
+const ctx = document.getElementById("categoryChart");
+
+new Chart(ctx, {
+
+    type: "bar",
+
+    data: {
+
+        labels: {{ category_labels|safe }},
+
+       datasets: [
+
+    {
+
+        label: "{% trans 'Products' %}",
+
+        data: {{ category_counts|safe }},
+
+                backgroundColor: [
+            {% for color in category_colors %}"{{ color }}"{% if not forloop.last %},{% endif %}{% endfor %}
+        ],
+
+        borderRadius: 8
+
+    }
+
+]
+
+    },
+
+    options: {
+
+    responsive: true,
+
+    plugins: {
+
+        legend: {
+
+            display: false
+
+        }
+
+    },
+
+    scales: {
+
+        y: {
+
+            beginAtZero: true,
+
+            ticks: {
+
+                precision: 0
+
+            }
+
+        }
+
+    }
+
+}
+
+});
+
+const txCtx = document.getElementById("transactionsChart");
+
+new Chart(txCtx, {
+
+    type: "line",
+
+    data: {
+
+        labels: {{ transactions_labels|safe }},
+
+        datasets: [
+            {
+                label: "{% trans 'Transactions' %}",
+                data: {{ transactions_counts|safe }},
+                borderColor: "#3a5457",
+                backgroundColor: "rgba(58, 84, 87, 0.15)",
+                tension: 0.3,
+                fill: true,
+            }
+        ]
+
+    },
+
+    options: {
+
+        responsive: true,
+
+        plugins: {
+            legend: {
+                display: false
+            }
+        },
+
+        scales: {
+            y: {
+                beginAtZero: true,
+                ticks: {
+                    precision: 0
+                }
+            }
+        }
+
+    }
+
+});
+
+const valueCtx = document.getElementById("categoryValueChart");
+
+new Chart(valueCtx, {
+    type: "doughnut",
+    data: {
+        labels: {{ category_value_labels|safe }},
+        datasets: [{
+            data: {{ category_value_counts|safe }},
+            backgroundColor: [{% for color in category_value_colors %}"{{ color }}"{% if not forloop.last %},{% endif %}{% endfor %}],
+            borderWidth: 0,
+        }]
+    },
+    options: {
+        responsive: true,
+        cutout: "68%",
+        plugins: { legend: { position: "bottom" } }
+    }
+});
+
+</script>
+
+{% endblock %}

@@ -1,0 +1,49 @@
+{% load static i18n %}
+
+<!DOCTYPE html>
+
+<html lang="{{ LANGUAGE_CODE }}" dir="{% if LANGUAGE_CODE == 'ar' %}rtl{% else %}ltr{% endif %}">
+
+<head>
+
+<meta charset="UTF-8">
+
+<title>{% trans "Product label" %} - {{ product.product_code }}</title>
+
+<link rel="stylesheet" href="{% static 'css/print.css' %}">
+
+</head>
+
+<body>
+
+<div class="print-label">
+
+    <h2>{{ product.name }}</h2>
+
+    <div class="product-code">{{ product.product_code }}</div>
+
+    <div class="print-info" style="font-size:18px; font-weight:700; margin-bottom:8px;">
+        {{ product.price }} {{ system_settings.currency }}
+    </div>
+
+    <div class="print-codes-row">
+
+        {% if product.barcode %}
+        <img src="{{ product.barcode.url }}" alt="Barcode" class="barcode-img">
+        {% endif %}
+
+        {% if product.qr_code %}
+        <img src="{{ product.qr_code.url }}" alt="QR Code" class="qr-img">
+        {% endif %}
+
+    </div>
+
+    <button class="print-btn" onclick="window.print()">
+        {% trans "Print label" %}
+    </button>
+
+</div>
+
+</body>
+
+</html>
