@@ -99,14 +99,14 @@
         <tr>
 
             <td data-label="{% trans 'QR' %}">
-                {% if product.qr_code %}
+                {% if True %}
 
                     <a
-                        href="{{ product.qr_code.url }}"
+                        href="/media/dynamic_qr/{{ product.product_code }}.png"
                         target="_blank">
 
                         <img
-                            src="{{ product.qr_code.url }}"
+                            src="/media/dynamic_qr/{{ product.product_code }}.png"
                             class="qr-thumb"
                             alt="QR">
 

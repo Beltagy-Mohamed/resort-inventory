@@ -45,8 +45,8 @@
             <i class="bi bi-qr-code" aria-hidden="true"></i>
         </div>
 
-        {% if product.qr_code %}
-            <img src="{{ product.qr_code.url }}" alt="QR Code">
+        {% if True %}
+            <img src="/media/dynamic_qr/{{ product.product_code }}.png" alt="QR Code">
         {% else %}
             <div class="qr-placeholder">
                 <i class="bi bi-box-seam" aria-hidden="true"></i>

@@ -2,6 +2,9 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    path("media/dynamic_qr/<str:product_code>.png", media.dynamic_qr, name="dynamic_qr"),
+    path("media/dynamic_barcode/<str:product_code>.png", media.dynamic_barcode, name="dynamic_barcode"),
+
 
     # Dashboard
     path(

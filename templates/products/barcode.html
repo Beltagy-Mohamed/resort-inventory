@@ -22,7 +22,7 @@
 
     <div class="product-code">{{ product.product_code }}</div>
 
-    <img src="{{ product.barcode.url }}" alt="Barcode" class="barcode-img">
+    <img src="/media/dynamic_barcode/{{ product.product_code }}.png" alt="Barcode" class="barcode-img">
 
     <button class="print-btn" onclick="window.print()">
         {% trans "Print Barcode" %}

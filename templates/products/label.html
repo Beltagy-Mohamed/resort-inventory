@@ -28,12 +28,12 @@
 
     <div class="print-codes-row">
 
-        {% if product.barcode %}
-        <img src="{{ product.barcode.url }}" alt="Barcode" class="barcode-img">
+        {% if True %}
+        <img src="/media/dynamic_barcode/{{ product.product_code }}.png" alt="Barcode" class="barcode-img">
         {% endif %}
 
-        {% if product.qr_code %}
-        <img src="{{ product.qr_code.url }}" alt="QR Code" class="qr-img">
+        {% if True %}
+        <img src="/media/dynamic_qr/{{ product.product_code }}.png" alt="QR Code" class="qr-img">
         {% endif %}
 
     </div>

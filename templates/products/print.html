@@ -22,7 +22,7 @@
 
     <div class="product-code">{{ product.product_code }}</div>
 
-    <img src="{{ product.qr_code.url }}" alt="QR" class="qr-img">
+    <img src="/media/dynamic_qr/{{ product.product_code }}.png" alt="QR" class="qr-img">
 
     <div class="print-info">
         {% trans "Price" %}: <strong>{{ product.price }} {{ system_settings.currency }}</strong>
