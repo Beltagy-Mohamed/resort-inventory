@@ -456,17 +456,21 @@
 
     <div class="quick-actions">
 
+        {% if perms.inventory.add_product %}
         <a href="{% url 'add_product' %}" class="quick-btn">
             ➕ {% trans "Add Product" %}
         </a>
+        {% endif %}
 
         <a href="{% url 'transactions_list' %}" class="quick-btn">
             🔄 {% trans "Inventory transactions" %}
         </a>
 
+        {% if perms.inventory.view_inventorytransaction %}
         <a href="{% url 'inventory_report' %}" class="quick-btn">
             📈 {% trans "Inventory Report" %}
         </a>
+        {% endif %}
 
         <a href="{% url 'low_stock_products' %}" class="quick-btn">
             ⚠ {% trans "Low Stock" %}

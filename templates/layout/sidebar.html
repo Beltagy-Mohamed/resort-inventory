@@ -103,10 +103,12 @@
         <i class="bi bi-box-seam" aria-hidden="true"></i>
         <span>{% trans "Products" %}</span>
     </a>
+    {% if perms.inventory.add_product %}
     <a href="{% url 'add_product' %}" class="{% if request.resolver_match.url_name == 'add_product' %}active{% endif %}">
         <i class="bi bi-plus-circle" aria-hidden="true"></i>
         <span>{% trans "Add" %}</span>
     </a>
+    {% endif %}
     <a href="{% url 'transactions_list' %}" class="{% if request.resolver_match.url_name == 'transactions_list' %}active{% endif %}">
         <i class="bi bi-arrow-left-right" aria-hidden="true"></i>
         <span>{% trans "Transactions" %}</span>
