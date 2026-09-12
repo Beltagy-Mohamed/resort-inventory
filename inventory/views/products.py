@@ -100,6 +100,16 @@ def add_product(request):
             QRService.generate(product)
             BarcodeService.generate(product)
 
+            # Create initial stock transaction if quantity > 0
+            if product.quantity > 0:
+                from inventory.models import InventoryTransaction
+                InventoryTransaction.objects.create(
+                    product=product,
+                    transaction_type='IN',
+                    quantity=product.quantity,
+                    reference='رصيد افتتاحي (عند الإضافة)'
+                )
+
             messages.success(
             request,
             "تم إضافة المنتج بنجاح."
