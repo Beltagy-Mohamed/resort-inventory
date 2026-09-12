@@ -100,13 +100,9 @@
 
 <tr>
 
-<td style="background:red;color:white;">
-    {{ t.product.name }}
-</td>
-
-<td style="background:blue;color:white;">
-    {{ t.product.product_code }}
-</td>
+<td data-label="{% trans 'Product' %}">{{ t.product.name }}</td>
+<td data-label="{% trans 'User' %}">{% if t.user %}{{ t.user.username }}{% else %}-{% endif %}</td>
+<td data-label="{% trans 'Code' %}">{{ t.product.product_code }}</td>
 <td>{{ t.get_transaction_type_display }}</td>
 
 <td>{{ t.quantity }}</td>
@@ -119,7 +115,7 @@
 
 <tr>
 
-<td colspan="5">
+<td colspan="6">
 
 {% trans "No transactions" %}
 

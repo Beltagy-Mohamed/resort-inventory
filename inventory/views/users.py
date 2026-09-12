@@ -3,7 +3,7 @@ from django.contrib.auth.models import User, Permission
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib import messages
 from django.contrib.contenttypes.models import ContentType
-from inventory.models import Product, InventoryTransaction
+from inventory.models import Product, InventoryTransaction, Category, Color, Size
 from inventory.forms import CustomUserCreationForm, CustomUserEditForm
 
 def superuser_required(user):
@@ -20,12 +20,24 @@ def assign_permissions(user, cleaned_data):
     # We assign standard django permissions based on checkboxes
     prod_ct = ContentType.objects.get_for_model(Product)
     trans_ct = ContentType.objects.get_for_model(InventoryTransaction)
+    cat_ct = ContentType.objects.get_for_model(Category)
+    col_ct = ContentType.objects.get_for_model(Color)
+    size_ct = ContentType.objects.get_for_model(Size)
     
     if cleaned_data.get('perm_inventory'):
         user.user_permissions.add(
             Permission.objects.get(content_type=prod_ct, codename='add_product'),
             Permission.objects.get(content_type=prod_ct, codename='change_product'),
-            Permission.objects.get(content_type=prod_ct, codename='view_product')
+            Permission.objects.get(content_type=prod_ct, codename='view_product'),
+            Permission.objects.get(content_type=cat_ct, codename='add_category'),
+            Permission.objects.get(content_type=cat_ct, codename='change_category'),
+            Permission.objects.get(content_type=cat_ct, codename='view_category'),
+            Permission.objects.get(content_type=col_ct, codename='add_color'),
+            Permission.objects.get(content_type=col_ct, codename='change_color'),
+            Permission.objects.get(content_type=col_ct, codename='view_color'),
+            Permission.objects.get(content_type=size_ct, codename='add_size'),
+            Permission.objects.get(content_type=size_ct, codename='change_size'),
+            Permission.objects.get(content_type=size_ct, codename='view_size')
         )
     if cleaned_data.get('perm_sales'):
         user.user_permissions.add(
@@ -36,7 +48,10 @@ def assign_permissions(user, cleaned_data):
     if cleaned_data.get('perm_delete'):
         user.user_permissions.add(
             Permission.objects.get(content_type=prod_ct, codename='delete_product'),
-            Permission.objects.get(content_type=trans_ct, codename='delete_inventorytransaction')
+            Permission.objects.get(content_type=trans_ct, codename='delete_inventorytransaction'),
+            Permission.objects.get(content_type=cat_ct, codename='delete_category'),
+            Permission.objects.get(content_type=col_ct, codename='delete_color'),
+            Permission.objects.get(content_type=size_ct, codename='delete_size')
         )
     # perm_reports can be a custom permission or just mapped to viewing reports.
     # We can just check user.has_perm('inventory.view_inventorytransaction') for reports, 
