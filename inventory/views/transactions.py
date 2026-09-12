@@ -45,12 +45,13 @@ def transactions_list(request):
     if transaction_type:
         transactions = transactions.filter(transaction_type=transaction_type)
         
-    if month_filter:
-        try:
-            year, month = month_filter.split("-")
-            transactions = transactions.filter(created_at__year=year, created_at__month=month)
-        except ValueError:
-            pass
+    year_filter = request.GET.get("year_filter", "")
+    
+    if month_filter and month_filter.isdigit():
+        transactions = transactions.filter(created_at__month=int(month_filter))
+    
+    if year_filter and year_filter.isdigit():
+        transactions = transactions.filter(created_at__year=int(year_filter))
 
     transactions = transactions.order_by("-created_at")
 
@@ -73,7 +74,10 @@ def transactions_list(request):
             "page_obj": page_obj,
             "search": search,
             "transaction_type": transaction_type,
-            "month_filter": month_filter,
+            "month_filter": int(month_filter) if month_filter.isdigit() else "",
+            "year_filter": int(year_filter) if year_filter.isdigit() else "",
+            "months": [(1, "يناير"), (2, "فبراير"), (3, "مارس"), (4, "أبريل"), (5, "مايو"), (6, "يونيو"), (7, "يوليو"), (8, "أغسطس"), (9, "سبتمبر"), (10, "أكتوبر"), (11, "نوفمبر"), (12, "ديسمبر")],
+            "years": range(2025, 2035),
         }
 
     )

@@ -60,6 +60,21 @@
             <span class="label">{% trans "Inventory Report" %}</span>
         </a>
 
+        <a href="{% url 'warehouse_stock_report' %}" class="{% if request.resolver_match.url_name == 'warehouse_stock_report' %}active{% endif %}">
+            <i class="bi bi-building"></i>
+            <span class="label">جرد المخازن التفصيلي</span>
+        </a>
+
+        <a href="{% url 'partner_statement_report' %}" class="{% if request.resolver_match.url_name == 'partner_statement_report' %}active{% endif %}">
+            <i class="bi bi-person-lines-fill"></i>
+            <span class="label">كشف حساب الجهات</span>
+        </a>
+
+        <a href="{% url 'profit_report' %}" class="{% if request.resolver_match.url_name == 'profit_report' %}active{% endif %}">
+            <i class="bi bi-graph-up-arrow"></i>
+            <span class="label">تقرير الأرباح والمبيعات</span>
+        </a>
+
         <a href="{% url 'low_stock_products' %}" class="{% if request.resolver_match.url_name == 'low_stock_products' %}active{% endif %}">
             <i class="bi bi-exclamation-triangle"></i>
             <span class="label">{% trans "Low Stock" %}</span>

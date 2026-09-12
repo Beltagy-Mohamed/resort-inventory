@@ -62,7 +62,18 @@
 
         </select>
 
-        <input type="month" name="month_filter" value="{{ month_filter }}" title="{% trans 'Select Month' %}" style="min-width: 170px;">
+        <select name="month_filter" class="form-control" style="min-width: 120px;">
+            <option value="">-- الشهر --</option>
+            {% for m_id, m_name in months %}
+            <option value="{{ m_id }}" {% if month_filter == m_id %}selected{% endif %}>{{ m_name }}</option>
+            {% endfor %}
+        </select>
+        <select name="year_filter" class="form-control" style="min-width: 100px;">
+            <option value="">-- السنة --</option>
+            {% for y in years %}
+            <option value="{{ y }}" {% if year_filter == y %}selected{% endif %}>{{ y }}</option>
+            {% endfor %}
+        </select>
         <button class="btn-save">
             {% trans "Search" %}
         </button>
@@ -84,7 +95,8 @@
 <th>{% trans "Code" %}</th>
 
 <th>{% trans "Type" %}</th>
-
+<th>الجهة</th>
+<th>المخزن</th>
 <th>{% trans "Quantity" %}</th>
 
 <th>{% trans "Date" %}</th>
@@ -102,9 +114,10 @@
 <td data-label="{% trans 'Product' %}">{{ t.product.name }}</td>
 <td data-label="{% trans 'User' %}">{% if t.user %}{{ t.user.username }}{% else %}-{% endif %}</td>
 <td data-label="{% trans 'Code' %}">{{ t.product.product_code }}</td>
-<td>{{ t.get_transaction_type_display }}</td>
-
-<td>{{ t.quantity }}</td>
+<td data-label="{% trans 'Type' %}">{{ t.get_transaction_type_display }}</td>
+<td data-label="الجهة">{% if t.partner %}{{ t.partner.name }}{% else %}-{% endif %}</td>
+<td data-label="المخزن">{% if t.warehouse %}{{ t.warehouse.name }}{% else %}-{% endif %}</td>
+<td data-label="{% trans 'Quantity' %}">{{ t.quantity }}</td>
 
 <td>{{ t.created_at|date:"Y-m-d H:i" }}</td>
 
@@ -114,7 +127,7 @@
 
 <tr>
 
-<td colspan="6">
+<td colspan="8">
 
 {% trans "No transactions" %}
 

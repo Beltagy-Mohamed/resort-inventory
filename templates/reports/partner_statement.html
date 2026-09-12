@@ -20,7 +20,18 @@
             <option value="{{ p.id }}" {% if selected_partner == p.id %}selected{% endif %}>{{ p.name }} ({{ p.get_partner_type_display }})</option>
             {% endfor %}
         </select>
-        <input type="month" name="month_filter" value="{{ month_filter }}" class="form-control" style="min-width: 170px;">
+        <select name="month_filter" class="form-control" style="min-width: 120px;">
+            <option value="">-- الشهر --</option>
+            {% for m_id, m_name in months %}
+            <option value="{{ m_id }}" {% if month_filter == m_id %}selected{% endif %}>{{ m_name }}</option>
+            {% endfor %}
+        </select>
+        <select name="year_filter" class="form-control" style="min-width: 100px;">
+            <option value="">-- السنة --</option>
+            {% for y in years %}
+            <option value="{{ y }}" {% if year_filter == y %}selected{% endif %}>{{ y }}</option>
+            {% endfor %}
+        </select>
         <button type="submit" class="btn-primary" style="padding: 10px 15px; background: #3A5457; color: white; border: none; border-radius: 4px;">بحث</button>
     </form>
 </div>
