@@ -1,0 +1,66 @@
+{% extends "layout/base.html" %}
+{% load static %}
+
+{% block title %}كشف حساب جهة تعامل{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/products.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>كشف حساب جهة تعامل (مورد / عميل)</h1>
+</div>
+
+<div class="search-bar">
+    <form method="get">
+        <select name="partner_id" class="form-control" style="min-width: 200px;" required>
+            <option value="">-- اختر الجهة --</option>
+            {% for p in partners %}
+            <option value="{{ p.id }}" {% if selected_partner == p.id %}selected{% endif %}>{{ p.name }} ({{ p.get_partner_type_display }})</option>
+            {% endfor %}
+        </select>
+        <input type="month" name="month_filter" value="{{ month_filter }}" class="form-control" style="min-width: 170px;">
+        <button type="submit" class="btn-primary" style="padding: 10px 15px; background: #3A5457; color: white; border: none; border-radius: 4px;">بحث</button>
+    </form>
+</div>
+
+{% if selected_partner %}
+<div class="table-responsive">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>التاريخ</th>
+                <th>نوع الحركة</th>
+                <th>المنتج</th>
+                <th>الكمية</th>
+                <th>سعر الوحدة</th>
+                <th>الإجمالي</th>
+                <th>المخزن</th>
+                <th>ملاحظات</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for trans in transactions %}
+            <tr>
+                <td>{{ trans.created_at|date:"Y-m-d H:i" }}</td>
+                <td>{{ trans.get_transaction_type_display }}</td>
+                <td>{{ trans.product.name }}</td>
+                <td>{{ trans.quantity }}</td>
+                <td>{{ trans.unit_price }}</td>
+                <td>{% widthratio trans.unit_price 1 trans.quantity %}</td>
+                <td>{{ trans.warehouse.name|default:"-" }}</td>
+                <td>{{ trans.notes|default:"-" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="8" style="text-align: center;">لا توجد حركات لهذه الجهة في الفترة المحددة</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<p style="text-align: center; margin-top: 50px;">يرجى اختيار جهة تعامل للبدء</p>
+{% endif %}
+{% endblock %}

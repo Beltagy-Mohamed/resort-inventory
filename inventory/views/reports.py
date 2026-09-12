@@ -33,7 +33,7 @@ def inventory_report(request):
     elif status == "out":
         products = products.filter(quantity=0)
 
-    products = products.annotate(total_value=F("price") * F("quantity")).order_by("-id")
+    products = products.annotate(total_value=F("cost_price") * F("quantity")).order_by("-id")
     products_list = list(products)
 
     total_quantity = sum(p.quantity for p in products_list)
@@ -76,7 +76,7 @@ def inventory_report(request):
                 p.product_code,
                 p.name,
                 p.category.name if p.category else 'بدون تصنيف',
-                float(p.price),
+                float(p.cost_price),
                 p.quantity,
                 p.minimum_stock,
                 p.stock_status_text,

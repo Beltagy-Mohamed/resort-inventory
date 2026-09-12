@@ -1,0 +1,57 @@
+{% extends "layout/base.html" %}
+{% load static %}
+
+{% block title %}جرد المخازن التفصيلي{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/products.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>جرد المخازن التفصيلي</h1>
+</div>
+
+<div class="search-bar">
+    <form method="get">
+        <select name="warehouse_id" class="form-control" style="min-width: 200px;">
+            <option value="">-- كل المخازن --</option>
+            {% for w in warehouses %}
+            <option value="{{ w.id }}" {% if selected_warehouse == w.id %}selected{% endif %}>{{ w.name }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="btn-primary" style="padding: 10px 15px; background: #3A5457; color: white; border: none; border-radius: 4px;">بحث</button>
+    </form>
+</div>
+
+<div class="table-responsive">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>المخزن</th>
+                <th>كود المنتج</th>
+                <th>اسم المنتج</th>
+                <th>الكمية المتاحة</th>
+                <th>سعر التكلفة</th>
+                <th>سعر البيع</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for stock in stocks %}
+            <tr>
+                <td>{{ stock.warehouse.name }}</td>
+                <td>{{ stock.product.product_code }}</td>
+                <td>{{ stock.product.name }}</td>
+                <td>{{ stock.quantity }}</td>
+                <td>{{ stock.product.cost_price }}</td>
+                <td>{{ stock.product.selling_price }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" style="text-align: center;">لا توجد أرصدة مطابقة للبحث</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

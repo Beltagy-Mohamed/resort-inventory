@@ -176,7 +176,23 @@ path(
         views.add_transaction,
         name="add_transaction"
     ),
-    path(
+    
+path(
+    "reports/warehouse-stock/",
+    views.warehouse_stock_report,
+    name="warehouse_stock_report",
+),
+path(
+    "reports/partner-statement/",
+    views.partner_statement_report,
+    name="partner_statement_report",
+),
+path(
+    "reports/profit/",
+    views.profit_report,
+    name="profit_report",
+),
+path(
     "reports/inventory/",
     views.inventory_report,
     name="inventory_report",
