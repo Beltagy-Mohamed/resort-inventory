@@ -3,6 +3,14 @@ from . import views
 from inventory.views import media
 
 urlpatterns = [
+    # ===========================
+    # Users & Permissions
+    # ===========================
+    path('users/', views.users_list, name='users_list'),
+    path('users/add/', views.add_user, name='add_user'),
+    path('users/<int:pk>/edit/', views.edit_user, name='edit_user'),
+    path('users/<int:pk>/delete/', views.delete_user, name='delete_user'),
+
     path("media/dynamic_qr/<str:product_code>.png", media.dynamic_qr, name="dynamic_qr"),
     path("media/dynamic_barcode/<str:product_code>.png", media.dynamic_barcode, name="dynamic_barcode"),
 

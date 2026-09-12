@@ -204,3 +204,63 @@ class SystemSettingsForm(forms.ModelForm):
                 attrs={"class": "form-control", "placeholder": "مثال: EGP"}
             ),
         }
+
+
+from django.contrib.auth.models import User
+from django import forms
+
+class CustomUserCreationForm(forms.ModelForm):
+    password = forms.CharField(label='كلمة المرور', widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    first_name = forms.CharField(label='الاسم الأول', max_length=30, required=False, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    last_name = forms.CharField(label='الاسم العائلة', max_length=30, required=False, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    
+    perm_inventory = forms.BooleanField(label='إدارة المخزون (إضافة/تعديل المنتجات)', required=False, widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}))
+    perm_sales = forms.BooleanField(label='إدارة المبيعات (حركات مخزنية)', required=False, widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}))
+    perm_reports = forms.BooleanField(label='التقارير (رؤية الأرباح وتقارير الجرد)', required=False, widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}))
+    perm_delete = forms.BooleanField(label='صلاحية الحذف (حذف المنتجات والحركات)', required=False, widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}))
+
+    class Meta:
+        model = User
+        fields = ('username', 'password', 'first_name', 'last_name')
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            if not isinstance(field.widget, forms.CheckboxInput):
+                field.widget.attrs.update({'class': 'form-control'})
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.set_password(self.cleaned_data['password'])
+        if commit:
+            user.save()
+        return user
+
+class CustomUserEditForm(forms.ModelForm):
+    password = forms.CharField(label='تغيير كلمة المرور (اتركه فارغاً للإبقاء عليها)', required=False, widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    first_name = forms.CharField(max_length=30, required=False, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    last_name = forms.CharField(max_length=30, required=False, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    is_active = forms.BooleanField(label='نشط (يمكنه تسجيل الدخول)', required=False, widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}))
+    
+    perm_inventory = forms.BooleanField(label='إدارة المخزون (إضافة/تعديل المنتجات)', required=False, widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}))
+    perm_sales = forms.BooleanField(label='إدارة المبيعات (حركات مخزنية)', required=False, widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}))
+    perm_reports = forms.BooleanField(label='التقارير (رؤية الأرباح وتقارير الجرد)', required=False, widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}))
+    perm_delete = forms.BooleanField(label='صلاحية الحذف (حذف المنتجات والحركات)', required=False, widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}))
+
+    class Meta:
+        model = User
+        fields = ('username', 'first_name', 'last_name', 'is_active')
+        
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            if not isinstance(field.widget, forms.CheckboxInput):
+                field.widget.attrs.update({'class': 'form-control'})
+                
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        if self.cleaned_data.get('password'):
+            user.set_password(self.cleaned_data['password'])
+        if commit:
+            user.save()
+        return user
