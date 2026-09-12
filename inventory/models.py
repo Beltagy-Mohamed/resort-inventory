@@ -182,6 +182,7 @@ class Product(models.Model):
 
 
 class InventoryTransaction(models.Model):
+    user = models.ForeignKey("auth.User", on_delete=models.SET_NULL, null=True, blank=True, verbose_name="المستخدم")
 
     TRANSACTION_TYPES = [
 
@@ -235,6 +236,7 @@ class InventoryTransaction(models.Model):
 
 
 class ActivityLog(models.Model):
+    user = models.ForeignKey("auth.User", on_delete=models.SET_NULL, null=True, blank=True, verbose_name="المستخدم")
 
     ACTIONS = [
 

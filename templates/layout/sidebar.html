@@ -45,10 +45,12 @@
             <span class="label">{% trans "Sizes" %}</span>
         </a>
 
+        {% if perms.inventory.view_inventorytransaction %}
         <a href="{% url 'transactions_list' %}" class="{% if request.resolver_match.url_name == 'transactions_list' or request.resolver_match.url_name == 'add_transaction' %}active{% endif %}">
             <i class="bi bi-arrow-left-right"></i>
             <span class="label">{% trans "Transactions" %}</span>
         </a>
+        {% endif %}
 
         {% if perms.inventory.view_inventorytransaction %}
         <h5>{% trans "Reports" %}</h5>
@@ -63,10 +65,12 @@
             <span class="label">{% trans "Low Stock" %}</span>
         </a>
 
+        {% if user.is_superuser %}
         <a href="{% url 'activity_logs' %}" class="{% if request.resolver_match.url_name == 'activity_logs' %}active{% endif %}">
             <i class="bi bi-clock-history"></i>
             <span class="label">{% trans "Activity Log" %}</span>
         </a>
+        {% endif %}
         {% endif %}
 
         <h5>{% trans "Management" %}</h5>
@@ -109,10 +113,12 @@
         <span>{% trans "Add" %}</span>
     </a>
     {% endif %}
+    {% if perms.inventory.view_inventorytransaction %}
     <a href="{% url 'transactions_list' %}" class="{% if request.resolver_match.url_name == 'transactions_list' %}active{% endif %}">
         <i class="bi bi-arrow-left-right" aria-hidden="true"></i>
         <span>{% trans "Transactions" %}</span>
     </a>
+    {% endif %}
     {% if user.is_superuser %}
     <a href="{% url 'system_settings' %}" class="{% if request.resolver_match.url_name == 'system_settings' %}active{% endif %}">
         <i class="bi bi-three-dots" aria-hidden="true"></i>

@@ -1,13 +1,19 @@
-from django.db.models.signals import post_save, post_delete
+from django.db.models.signals import pre_save, post_save, post_delete
 from django.dispatch import receiver
 from django.contrib.auth.models import User
 from .models import Category, Color, Size, Product, InventoryTransaction, ActivityLog
 
+from .middleware import get_current_user
+
 def log_activity(action, desc, product=None):
+    user = get_current_user()
+    if user and not user.is_authenticated:
+        user = None
     ActivityLog.objects.create(
         action=action,
         description=desc,
-        product=product
+        product=product,
+        user=user
     )
 
 # --- Category ---
@@ -86,3 +92,10 @@ def transaction_saved(sender, instance, created, **kwargs):
 def transaction_deleted(sender, instance, **kwargs):
     action_type = instance.transaction_type
     log_activity('DELETE', f'تم حذف حركة مخزنية ({action_type}) للمنتج {instance.product.name}')
+
+@receiver(pre_save, sender=InventoryTransaction)
+def transaction_pre_save(sender, instance, **kwargs):
+    if not instance.user_id:
+        user = get_current_user()
+        if user and user.is_authenticated:
+            instance.user = user

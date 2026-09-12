@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.decorators import login_required, permission_required, permission_required
 from django.core.exceptions import ValidationError
 from django.core.paginator import Paginator
 from django.db.models import Q
@@ -22,6 +22,7 @@ from ..models import InventoryTransaction
 
 
 @login_required
+@permission_required("inventory.view_inventorytransaction", raise_exception=True)
 def transactions_list(request):
 
     search = request.GET.get("search", "")

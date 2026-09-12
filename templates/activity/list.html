@@ -20,6 +20,7 @@
         <tr>
 
             <th>{% trans "Time" %}</th>
+            <th>{% trans "User" %}</th>
 
             <th>{% trans "Action" %}</th>
 
@@ -38,6 +39,7 @@
         <tr>
 
             <td data-label="{% trans 'Date' %}">{{ log.created_at|date:"Y-m-d H:i" }}</td>
+            <td data-label="المستخدم">{% if log.user %}{{ log.user.username }}{% else %}-{% endif %}</td>
 
             <td>{{ log.get_action_display }}</td>
 
@@ -63,7 +65,7 @@
 
         <tr>
 
-            <td colspan="4">
+            <td colspan="5">
 
                 {% trans "No activity" %}
 
