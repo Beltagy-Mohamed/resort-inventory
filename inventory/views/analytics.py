@@ -29,10 +29,10 @@ def partner_statement_report(request):
     
     transactions = InventoryTransaction.objects.select_related("product", "partner", "warehouse").none()
     
+    year_filter = request.GET.get("year_filter", "")
+    
     if partner_id:
         transactions = InventoryTransaction.objects.select_related("product", "partner", "warehouse").filter(partner_id=partner_id)
-        
-        year_filter = request.GET.get("year_filter", "")
         if month_filter and month_filter.isdigit():
             transactions = transactions.filter(created_at__month=int(month_filter))
         if year_filter and year_filter.isdigit():
@@ -79,7 +79,10 @@ def profit_report(request):
     
     context = {
         "transactions": transactions,
-        "month_filter": month_filter,
+        "month_filter": int(month_filter) if month_filter.isdigit() else "",
+        "year_filter": int(year_filter) if year_filter.isdigit() else "",
+        "months": [(1, "يناير"), (2, "فبراير"), (3, "مارس"), (4, "أبريل"), (5, "مايو"), (6, "يونيو"), (7, "يوليو"), (8, "أغسطس"), (9, "سبتمبر"), (10, "أكتوبر"), (11, "نوفمبر"), (12, "ديسمبر")],
+        "years": range(2025, 2035),
         "total_profit": total_profit,
         "total_sales": total_sales,
         "total_cost": total_cost,
