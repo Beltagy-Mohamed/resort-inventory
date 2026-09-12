@@ -1,69 +1,73 @@
 {% extends 'layout/base.html' %}
-{% load i18n %}
+{% load i18n static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/products.css' %}">
+{% endblock %}
 
 {% block title %}المستخدمون والصلاحيات{% endblock %}
 
 {% block content %}
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="mb-0">المستخدمون والصلاحيات</h2>
-    <a href="{% url 'add_user' %}" class="btn btn-primary">
+<div class="page-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+    <h1 style="margin: 0;">المستخدمون والصلاحيات</h1>
+    <a href="{% url 'add_user' %}" class="btn-save" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
         <i class="bi bi-person-plus"></i> إضافة موظف
     </a>
 </div>
 
-<div class="card shadow-sm">
-    <div class="table-responsive">
-        <table class="table table-hover align-middle mb-0 global-table">
-            <thead class="table-light">
-                <tr>
-                    <th>اسم المستخدم</th>
-                    <th>الاسم الكامل</th>
-                    <th>حالة الحساب</th>
-                    <th>مدير نظام؟</th>
-                    <th>الإجراءات</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for u in users %}
-                <tr>
-                    <td data-label="اسم المستخدم">
-                        <strong>{{ u.username }}</strong>
-                    </td>
-                    <td data-label="الاسم الكامل">
-                        {{ u.first_name }} {{ u.last_name }}
-                    </td>
-                    <td data-label="حالة الحساب">
-                        {% if u.is_active %}
-                            <span class="badge bg-success">نشط</span>
-                        {% else %}
-                            <span class="badge bg-danger">موقوف</span>
-                        {% endif %}
-                    </td>
-                    <td data-label="مدير نظام؟">
-                        {% if u.is_superuser %}
-                            <i class="bi bi-check-circle-fill text-primary"></i> نعم
-                        {% else %}
-                            <i class="bi bi-x-circle text-secondary"></i> لا
-                        {% endif %}
-                    </td>
-                    <td data-label="الإجراءات">
-                        <a href="{% url 'edit_user' u.id %}" class="btn btn-sm btn-outline-secondary">
-                            <i class="bi bi-pencil"></i> تعديل
-                        </a>
-                        {% if not u.is_superuser %}
-                        <a href="{% url 'delete_user' u.id %}" class="btn btn-sm btn-outline-danger" onclick="return confirm('هل أنت متأكد من إيقاف/حذف هذا الموظف؟')">
-                            <i class="bi bi-trash"></i> حذف
-                        </a>
-                        {% endif %}
-                    </td>
-                </tr>
-                {% empty %}
-                <tr>
-                    <td colspan="5" class="text-center py-4 text-muted">لا يوجد مستخدمين.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+<div class="table-container">
+    <table class="products-table">
+        <thead>
+            <tr>
+                <th>اسم المستخدم</th>
+                <th>الاسم الكامل</th>
+                <th>حالة الحساب</th>
+                <th>مدير نظام؟</th>
+                <th style="text-align: center;">الإجراءات</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for u in users %}
+            <tr>
+                <td data-label="اسم المستخدم">
+                    <strong>{{ u.username }}</strong>
+                </td>
+                <td data-label="الاسم الكامل">
+                    {{ u.first_name }} {{ u.last_name }}
+                </td>
+                <td data-label="حالة الحساب">
+                    {% if u.is_active %}
+                        <span class="badge badge-success">نشط</span>
+                    {% else %}
+                        <span class="badge badge-danger">موقوف</span>
+                    {% endif %}
+                </td>
+                <td data-label="مدير نظام؟">
+                    {% if u.is_superuser %}
+                        <i class="bi bi-check-circle-fill" style="color: #059669;"></i> نعم
+                    {% else %}
+                        <i class="bi bi-x-circle" style="color: #6b7280;"></i> لا
+                    {% endif %}
+                </td>
+                <td data-label="الإجراءات" style="text-align: center;">
+                    <a href="{% url 'edit_user' u.id %}" class="action-btn" title="تعديل">
+                        <i class="bi bi-pencil-square"></i> تعديل
+                    </a>
+                    {% if not u.is_superuser %}
+                    <a href="{% url 'delete_user' u.id %}" class="action-btn" title="إيقاف/حذف" onclick="return confirm('هل أنت متأكد من إيقاف/حذف هذا الموظف؟')" style="color: #dc2626;">
+                        <i class="bi bi-trash3"></i> حذف
+                    </a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="5" style="text-align: center; padding: 40px; color: var(--ink-text-muted);">
+                    لا يوجد مستخدمين.
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 {% endblock %}

@@ -96,15 +96,7 @@ def add_product(request):
             product.product_code = CodeGenerator.generate()
 
             product.save()
-            ActivityLog.objects.create(
-
-    action="ADD",
-
-    product=product,
-
-    description=f"تم إضافة {product.name}"
-
-)
+            pass
             QRService.generate(product)
             BarcodeService.generate(product)
 
@@ -146,15 +138,7 @@ def edit_product(request, product_code):
         if form.is_valid():
 
             form.save()
-            ActivityLog.objects.create(
-
-    action="EDIT",
-
-    product=product,
-
-    description=f"تم تعديل {product.name}"
-
-)
+            pass
             messages.success(
                 request,
                 "تم تعديل المنتج بنجاح."
@@ -189,13 +173,7 @@ def delete_product(request, product_code):
 
     if request.method == "POST":
        
-        ActivityLog.objects.create(
-
-    action="DELETE",
-
-    description=f"تم حذف {product.name}"
-
-)
+        pass
         product.delete()
 
         messages.success(
