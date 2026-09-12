@@ -27,8 +27,7 @@ def transactions_list(request):
 
     search = request.GET.get("search", "")
     transaction_type = request.GET.get("type", "")
-    date_from = request.GET.get("date_from", "")
-    date_to = request.GET.get("date_to", "")
+    month_filter = request.GET.get("month_filter", "")
 
     transactions = InventoryTransaction.objects.select_related(
         "product"
@@ -46,11 +45,12 @@ def transactions_list(request):
     if transaction_type:
         transactions = transactions.filter(transaction_type=transaction_type)
         
-    if date_from:
-        transactions = transactions.filter(created_at__date__gte=date_from)
-        
-    if date_to:
-        transactions = transactions.filter(created_at__date__lte=date_to)
+    if month_filter:
+        try:
+            year, month = month_filter.split("-")
+            transactions = transactions.filter(created_at__year=year, created_at__month=month)
+        except ValueError:
+            pass
 
     transactions = transactions.order_by("-created_at")
 
@@ -73,8 +73,7 @@ def transactions_list(request):
             "page_obj": page_obj,
             "search": search,
             "transaction_type": transaction_type,
-            "date_from": date_from,
-            "date_to": date_to,
+            "month_filter": month_filter,
         }
 
     )

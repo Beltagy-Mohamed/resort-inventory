@@ -62,8 +62,7 @@
 
         </select>
 
-        <input type="date" name="date_from" value="{{ date_from }}" title="من تاريخ">
-        <input type="date" name="date_to" value="{{ date_to }}" title="إلى تاريخ">
+        <input type="month" name="month_filter" value="{{ month_filter }}" title="{% trans 'Select Month' %}" style="min-width: 170px;">
         <button class="btn-save">
             {% trans "Search" %}
         </button>
