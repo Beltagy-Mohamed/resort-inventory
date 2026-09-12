@@ -80,7 +80,7 @@
 
             <th>{% trans "Category" %}</th>
 
-            <th>{% trans "Price" %}</th>
+            <th>سعر الشراء</th><th>سعر البيع</th>
 
             <th>{% trans "Quantity" %}</th>
 
@@ -122,7 +122,8 @@
 
             <td data-label="{% trans 'Category' %}">{{ product.category }}</td>
 
-            <td data-label="{% trans 'Price' %}">{{ product.price }} {{ system_settings.currency }}</td>
+            <td data-label="سعر الشراء">{{ product.cost_price }} {{ system_settings.currency }}</td>
+<td data-label="سعر البيع">{{ product.selling_price }} {{ system_settings.currency }}</td>
 
             <td data-label="{% trans 'Quantity' %}">{{ product.quantity }}</td>
 

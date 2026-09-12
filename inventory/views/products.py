@@ -102,13 +102,19 @@ def add_product(request):
 
             # Create initial stock transaction if quantity > 0
             if product.quantity > 0:
-                from inventory.models import InventoryTransaction
-                InventoryTransaction.objects.create(
-                    product=product,
-                    transaction_type='IN',
-                    quantity=product.quantity,
-                    notes='رصيد افتتاحي (عند الإضافة)'
-                )
+                from inventory.models import InventoryTransaction, Warehouse
+                from inventory.services.inventory_service import InventoryService
+                
+                default_warehouse = Warehouse.objects.first()
+                if default_warehouse:
+                    trans = InventoryTransaction(
+                        product=product,
+                        transaction_type='IN',
+                        quantity=product.quantity,
+                        warehouse=default_warehouse,
+                        notes='رصيد افتتاحي (عند الإضافة)'
+                    )
+                    InventoryService.process(trans)
 
             messages.success(
             request,

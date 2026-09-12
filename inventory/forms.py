@@ -17,7 +17,8 @@ class ProductForm(forms.ModelForm):
             "category",
             "color",
             "size",
-            "price",
+            "cost_price",
+            "selling_price",
             "quantity",
             "minimum_stock",
             "description",
@@ -28,7 +29,8 @@ class ProductForm(forms.ModelForm):
             "category": _("Category"),
             "color": _("Color"),
             "size": _("Size"),
-            "price": _("Price"),
+            "cost_price": "سعر الشراء / التكلفة",
+            "selling_price": "سعر البيع / التوريد",
             "quantity": _("Quantity"),
             "description": _("Description"),
             "minimum_stock": _("Minimum stock"),
@@ -47,7 +49,8 @@ class ProductForm(forms.ModelForm):
             "size": forms.Select(
                 attrs={"class": "form-control"}
             ),
-            "price": forms.NumberInput(
+            "cost_price": forms.NumberInput(attrs={"class": "form-control"}),
+            "selling_price": forms.NumberInput(
                 attrs={"class": "form-control"}
             ),
             "quantity": forms.NumberInput(
@@ -119,15 +122,13 @@ class InventoryTransactionForm(forms.ModelForm):
         model = InventoryTransaction
 
         fields = [
-
             "product",
-
+            "warehouse",
+            "partner",
             "transaction_type",
-
             "quantity",
-
+            "unit_price",
             "notes",
-
         ]
 
         widgets = {

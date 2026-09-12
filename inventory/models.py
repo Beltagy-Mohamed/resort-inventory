@@ -84,6 +84,32 @@ class SystemSettings(models.Model):
         return obj
 
 
+
+class Warehouse(models.Model):
+    name = models.CharField(max_length=150, unique=True, verbose_name="اسم المخزن")
+    location = models.CharField(max_length=250, blank=True, null=True, verbose_name="الموقع/العنوان")
+    manager = models.CharField(max_length=150, blank=True, null=True, verbose_name="أمين المخزن")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+
+
+class Partner(models.Model):
+    PARTNER_TYPES = [
+        ("SUPPLIER", "مورد"),
+        ("CLIENT", "عميل / جهة صرف"),
+        ("OTHER", "جهة أخرى"),
+    ]
+    name = models.CharField(max_length=200, verbose_name="اسم الجهة")
+    partner_type = models.CharField(max_length=20, choices=PARTNER_TYPES, default="CLIENT", verbose_name="نوع الجهة")
+    contact_info = models.TextField(blank=True, null=True, verbose_name="بيانات التواصل")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.name} ({self.get_partner_type_display()})"
+
+
 class Product(models.Model):
 
     product_code = models.CharField(
@@ -118,9 +144,18 @@ class Product(models.Model):
         blank=True,
     )
 
-    price = models.DecimalField(
+    cost_price = models.DecimalField(
         max_digits=10,
         decimal_places=2,
+        default=0.00,
+        verbose_name="سعر الشراء/التكلفة"
+    )
+
+    selling_price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0.00,
+        verbose_name="سعر البيع"
     )
 
     quantity = models.PositiveIntegerField(
@@ -181,6 +216,19 @@ class Product(models.Model):
         return self.name
 
 
+
+class Stock(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="stocks")
+    warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE, related_name="stocks")
+    quantity = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        unique_together = ('product', 'warehouse')
+
+    def __str__(self):
+        return f"{self.product.name} in {self.warehouse.name}: {self.quantity}"
+
+
 class InventoryTransaction(models.Model):
     user = models.ForeignKey("auth.User", on_delete=models.SET_NULL, null=True, blank=True, verbose_name="المستخدم")
 
@@ -203,6 +251,28 @@ class InventoryTransaction(models.Model):
     transaction_type = models.CharField(
         max_length=10,
         choices=TRANSACTION_TYPES,
+    )
+
+    warehouse = models.ForeignKey(
+        Warehouse,
+        on_delete=models.CASCADE,
+        related_name="transactions",
+        verbose_name="المخزن",
+    )
+
+    partner = models.ForeignKey(
+        Partner,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        verbose_name="الجهة (المورد / العميل)",
+    )
+
+    unit_price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        default=0.00,
+        verbose_name="السعر وقت الحركة",
     )
 
     quantity = models.PositiveIntegerField()

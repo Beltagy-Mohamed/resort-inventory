@@ -58,7 +58,7 @@ def dashboard(request):
             previous_start = period_start.replace(month=period_start.month - 1)
 
     inventory_value = products.aggregate(
-        total=Sum(F("price") * F("quantity"))
+        total=Sum(F("cost_price") * F("quantity"))
     )["total"] or 0
 
     # One grouped query instead of one .count() per category.
@@ -162,7 +162,7 @@ def dashboard(request):
     category_value_qs = products.values(
         "category__name"
     ).annotate(
-        total=Sum(F("price") * F("quantity"))
+        total=Sum(F("cost_price") * F("quantity"))
     ).order_by("category__name")
 
     top_active_products = Product.objects.filter(
@@ -190,8 +190,8 @@ def dashboard(request):
         "today_transactions": InventoryTransaction.objects.filter(
             created_at__date=today
         ).count(),
-        "average_price": products.aggregate(Avg("price"))["price__avg"] or 0,
-        "most_expensive": products.order_by("-price").first(),
+        "average_price": products.aggregate(Avg("cost_price"))["cost_price__avg"] or 0,
+        "most_expensive": products.order_by("-selling_price").first(),
         "lowest_stock": products.exclude(quantity=0).order_by("quantity").first(),
         "period_transactions": current_transaction_count,
         "previous_transactions": previous_transaction_count,
