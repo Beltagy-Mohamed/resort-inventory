@@ -17,3 +17,11 @@ application = get_wsgi_application()
 
 # Vercel requires 'app' variable
 app = application
+
+
+# Auto-apply migrations on Vercel boot (cold start)
+try:
+    from django.core.management import call_command
+    call_command('migrate', interactive=False)
+except Exception as e:
+    print(f"Migration failed: {e}")
