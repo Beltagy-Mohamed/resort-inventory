@@ -107,7 +107,7 @@ def add_product(request):
                     product=product,
                     transaction_type='IN',
                     quantity=product.quantity,
-                    reference='رصيد افتتاحي (عند الإضافة)'
+                    notes='رصيد افتتاحي (عند الإضافة)'
                 )
 
             messages.success(
