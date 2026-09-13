@@ -828,3 +828,21 @@ msgstr "-- كل الفئات --"
 
 msgid "-- All Status --"
 msgstr "-- كل الحالات --"
+
+msgid "Transactions Count"
+msgstr "عدد الحركات"
+
+msgid "New Transaction"
+msgstr "تسجيل حركة جديدة"
+
+msgid "Main Menu"
+msgstr "القائمة الرئيسية"
+
+msgid "Edit Product"
+msgstr "تعديل المنتج"
+
+msgid "Account Settings"
+msgstr "إعدادات الحساب"
+
+msgid "Product Details"
+msgstr "تفاصيل المنتج"

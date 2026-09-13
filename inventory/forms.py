@@ -55,8 +55,8 @@ class ProductForm(StripWhitespaceMixin, forms.ModelForm):
             "category": _("Category"),
             "color": _("Color"),
             "size": _("Size"),
-            "cost_price": "سعر الشراء / التكلفة",
-            "selling_price": "سعر البيع / التوريد",
+            "cost_price": _("سعر الشراء / التكلفة"),
+            "selling_price": _("سعر البيع / التوريد"),
             "quantity": _("Quantity"),
             "description": _("Description"),
             "minimum_stock": _("Minimum stock"),
@@ -227,8 +227,8 @@ class SystemSettingsForm(forms.ModelForm):
         ]
 
         labels = {
-            "company_name": "اسم الشركة",
-            "currency": "العملة",
+            "company_name": _("اسم الشركة"),
+            "currency": _("العملة"),
         }
 
         widgets = {
@@ -236,7 +236,7 @@ class SystemSettingsForm(forms.ModelForm):
                 attrs={"class": "form-control"}
             ),
             "currency": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "مثال: EGP"}
+                attrs={"class": "form-control", "placeholder": _("مثال: EGP")}
             ),
         }
 
@@ -245,14 +245,14 @@ from django.contrib.auth.models import User
 from django import forms
 
 class CustomUserCreationForm(forms.ModelForm):
-    password = forms.CharField(label='كلمة المرور', widget=forms.PasswordInput(attrs={'class': 'form-control'}))
-    first_name = forms.CharField(label='الاسم الأول', max_length=30, required=False, widget=forms.TextInput(attrs={'class': 'form-control'}))
-    last_name = forms.CharField(label='الاسم العائلة', max_length=30, required=False, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    password = forms.CharField(label=_('كلمة المرور'), widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    first_name = forms.CharField(label=_('الاسم الأول'), max_length=30, required=False, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    last_name = forms.CharField(label=_('الاسم العائلة'), max_length=30, required=False, widget=forms.TextInput(attrs={'class': 'form-control'}))
     
-    perm_inventory = forms.BooleanField(label='إدارة المخزون (إضافة/تعديل المنتجات)', required=False, widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}))
-    perm_sales = forms.BooleanField(label='إدارة المبيعات (حركات مخزنية)', required=False, widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}))
-    perm_reports = forms.BooleanField(label='التقارير (رؤية الأرباح وتقارير الجرد)', required=False, widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}))
-    perm_delete = forms.BooleanField(label='صلاحية الحذف (حذف المنتجات والحركات)', required=False, widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}))
+    perm_inventory = forms.BooleanField(label=_('إدارة المخزون (إضافة/تعديل المنتجات)'), required=False, widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}))
+    perm_sales = forms.BooleanField(label=_('إدارة المبيعات (حركات مخزنية)'), required=False, widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}))
+    perm_reports = forms.BooleanField(label=_('التقارير (رؤية الأرباح وتقارير الجرد)'), required=False, widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}))
+    perm_delete = forms.BooleanField(label=_('صلاحية الحذف (حذف المنتجات والحركات)'), required=False, widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}))
 
     class Meta:
         model = User
@@ -272,15 +272,15 @@ class CustomUserCreationForm(forms.ModelForm):
         return user
 
 class CustomUserEditForm(forms.ModelForm):
-    password = forms.CharField(label='تغيير كلمة المرور (اتركه فارغاً للإبقاء عليها)', required=False, widget=forms.PasswordInput(attrs={'class': 'form-control'}))
+    password = forms.CharField(label=_('تغيير كلمة المرور (اتركه فارغاً للإبقاء عليها)'), required=False, widget=forms.PasswordInput(attrs={'class': 'form-control'}))
     first_name = forms.CharField(max_length=30, required=False, widget=forms.TextInput(attrs={'class': 'form-control'}))
     last_name = forms.CharField(max_length=30, required=False, widget=forms.TextInput(attrs={'class': 'form-control'}))
-    is_active = forms.BooleanField(label='نشط (يمكنه تسجيل الدخول)', required=False, widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}))
+    is_active = forms.BooleanField(label=_('نشط (يمكنه تسجيل الدخول)'), required=False, widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}))
     
-    perm_inventory = forms.BooleanField(label='إدارة المخزون (إضافة/تعديل المنتجات)', required=False, widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}))
-    perm_sales = forms.BooleanField(label='إدارة المبيعات (حركات مخزنية)', required=False, widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}))
-    perm_reports = forms.BooleanField(label='التقارير (رؤية الأرباح وتقارير الجرد)', required=False, widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}))
-    perm_delete = forms.BooleanField(label='صلاحية الحذف (حذف المنتجات والحركات)', required=False, widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}))
+    perm_inventory = forms.BooleanField(label=_('إدارة المخزون (إضافة/تعديل المنتجات)'), required=False, widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}))
+    perm_sales = forms.BooleanField(label=_('إدارة المبيعات (حركات مخزنية)'), required=False, widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}))
+    perm_reports = forms.BooleanField(label=_('التقارير (رؤية الأرباح وتقارير الجرد)'), required=False, widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}))
+    perm_delete = forms.BooleanField(label=_('صلاحية الحذف (حذف المنتجات والحركات)'), required=False, widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}))
 
     class Meta:
         model = User
@@ -306,9 +306,9 @@ class WarehouseForm(StripWhitespaceMixin, forms.ModelForm):
         model = Warehouse
         fields = ["name", "location", "manager"]
         labels = {
-            "name": "اسم المخزن",
-            "location": "الموقع / العنوان",
-            "manager": "أمين المخزن",
+            "name": _("اسم المخزن"),
+            "location": _("الموقع / العنوان"),
+            "manager": _("أمين المخزن"),
         }
 
 
@@ -317,7 +317,7 @@ class PartnerForm(StripWhitespaceMixin, forms.ModelForm):
         model = Partner
         fields = ["name", "partner_type", "contact_info"]
         labels = {
-            "name": "اسم الجهة",
-            "partner_type": "نوع الجهة",
-            "contact_info": "بيانات التواصل (هاتف، عنوان..)",
+            "name": _("اسم الجهة"),
+            "partner_type": _("نوع الجهة"),
+            "contact_info": _("بيانات التواصل (هاتف، عنوان..)"),
         }

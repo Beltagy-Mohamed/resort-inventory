@@ -7,31 +7,31 @@
 {% endblock %}
 {% block content %}
 <div class="page-header">
-    <h1>المخازن</h1>
-    <a href="{% url 'add_warehouse' %}" class="btn-primary">{% trans "Add Warehouse" %}</a>
+    <h1>{% trans 'المخازن' %}</h1>
+    <a href="{% url 'add_warehouse' %}" class="btn-primary">{% trans 'إضافة مخزن جديد' %}</a>
 </div>
 <div class="table-responsive">
     <table class="products-table">
         <thead>
             <tr>
-                <th>الاسم</th>
-                <th>الموقع</th>
-                <th>أمين {% trans "Warehouse" %}</th>
-                <th>إجراءات</th>
+                <th>{% trans 'الاسم' %}</th>
+                <th>{% trans 'الموقع' %}</th>
+                <th>{% trans 'أمين المخزن' %}</th>
+                <th>{% trans 'إجراءات' %}</th>
             </tr>
         </thead>
         <tbody>
             {% for w in warehouses %}
             <tr>
-                <td data-label="{% trans 'Warehouse Name' %}">{{ w.name }}</td>
-                <td data-label="الموقع">{{ w.location|default:"-" }}</td>
+                <td data-label="{% trans 'اسم المخزن' %}">{{ w.name }}</td>
+                <td data-label="{% trans 'الموقع' %}">{{ w.location|default:"-" }}</td>
                 <td>{{ w.manager|default:"-" }}</td>
                 <td>
-                    <a href="{% url 'edit_warehouse' w.id %}" class="btn-icon"><i class="bi bi-pencil"></i> {% trans "Edit" %}</a>
+                    <a href="{% url 'edit_warehouse' w.id %}" class="btn-icon"><i class="bi bi-pencil"></i> {% trans 'تعديل' %}</a>
                 </td>
             </tr>
             {% empty %}
-            <tr><td colspan="4" style="text-align: center;">لا توجد مخازن</td></tr>
+            <tr><td colspan="4" style="text-align: center;">{% trans 'لا توجد مخازن' %}</td></tr>
             {% endfor %}
         </tbody>
     </table>

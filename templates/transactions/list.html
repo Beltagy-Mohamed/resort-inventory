@@ -63,13 +63,13 @@
         </select>
 
         <select name="month_filter" class="form-control" style="min-width: 120px;">
-            <option value="">{% trans "-- Month --" %}</option>
+            <option value="">{% trans '-- الشهر --' %}</option>
             {% for m_id, m_name in months %}
             <option value="{{ m_id }}" {% if month_filter == m_id %}selected{% endif %}>{{ m_name }}</option>
             {% endfor %}
         </select>
         <select name="year_filter" class="form-control" style="min-width: 100px;">
-            <option value="">{% trans "-- Year --" %}</option>
+            <option value="">{% trans '-- السنة --' %}</option>
             {% for y in years %}
             <option value="{{ y }}" {% if year_filter == y %}selected{% endif %}>{{ y }}</option>
             {% endfor %}
@@ -95,8 +95,8 @@
 
 
 <th>{% trans "Type" %}</th>
-<th>الجهة</th>
-<th>{% trans "Warehouse" %}</th>
+<th>{% trans 'الجهة' %}</th>
+<th>{% trans 'المخزن' %}</th>
 <th>{% trans "Quantity" %}</th>
 
 <th>{% trans "Date" %}</th>
@@ -115,8 +115,8 @@
 <td data-label="{% trans 'User' %}">{% if t.user %}{{ t.user.username }}{% else %}-{% endif %}</td>
 
 <td data-label="{% trans 'Type' %}">{{ t.get_transaction_type_display }}</td>
-<td data-label="الجهة">{% if t.partner %}{{ t.partner.name }}{% else %}-{% endif %}</td>
-<td data-label="{% trans 'Warehouse' %}">{% if t.warehouse %}{{ t.warehouse.name }}{% else %}-{% endif %}</td>
+<td data-label="{% trans 'الجهة' %}">{% if t.partner %}{{ t.partner.name }}{% else %}-{% endif %}</td>
+<td data-label="{% trans 'المخزن' %}">{% if t.warehouse %}{{ t.warehouse.name }}{% else %}-{% endif %}</td>
 <td data-label="{% trans 'Quantity' %}">{{ t.quantity }}</td>
 
 <td>{{ t.created_at|date:"Y-m-d H:i" }}</td>

@@ -1,0 +1,370 @@
+msgid ""
+msgstr ""
+"Language: en\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+
+msgid "تسجيل الخروج"
+msgstr "Log out"
+
+msgid "مخزون المنتجع"
+msgstr "Resort Inventory"
+
+msgid "لوحة التحكم"
+msgstr "Dashboard"
+
+msgid "المخزون"
+msgstr "Inventory"
+
+msgid "المنتجات"
+msgstr "Products"
+
+msgid "إضافة منتج"
+msgstr "Add Product"
+
+msgid "الفئات"
+msgstr "Categories"
+
+msgid "الألوان"
+msgstr "Colors"
+
+msgid "المقاسات"
+msgstr "Sizes"
+
+msgid "إستلام (مورد)"
+msgstr "Receive Stock"
+
+msgid "صرف (جهة/عميل)"
+msgstr "Issue Stock"
+
+msgid "سجل الحركات"
+msgstr "Transactions Log"
+
+msgid "التقارير"
+msgstr "Reports"
+
+msgid "تقرير المخزون"
+msgstr "Inventory Report"
+
+msgid "جرد المخازن التفصيلي"
+msgstr "Warehouse Stock"
+
+msgid "كشف حساب الجهات"
+msgstr "Partner Statement"
+
+msgid "تقرير الأرباح والمبيعات"
+msgstr "Profit & Sales"
+
+msgid "منخفض المخزون"
+msgstr "Low Stock"
+
+msgid "الإدارة"
+msgstr "Management"
+
+msgid "المخازن (فروع)"
+msgstr "Warehouses"
+
+msgid "جهات التعامل (مورد/عميل)"
+msgstr "Partners"
+
+msgid "المستخدمون والصلاحيات"
+msgstr "Users & Permissions"
+
+msgid "مرحباً بعودتك،"
+msgstr "Welcome back,"
+
+msgid "إجمالي المنتجات"
+msgstr "Total Products"
+
+msgid "إجمالي الفئات"
+msgstr "Total Categories"
+
+msgid "إجمالي الكميات"
+msgstr "Total Quantity"
+
+msgid "قيمة المخزون"
+msgstr "Inventory Value"
+
+msgid "أحدث الحركات"
+msgstr "Recent Transactions"
+
+msgid "المنتج"
+msgstr "Product"
+
+msgid "النوع"
+msgstr "Type"
+
+msgid "الكمية"
+msgstr "Quantity"
+
+msgid "التاريخ"
+msgstr "Date"
+
+msgid "المستخدم"
+msgstr "User"
+
+msgid "المنتجات منخفضة المخزون"
+msgstr "Low Stock Products"
+
+msgid "المنتجات حسب الفئة"
+msgstr "Products by Category"
+
+msgid "نظرة واضحة على حالة مخزونك"
+msgstr "A clear view of your inventory health"
+
+msgid "اسم المنتج"
+msgstr "Product Name"
+
+msgid "الفئة"
+msgstr "Category"
+
+msgid "سعر الشراء"
+msgstr "Purchase Price"
+
+msgid "سعر البيع"
+msgstr "Selling Price"
+
+msgid "حالة المخزون"
+msgstr "Stock Status"
+
+msgid "الإجراءات"
+msgstr "Actions"
+
+msgid "تعديل"
+msgstr "Edit"
+
+msgid "حذف"
+msgstr "Delete"
+
+msgid "إيقاف/حذف"
+msgstr "Suspend/Delete"
+
+msgid "متاح"
+msgstr "Available"
+
+msgid "منخفض"
+msgstr "Low"
+
+msgid "نفد"
+msgstr "Out of stock"
+
+msgid "البحث عن منتج بالاسم..."
+msgstr "Search by name..."
+
+msgid "بحث"
+msgstr "Search"
+
+msgid "حفظ البيانات"
+msgstr "Save"
+
+msgid "إلغاء"
+msgstr "Cancel"
+
+msgid "إضافة فئة جديدة"
+msgstr "Add Category"
+
+msgid "إضافة لون جديد"
+msgstr "Add Color"
+
+msgid "إضافة مقاس جديد"
+msgstr "Add Size"
+
+msgid "اسم الفئة"
+msgstr "Category Name"
+
+msgid "اللون"
+msgstr "Color"
+
+msgid "المقاس"
+msgstr "Size"
+
+msgid "إضافة مخزن جديد"
+msgstr "Add Warehouse"
+
+msgid "إضافة جهة جديدة"
+msgstr "Add Partner"
+
+msgid "اسم المخزن"
+msgstr "Warehouse Name"
+
+msgid "الموقع / الوصف"
+msgstr "Location / Description"
+
+msgid "الموقع"
+msgstr "Location"
+
+msgid "اسم الجهة"
+msgstr "Partner Name"
+
+msgid "نوع الجهة"
+msgstr "Partner Type"
+
+msgid "مورد"
+msgstr "Supplier"
+
+msgid "عميل / جهة صرف"
+msgstr "Client / Entity"
+
+msgid "معلومات الاتصال"
+msgstr "Contact Info"
+
+msgid "عدد الحركات"
+msgstr "Transactions Count"
+
+msgid "الفترة"
+msgstr "Period"
+
+msgid "إجمالي المبيعات (قيمة البضاعة المنصرفة)"
+msgstr "Total Sales (Issued Value)"
+
+msgid "إجمالي التكلفة"
+msgstr "Total Cost"
+
+msgid "صافي الربح"
+msgstr "Net Profit"
+
+msgid "عرض التقرير"
+msgstr "View Report"
+
+msgid "من"
+msgstr "From"
+
+msgid "إلى"
+msgstr "To"
+
+msgid "كشف حساب جهة تعامل (مورد / عميل)"
+msgstr "Partner Statement (Supplier/Client)"
+
+msgid "كشف حساب جهة تعامل"
+msgstr "Partner Statement"
+
+msgid "نوع الحركة"
+msgstr "Transaction Type"
+
+msgid "سعر الوحدة"
+msgstr "Unit Price"
+
+msgid "الإجمالي"
+msgstr "Total"
+
+msgid "المخزن"
+msgstr "Warehouse"
+
+msgid "ملاحظات"
+msgstr "Notes"
+
+msgid "يرجى اختيار جهة تعامل للبدء"
+msgstr "Please select a partner to begin"
+
+msgid "نعم"
+msgstr "Yes"
+
+msgid "لا"
+msgstr "No"
+
+msgid "نشط"
+msgstr "Active"
+
+msgid "موقوف"
+msgstr "Suspended"
+
+msgid "لا توجد حركات"
+msgstr "No transactions"
+
+msgid "لا توجد منتجات"
+msgstr "No products"
+
+msgid "لا توجد فئات"
+msgstr "No categories"
+
+msgid "إذن إضافة / استلام بضاعة"
+msgstr "Receipt Voucher (IN)"
+
+msgid "إذن صرف بضاعة"
+msgstr "Issue Voucher (OUT)"
+
+msgid "تأكيد استلام البضاعة"
+msgstr "Confirm Receipt"
+
+msgid "تأكيد صرف البضاعة"
+msgstr "Confirm Issue"
+
+msgid "الجهة الموردة"
+msgstr "Supplier"
+
+msgid "الجهة المصرف لها"
+msgstr "Client / Entity"
+
+msgid "-- الشهر --"
+msgstr "-- Month --"
+
+msgid "-- السنة --"
+msgstr "-- Year --"
+
+msgid "المركز الرئيسي"
+msgstr "Main Branch"
+
+msgid "إضافة موظف"
+msgstr "Add Employee"
+
+msgid "معلومات الحساب"
+msgstr "Account Information"
+
+msgid "اسم المستخدم"
+msgstr "Username"
+
+msgid "الاسم الكامل"
+msgstr "Full Name"
+
+msgid "حالة الحساب"
+msgstr "Account Status"
+
+msgid "مدير نظام؟"
+msgstr "System Admin?"
+
+msgid "صلاحيات الموظف (الأدوار)"
+msgstr "Employee Permissions"
+
+msgid "-- اختر المخزن --"
+msgstr "-- Select Warehouse --"
+
+msgid "-- اختر الجهة --"
+msgstr "-- Select Partner --"
+
+msgid "-- كل المخازن --"
+msgstr "-- All Warehouses --"
+
+msgid "-- كل الفئات --"
+msgstr "-- All Categories --"
+
+msgid "-- كل الحالات --"
+msgstr "-- All Status --"
+
+msgid "الجهة"
+msgstr "Partner"
+
+msgid "الكمية المتاحة"
+msgstr "Available Quantity"
+
+msgid "سعر التكلفة"
+msgstr "Cost Price"
+
+msgid "إضافة جهة تعامل"
+msgstr "Add Partner"
+
+msgid "تسجيل حركة جديدة"
+msgstr "New Transaction"
+
+msgid "القائمة الرئيسية"
+msgstr "Main Menu"
+
+msgid "تعديل المنتج"
+msgstr "Edit Product"
+
+msgid "إعدادات الحساب"
+msgstr "Account Settings"
+
+msgid "تفاصيل المنتج"
+msgstr "Product Details"
