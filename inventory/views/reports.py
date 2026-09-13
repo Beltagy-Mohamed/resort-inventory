@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.db.models import Sum, F, Q
 import csv
 
-from ..models import Product, Category
+from ..models import Product, Category, Warehouse
 
 @login_required
 def inventory_report(request):
@@ -12,12 +12,16 @@ def inventory_report(request):
     search = request.GET.get("search", "")
     category = request.GET.get("category", "")
     status = request.GET.get("status", "")
+    warehouse = request.GET.get("warehouse", "")
 
     products = Product.objects.select_related(
         "category",
         "color",
         "size",
     )
+    
+    if warehouse:
+        products = products.filter(stocks__warehouse_id=warehouse).distinct()
 
     if search:
         products = products.filter(
@@ -111,9 +115,11 @@ def inventory_report(request):
     context = {
         "products": products_list,
         "categories": Category.objects.all(),
+        "warehouses": Warehouse.objects.all(),
         "search": search,
         "category": category,
         "status": status,
+        "warehouse": warehouse,
         "total_products": len(products_list),
         "total_quantity": total_quantity,
         "inventory_value": inventory_value,

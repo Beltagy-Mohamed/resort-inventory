@@ -1,6 +1,5 @@
 from django.db import models
 from django.core.validators import RegexValidator
-from django.utils.translation import gettext_lazy as _
 
 
 class Category(models.Model):
@@ -207,11 +206,11 @@ class InventoryTransaction(models.Model):
 
     TRANSACTION_TYPES = [
 
-        ("IN", _("Received")),
+        ("IN", "استلام"),
 
-        ("OUT", _("Issued")),
+        ("OUT", "صرف"),
 
-        ("ADJUST", _("Adjustment")),
+        ("ADJUST", "جرد"),
 
     ]
 
@@ -283,11 +282,11 @@ class ActivityLog(models.Model):
 
     ACTIONS = [
 
-        ("ADD", _("Add")),
+        ("ADD", "أضف"),
 
-        ("EDIT", _("Edit")),
+        ("EDIT", "تعديل"),
 
-        ("DELETE", _("Delete")),
+        ("DELETE", "حذف"),
 
         ("IN", "استلام"),
 

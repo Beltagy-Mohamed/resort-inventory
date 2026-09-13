@@ -22,6 +22,12 @@
 
 <div class="search-bar">
     <form method="get">
+        <select name="warehouse" class="form-control" style="min-width: 120px;">
+            <option value="">-- كل المخازن --</option>
+            {% for w in warehouses %}
+            <option value="{{ w.id }}" {% if warehouse_filter == w.id|stringformat:"s" %}selected{% endif %}>{{ w.name }}</option>
+            {% endfor %}
+        </select>
         <select name="month_filter" class="form-control" style="min-width: 120px;">
             <option value="">-- الشهر --</option>
             {% for m_id, m_name in months %}
@@ -41,16 +47,16 @@
 <div class="summary-cards">
     <div class="summary-card">
         <h3>إجمالي المبيعات (قيمة البضاعة المنصرفة)</h3>
-        <div class="value">{{ total_sales|humanize_arabic }} {{ system_settings.currency|default:'ج.م' }}</div>
+        <div class="value">{{ total_sales|humanize_arabic }}</div>
     </div>
     <div class="summary-card">
         <h3>إجمالي التكلفة</h3>
-        <div class="value">{{ total_cost|humanize_arabic }} {{ system_settings.currency|default:'ج.م' }}</div>
+        <div class="value">{{ total_cost|humanize_arabic }}</div>
     </div>
     <div class="summary-card">
         <h3>صافي الربح</h3>
         <div class="value {% if total_profit > 0 %}profit-positive{% elif total_profit < 0 %}profit-negative{% endif %}">
-            {{ total_profit|humanize_arabic }} {{ system_settings.currency|default:'ج.م' }}
+            {{ total_profit|humanize_arabic }}
         </div>
     </div>
 </div>

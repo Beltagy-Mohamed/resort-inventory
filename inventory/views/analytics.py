@@ -26,6 +26,7 @@ def warehouse_stock_report(request):
 def partner_statement_report(request):
     partner_id = request.GET.get("partner_id", "")
     month_filter = request.GET.get("month_filter", "")
+    warehouse_filter = request.GET.get("warehouse", "")
     
     transactions = InventoryTransaction.objects.select_related("product", "partner", "warehouse").none()
     
@@ -55,6 +56,7 @@ def partner_statement_report(request):
 @login_required
 def profit_report(request):
     month_filter = request.GET.get("month_filter", "")
+    warehouse_filter = request.GET.get("warehouse", "")
     
     # We only calculate profit on 'OUT' transactions (Sales/Issuance)
     transactions = InventoryTransaction.objects.select_related("product").filter(transaction_type='OUT')
@@ -64,6 +66,8 @@ def profit_report(request):
         transactions = transactions.filter(created_at__month=int(month_filter))
     if year_filter and year_filter.isdigit():
         transactions = transactions.filter(created_at__year=int(year_filter))
+    if warehouse_filter:
+        transactions = transactions.filter(warehouse_id=warehouse_filter)
             
     # Calculate Profit: (unit_price - cost_price) * quantity
     transactions = transactions.annotate(

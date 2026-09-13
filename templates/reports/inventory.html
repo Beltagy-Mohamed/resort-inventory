@@ -1,5 +1,5 @@
 {% extends "layout/base.html" %}
-{% load static inventory_tags i18n humanize humanize %}
+{% load static inventory_tags humanize %}
 
 {% block title %}
 تقرير المخزون
@@ -36,7 +36,7 @@
             <h3>قيمة المخزون</h3>
         </div>
         <div class="card-body">
-            <h2>{{ system_settings.currency }} {{ inventory_value|humanize_arabic }} {{ system_settings.currency|default:'ج.م' }}</h2>
+            <h2>{{ inventory_value|humanize_arabic }}</h2>
         </div>
     </div>
     <div class="card">
@@ -94,6 +94,13 @@
         {% endfor %}
     </select>
 
+    <select name="warehouse">
+        <option value="">كل المخازن</option>
+        {% for w in warehouses %}
+            <option value="{{ w.id }}" {% if warehouse == w.id|stringformat:"s" %}selected{% endif %}>{{ w.name }}</option>
+        {% endfor %}
+    </select>
+
     <select name="status">
         <option value="">كل الحالات</option>
         <option value="low" {% if status == "low" %}selected{% endif %}>منخفض</option>
@@ -134,8 +141,8 @@
                         <span class="status-pill status-success">{{ product.stock_status_text }}</span>
                     {% endif %}
                 </td>
-                <td>{{ system_settings.currency }} {{ product.price|floatformat:2|intcomma }}</td>
-                <td><strong>{{ system_settings.currency }} {{ product.total_value|floatformat:2|intcomma }}</strong></td>
+                <td>{{ product.cost_price|floatformat:2|intcomma }}</td>
+                <td><strong>{{ product.total_value|humanize_arabic }}</strong></td>
             </tr>
             {% empty %}
             <tr>

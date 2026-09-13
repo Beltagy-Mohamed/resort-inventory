@@ -27,7 +27,14 @@
             value="{{ search }}"
             placeholder="البحث عن منتج بالاسم...">
 
-        <select name="type">
+        <select name="warehouse">
+        <option value="">كل المخازن</option>
+        {% for w in warehouses %}
+            <option value="{{ w.id }}" {% if warehouse_filter == w.id|stringformat:"s" %}selected{% endif %}>{{ w.name }}</option>
+        {% endfor %}
+    </select>
+    
+    <select name="type">
 
             <option value="">
                 كل الحركات

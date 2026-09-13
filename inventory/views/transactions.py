@@ -28,6 +28,7 @@ def transactions_list(request):
     search = request.GET.get("search", "")
     transaction_type = request.GET.get("type", "")
     month_filter = request.GET.get("month_filter", "")
+    warehouse_filter = request.GET.get("warehouse", "")
 
     transactions = InventoryTransaction.objects.select_related(
         "product"
@@ -44,6 +45,9 @@ def transactions_list(request):
 
     if transaction_type:
         transactions = transactions.filter(transaction_type=transaction_type)
+
+    if warehouse_filter:
+        transactions = transactions.filter(warehouse_id=warehouse_filter)
         
     year_filter = request.GET.get("year_filter", "")
     
