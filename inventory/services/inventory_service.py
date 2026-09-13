@@ -12,7 +12,7 @@ class InventoryService:
         """
         # Serialize movements per product so concurrent OUT requests cannot
         # independently read the same available balance.
-        product = Product.objects.select_for_update().get(
+        product = Product.all_objects.select_for_update().get(
             pk=inventory_transaction.product_id
         )
         qty = inventory_transaction.quantity
