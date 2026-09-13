@@ -93,11 +93,19 @@ def add_transaction(request):
     if action not in ["IN", "OUT", "ADJUST"]:
         action = "IN"
 
+    from ..models import Partner
+    
     if request.method == "POST":
         # Force the transaction type based on the action parameter to ensure data integrity
         post_data = request.POST.copy()
         post_data['transaction_type'] = action
         form = InventoryTransactionForm(post_data)
+        
+        # Enforce partner filtering on POST
+        if action == "IN":
+            form.fields['partner'].queryset = Partner.objects.filter(partner_type="SUPPLIER")
+        elif action == "OUT":
+            form.fields['partner'].queryset = Partner.objects.filter(partner_type__in=["CLIENT", "OTHER"])
 
         if form.is_valid():
 
@@ -136,8 +144,13 @@ def add_transaction(request):
                 )
 
     else:
-
         form = InventoryTransactionForm()
+        
+        # Enforce partner filtering on GET
+        if action == "IN":
+            form.fields['partner'].queryset = Partner.objects.filter(partner_type="SUPPLIER")
+        elif action == "OUT":
+            form.fields['partner'].queryset = Partner.objects.filter(partner_type__in=["CLIENT", "OTHER"])
 
     
     # Create dictionary mapping product ID to its prices for JS autofill
