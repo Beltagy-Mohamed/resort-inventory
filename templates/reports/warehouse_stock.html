@@ -1,7 +1,6 @@
 {% extends "layout/base.html" %}
 {% load static i18n %}
 
-
 {% block title %}{% trans "Detailed Warehouse Stock" %}{% endblock %}
 
 {% block extra_css %}
@@ -30,9 +29,8 @@
         <thead>
             <tr>
                 <th>{% trans "Warehouse" %}</th>
-                <th>كود {% trans "Product" %}</th>
-                <th>اسم {% trans "Product" %}</th>
-                <th>{% trans "Quantity" %} المتاحة</th>
+                <th>{% trans "Product Name" %}</th>
+                <th>{% trans "Available Quantity" %}</th>
                 <th>{% trans "Cost Price" %}</th>
                 <th>{% trans "Selling Price" %}</th>
             </tr>
@@ -41,7 +39,6 @@
             {% for stock in stocks %}
             <tr>
                 <td>{{ stock.warehouse.name }}</td>
-                <td>{{ stock.product.id }}</td>
                 <td>{{ stock.product.name }}</td>
                 <td>{{ stock.quantity }}</td>
                 <td>{{ stock.product.cost_price }}</td>
@@ -49,7 +46,7 @@
             </tr>
             {% empty %}
             <tr>
-                <td colspan="6" style="text-align: center;">لا توجد أرصدة مطابقة لل{% trans "Search" %}</td>
+                <td colspan="5" style="text-align: center;">{% trans "No stocks found matching the search" %}</td>
             </tr>
             {% endfor %}
         </tbody>

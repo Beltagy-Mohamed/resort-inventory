@@ -94,7 +94,7 @@
 <th>{% trans "Product" %}</th>
                 <th>{% trans "User" %}</th>
 
-<th>{% trans "Code" %}</th>
+
 
 <th>{% trans "Type" %}</th>
 <th>{% trans "Partner" %}/th>
@@ -115,7 +115,7 @@
 
 <td data-label="{% trans "Product" %}">{{ t.product.name }}</td>
 <td data-label="{% trans "User" %}">{% if t.user %}{{ t.user.username }}{% else %}-{% endif %}</td>
-<td data-label="{% trans "Code" %}">{{ t.product.id }}</td>
+
 <td data-label="{% trans "Type" %}">{{ t.get_transaction_type_display }}</td>
 <td data-label="{% trans 'Partner' %}">{% if t.partner %}{{ t.partner.name }}{% else %}-{% endif %}</td>
 <td data-label="{% trans 'Warehouse' %}">{% if t.warehouse %}{{ t.warehouse.name }}{% else %}-{% endif %}</td>

@@ -1964,7 +1964,7 @@ tbody tr:hover {
 
     .logout-btn::before {
 
-        content: "\\F4CA";
+        content: "\F4CA";
 
         font-family: "bootstrap-icons";
 

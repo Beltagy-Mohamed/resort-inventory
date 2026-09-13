@@ -21,7 +21,7 @@
     <div class="detail-heading">
         <span class="eyebrow">{% trans "Product details" %}</span>
         <h1>{{ product.name }}</h1>
-        <span class="detail-code">{{ product.id }}</span>
+        
     </div>
 
     <span class="stock-status stock-{{ product.stock_status }}">
@@ -40,11 +40,7 @@
 
     <div class="summary-card">
 
-        <div class="summary-card-heading">
-            <span class="eyebrow">{% trans "Product code" %}</span>
-        </div>
-
-        <strong class="product-code">{{ product.id }}</strong>
+        
 
         <div class="quantity-highlight">
             <span>{% trans "Current quantity" %}</span>
