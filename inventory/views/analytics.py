@@ -46,6 +46,8 @@ def partner_statement_report(request):
         "partners": Partner.objects.all(),
         "selected_partner": int(partner_id) if partner_id else "",
         "month_filter": int(month_filter) if month_filter.isdigit() else "",
+        "warehouse_filter": warehouse_filter,
+        "warehouses": Warehouse.objects.all(),
         "year_filter": int(year_filter) if year_filter.isdigit() else "",
         "months": [(1, "يناير"), (2, "فبراير"), (3, "مارس"), (4, "أبريل"), (5, "مايو"), (6, "يونيو"), (7, "يوليو"), (8, "أغسطس"), (9, "سبتمبر"), (10, "أكتوبر"), (11, "نوفمبر"), (12, "ديسمبر")],
         "years": range(2025, 2035),
@@ -84,6 +86,8 @@ def profit_report(request):
     context = {
         "transactions": transactions,
         "month_filter": int(month_filter) if month_filter.isdigit() else "",
+        "warehouse_filter": warehouse_filter,
+        "warehouses": Warehouse.objects.all(),
         "year_filter": int(year_filter) if year_filter.isdigit() else "",
         "months": [(1, "يناير"), (2, "فبراير"), (3, "مارس"), (4, "أبريل"), (5, "مايو"), (6, "يونيو"), (7, "يوليو"), (8, "أغسطس"), (9, "سبتمبر"), (10, "أكتوبر"), (11, "نوفمبر"), (12, "ديسمبر")],
         "years": range(2025, 2035),
