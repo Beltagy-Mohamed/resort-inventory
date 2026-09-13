@@ -36,7 +36,7 @@
             <h3>قيمة المخزون</h3>
         </div>
         <div class="card-body">
-            <h2>{{ system_settings.currency }} {{ inventory_value|humanize_arabic }}</h2>
+            <h2>{{ system_settings.currency }} {{ inventory_value|humanize_arabic }} {{ system_settings.currency|default:'ج.م' }}</h2>
         </div>
     </div>
     <div class="card">

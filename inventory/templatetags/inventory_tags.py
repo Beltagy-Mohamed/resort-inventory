@@ -11,10 +11,10 @@ def humanize_arabic(value):
         return value
         
     if value >= 1_000_000_000:
-        return f"{value / 1_000_000_000:.2f} {_('Billion')}".replace('.00', '')
+        return f"{value / 1_000_000_000:.2f} {'مليار'}".replace('.00', '')
     elif value >= 1_000_000:
-        return f"{value / 1_000_000:.2f} {_('Million')}".replace('.00', '')
+        return f"{value / 1_000_000:.2f} {'مليون'}".replace('.00', '')
     elif value >= 1_000:
-        return f"{value / 1_000:.2f} {_('Thousand')}".replace('.00', '')
+        return f"{value / 1_000:.2f} {'ألف'}".replace('.00', '')
     else:
         return f"{value:,.0f}"

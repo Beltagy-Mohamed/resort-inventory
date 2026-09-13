@@ -48,6 +48,28 @@ class ProductForm(StripWhitespaceMixin, forms.ModelForm):
             "minimum_stock",
             "description",
         ]
+        labels = {
+            "name": "اسم المنتج",
+            "category": "الفئة",
+            "color": "اللون",
+            "size": "المقاس",
+            "cost_price": "سعر التكلفة",
+            "selling_price": "سعر البيع",
+            "quantity": "الكمية المتاحة",
+            "minimum_stock": "الحد الأدنى للمخزون",
+            "description": "الوصف",
+        }
+        labels = {
+            "name": "اسم المنتج",
+            "category": "الفئة",
+            "color": "اللون",
+            "size": "المقاس",
+            "cost_price": "سعر التكلفة",
+            "selling_price": "سعر البيع",
+            "quantity": "الكمية المتاحة",
+            "minimum_stock": "الحد الأدنى للمخزون",
+            "description": "الوصف",
+        }
 
         labels = {
             "name": "اسم المنتج",
@@ -101,6 +123,14 @@ class CategoryForm(StripWhitespaceMixin, forms.ModelForm):
             "name",
             "color",
         ]
+        labels = {
+            "name": "اسم اللون",
+            "color": "اللون",
+        }
+        labels = {
+            "name": "اسم الفئة",
+            "color": "اللون",
+        }
 
         widgets = {
 
@@ -128,6 +158,9 @@ class ColorForm(StripWhitespaceMixin, forms.ModelForm):
         fields = [
             "name",
         ]
+        labels = {
+            "name": "اسم المقاس",
+        }
 
         widgets = {
 
@@ -202,6 +235,9 @@ class SizeForm(StripWhitespaceMixin, forms.ModelForm):
         fields = [
             "name",
         ]
+        labels = {
+            "name": "اسم المقاس",
+        }
 
         widgets = {
 
@@ -259,6 +295,8 @@ class CustomUserCreationForm(forms.ModelForm):
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['username'].help_text = ''
+        self.fields['username'].label = 'اسم المستخدم'
         for field_name, field in self.fields.items():
             if not isinstance(field.widget, forms.CheckboxInput):
                 field.widget.attrs.update({'class': 'form-control'})
@@ -272,8 +310,8 @@ class CustomUserCreationForm(forms.ModelForm):
 
 class CustomUserEditForm(forms.ModelForm):
     password = forms.CharField(label="تغيير كلمة المرور (اتركه فارغاً للإبقاء عليها)", required=False, widget=forms.PasswordInput(attrs={'class': 'form-control'}))
-    first_name = forms.CharField(max_length=30, required=False, widget=forms.TextInput(attrs={'class': 'form-control'}))
-    last_name = forms.CharField(max_length=30, required=False, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    first_name = forms.CharField(label="الاسم الأول", max_length=30, required=False, widget=forms.TextInput(attrs={'class': 'form-control'}))
+    last_name = forms.CharField(label="اسم العائلة", max_length=30, required=False, widget=forms.TextInput(attrs={'class': 'form-control'}))
     is_active = forms.BooleanField(label="نشط (يمكنه تسجيل الدخول)", required=False, widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}))
     
     perm_inventory = forms.BooleanField(label="إدارة المخزون (إضافة/تعديل المنتجات)", required=False, widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}))
@@ -287,6 +325,8 @@ class CustomUserEditForm(forms.ModelForm):
         
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['username'].help_text = ''
+        self.fields['username'].label = 'اسم المستخدم'
         for field in self.fields.values():
             if not isinstance(field.widget, forms.CheckboxInput):
                 field.widget.attrs.update({'class': 'form-control'})

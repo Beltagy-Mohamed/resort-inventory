@@ -13,6 +13,31 @@
 
 <h1>سجل النشاطات</h1>
 
+<div class="search-bar" style="margin-bottom: 20px;">
+    <form method="get" style="display: flex; gap: 10px; align-items: center;">
+        <select name="day_filter" class="form-control" style="min-width: 100px;">
+            <option value="">-- اليوم --</option>
+            {% for d in days %}
+            <option value="{{ d }}" {% if day_filter == d %}selected{% endif %}>{{ d }}</option>
+            {% endfor %}
+        </select>
+        <select name="month_filter" class="form-control" style="min-width: 120px;">
+            <option value="">-- الشهر --</option>
+            {% for m_id, m_name in months %}
+            <option value="{{ m_id }}" {% if month_filter == m_id %}selected{% endif %}>{{ m_name }}</option>
+            {% endfor %}
+        </select>
+        <select name="year_filter" class="form-control" style="min-width: 100px;">
+            <option value="">-- السنة --</option>
+            {% for y in years %}
+            <option value="{{ y }}" {% if year_filter == y %}selected{% endif %}>{{ y }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit" class="btn-primary" style="padding: 10px 15px; background: #3A5457; color: white; border: none; border-radius: 4px;">عرض التقرير</button>
+    </form>
+</div>
+
+
 <table class="products-table">
 
     <thead>

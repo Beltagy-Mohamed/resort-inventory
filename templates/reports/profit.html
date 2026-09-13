@@ -41,16 +41,16 @@
 <div class="summary-cards">
     <div class="summary-card">
         <h3>إجمالي المبيعات (قيمة البضاعة المنصرفة)</h3>
-        <div class="value">{{ total_sales|humanize_arabic }}</div>
+        <div class="value">{{ total_sales|humanize_arabic }} {{ system_settings.currency|default:'ج.م' }}</div>
     </div>
     <div class="summary-card">
         <h3>إجمالي التكلفة</h3>
-        <div class="value">{{ total_cost|humanize_arabic }}</div>
+        <div class="value">{{ total_cost|humanize_arabic }} {{ system_settings.currency|default:'ج.م' }}</div>
     </div>
     <div class="summary-card">
         <h3>صافي الربح</h3>
         <div class="value {% if total_profit > 0 %}profit-positive{% elif total_profit < 0 %}profit-negative{% endif %}">
-            {{ total_profit|floatformat:2 }}
+            {{ total_profit|humanize_arabic }} {{ system_settings.currency|default:'ج.م' }}
         </div>
     </div>
 </div>
