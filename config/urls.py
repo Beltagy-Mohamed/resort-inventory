@@ -17,8 +17,7 @@ urlpatterns = [
         auth_views.LogoutView.as_view(),
         name="logout",
     ),
-    path("i18n/", include("django.conf.urls.i18n")),
-    path("", include("inventory.urls")),
+        path("", include("inventory.urls")),
 ]
 
 if settings.DEBUG:

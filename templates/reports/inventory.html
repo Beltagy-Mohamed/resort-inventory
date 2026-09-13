@@ -1,8 +1,18 @@
-{% extends "layout/base.html" %}
-{% load static i18n humanize inventory_tags %}
+{% extends "layout/base.htm
+<div class="card value-card">
+        <div class="card-header">
+            <div class="card-icon accent"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>
+            <h3>Inventory Value</h3>
+        </div>
+        <div class="card-body">
+            <h2>{{ system_settings.currency }} {{ inventory_value|floatformat:2 }}</h2>
+        </div>
+    </div>
+l" %}
+{% load static humanize humanize %}
 
 {% block title %}
-{% trans "Inventory Report" %}
+تقرير المخزون
 {% endblock %}
 
 {% block extra_css %}
@@ -13,7 +23,7 @@
 {% block content %}
 
 <div class="page-header">
-    <h1>{% trans "Inventory Report" %}</h1>
+    <h1>تقرير المخزون</h1>
     
     <div class="report-actions">
         <!-- Optional left side title if needed -->
@@ -22,27 +32,17 @@
         <div class="action-buttons">
             <a href="?search={{ search }}&category={{ category }}&status={{ status }}&export=xlsx" class="btn-export">
                 <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-                {% trans "Export" %}
+                Export
             </a>
         </div>
     </div>
 </div>
 
 <div class="cards">
-
-<div class="card value-card">
-        <div class="card-header">
-            <div class="card-icon accent"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>
-            <h3>{% trans "Inventory Value" %}</h3>
-        </div>
-        <div class="card-body">
-            <h2>{{ system_settings.currency }} {{ inventory_value|humanize_arabic }}</h2>
-        </div>
-    </div>
     <div class="card">
         <div class="card-header">
             <div class="card-icon"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg></div>
-            <h3>{% trans "Product Count" %}</h3>
+            <h3>Product Count</h3>
         </div>
         <div class="card-body">
             <h2>{{ total_products }}</h2>
@@ -52,7 +52,7 @@
     <div class="card">
         <div class="card-header">
             <div class="card-icon"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16 8v8m-4-5v5m-4-2v2m-2 4h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg></div>
-            <h3>{% trans "Total Quantity" %}</h3>
+            <h3>Total Quantity</h3>
         </div>
         <div class="card-body">
             <h2>{{ total_quantity }}</h2>
@@ -64,7 +64,7 @@
     <div class="card">
         <div class="card-header">
             <div class="card-icon warning"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg></div>
-            <h3>{% trans "Low Stock" %}</h3>
+            <h3>منخفض المخزون</h3>
         </div>
         <div class="card-body">
             <h2>{{ low_stock }}</h2>
@@ -74,7 +74,7 @@
     <div class="card">
         <div class="card-header">
             <div class="card-icon danger"><svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg></div>
-            <h3>{% trans "Out Of Stock" %}</h3>
+            <h3>Out Of Stock</h3>
         </div>
         <div class="card-body">
             <h2>{{ out_of_stock }}</h2>
@@ -101,7 +101,7 @@
     </select>
 
     <button type="submit" class="btn-filter">
-        {% trans "Filter" %}
+        Filter
     </button>
 </form>
 
@@ -111,9 +111,9 @@
             <tr>
                 <th>Item Name</th>
                 <th>SKU</th>
-                <th>Category</th>
+                <th>الفئة</th>
                 <th>Qty</th>
-                <th>Status</th>
+                <th>حالة المخزون</th>
                 <th>Price</th>
                 <th>Value</th>
             </tr>
@@ -134,13 +134,13 @@
                         <span class="status-pill status-success">{{ product.stock_status_text }}</span>
                     {% endif %}
                 </td>
-                <td>{{ system_settings.currency }} {{ product.price|floatformat:2|intcomma }}</td>
-                <td><strong>{{ system_settings.currency }} {{ product.total_value|floatformat:2|intcomma }}</strong></td>
+                <td>{{ system_settings.currency }} {{ product.price|floatformat:2 }}</td>
+                <td><strong>{{ system_settings.currency }} {{ product.total_value|floatformat:2 }}</strong></td>
             </tr>
             {% empty %}
             <tr>
                 <td colspan="7" style="text-align: center; padding: 40px; color: var(--text-muted);">
-                    <i>{% trans "No products match your filters" %}</i>
+                    <i>No products match your filters</i>
                 </td>
             </tr>
             {% endfor %}

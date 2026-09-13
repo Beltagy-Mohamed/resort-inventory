@@ -1,10 +1,10 @@
-{% load static i18n %}
+{% load static %}
 
 <aside class="sidebar">
 
     <div class="sidebar-header">
-        <h2>{% trans "Resort Inventory" %}</h2>
-        <button type="button" class="sidebar-collapse-btn" id="sidebar-toggle" title="{% trans 'Collapse sidebar' %}">
+        <h2>Resort Inventory</h2>
+        <button type="button" class="sidebar-collapse-btn" id="sidebar-toggle" title="Collapse sidebar">
             <i class="bi bi-layout-sidebar"></i>
         </button>
     </div>
@@ -13,114 +13,114 @@
 
         <a href="{% url 'dashboard' %}" class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
             <i class="bi bi-grid-1x2"></i>
-            <span class="label">{% trans "Dashboard" %}</span>
+            <span class="label">لوحة التحكم</span>
         </a>
 
-        <h5>{% trans "Inventory" %}</h5>
+        <h5>المخزون</h5>
 
         <a href="{% url 'products_list' %}" class="{% if request.resolver_match.url_name == 'products_list' %}active{% endif %}">
             <i class="bi bi-box-seam"></i>
-            <span class="label">{% trans "Products" %}</span>
+            <span class="label">المنتجات</span>
         </a>
 
         {% if perms.inventory.add_product %}
         <a href="{% url 'add_product' %}" class="{% if request.resolver_match.url_name == 'add_product' %}active{% endif %}">
             <i class="bi bi-plus-circle"></i>
-            <span class="label">{% trans "Add Product" %}</span>
+            <span class="label">إضافة منتج</span>
         </a>
         {% endif %}
 
         <a href="{% url 'categories_list' %}" class="{% if request.resolver_match.url_name == 'categories_list' %}active{% endif %}">
             <i class="bi bi-tags"></i>
-            <span class="label">{% trans "Categories" %}</span>
+            <span class="label">الفئات</span>
         </a>
 
         <a href="{% url 'colors_list' %}" class="{% if request.resolver_match.url_name == 'colors_list' %}active{% endif %}">
             <i class="bi bi-palette"></i>
-            <span class="label">{% trans "Colors" %}</span>
+            <span class="label">الألوان</span>
         </a>
 
         <a href="{% url 'sizes_list' %}" class="{% if request.resolver_match.url_name == 'sizes_list' %}active{% endif %}">
             <i class="bi bi-rulers"></i>
-            <span class="label">{% trans "Sizes" %}</span>
+            <span class="label">المقاسات</span>
         </a>
 
         {% if perms.inventory.view_inventorytransaction %}
         <a href="{% url 'add_transaction' %}?action=IN" class="{% if request.GET.action == 'IN' %}active{% endif %}">
             <i class="bi bi-box-arrow-in-down"></i>
-            <span class="label">{% trans "Receive Stock" %}</span>
+            <span class="label">إستلام (مورد)</span>
         </a>
 
         <a href="{% url 'add_transaction' %}?action=OUT" class="{% if request.GET.action == 'OUT' %}active{% endif %}">
             <i class="bi bi-box-arrow-up"></i>
-            <span class="label">{% trans "Issue Stock" %}</span>
+            <span class="label">صرف (جهة/عميل)</span>
         </a>
 
         <a href="{% url 'transactions_list' %}" class="{% if request.resolver_match.url_name == 'transactions_list' %}active{% endif %}">
             <i class="bi bi-arrow-left-right"></i>
-            <span class="label">{% trans "Transactions Log" %}</span>
+            <span class="label">سجل الحركات</span>
         </a>
         {% endif %}
 
         {% if perms.inventory.view_inventorytransaction %}
-        <h5>{% trans "Reports" %}</h5>
+        <h5>التقارير</h5>
 
         <a href="{% url 'inventory_report' %}" class="{% if request.resolver_match.url_name == 'inventory_report' %}active{% endif %}">
             <i class="bi bi-file-earmark-bar-graph"></i>
-            <span class="label">{% trans "Inventory Report" %}</span>
+            <span class="label">تقرير المخزون</span>
         </a>
 
         <a href="{% url 'warehouse_stock_report' %}" class="{% if request.resolver_match.url_name == 'warehouse_stock_report' %}active{% endif %}">
             <i class="bi bi-building"></i>
-            <span class="label">{% trans "Warehouse Stock" %}</span>
+            <span class="label">جرد المخازن التفصيلي</span>
         </a>
 
         <a href="{% url 'partner_statement_report' %}" class="{% if request.resolver_match.url_name == 'partner_statement_report' %}active{% endif %}">
             <i class="bi bi-person-lines-fill"></i>
-            <span class="label">{% trans "Partner Statement" %}</span>
+            <span class="label">كشف حساب الجهات</span>
         </a>
 
         <a href="{% url 'profit_report' %}" class="{% if request.resolver_match.url_name == 'profit_report' %}active{% endif %}">
             <i class="bi bi-graph-up-arrow"></i>
-            <span class="label">{% trans "Profit & Sales" %}</span>
+            <span class="label">تقرير الأرباح والمبيعات</span>
         </a>
 
         <a href="{% url 'low_stock_products' %}" class="{% if request.resolver_match.url_name == 'low_stock_products' %}active{% endif %}">
             <i class="bi bi-exclamation-triangle"></i>
-            <span class="label">{% trans "Low Stock" %}</span>
+            <span class="label">منخفض المخزون</span>
         </a>
 
         {% if user.is_superuser %}
         <a href="{% url 'activity_logs' %}" class="{% if request.resolver_match.url_name == 'activity_logs' %}active{% endif %}">
             <i class="bi bi-clock-history"></i>
-            <span class="label">{% trans "Activity Log" %}</span>
+            <span class="label">Activity Log</span>
         </a>
         {% endif %}
         {% endif %}
 
-        <h5>{% trans "Management" %}</h5>
+        <h5>الإدارة</h5>
 
         <a href="{% url 'warehouses_list' %}" class="{% if request.resolver_match.url_name == 'warehouses_list' or request.resolver_match.url_name == 'add_warehouse' or request.resolver_match.url_name == 'edit_warehouse' %}active{% endif %}">
             <i class="bi bi-building"></i>
-            <span class="label">{% trans "Warehouses" %}</span>
+            <span class="label">المخازن (فروع)</span>
         </a>
 
         <a href="{% url 'partners_list' %}" class="{% if request.resolver_match.url_name == 'partners_list' or request.resolver_match.url_name == 'add_partner' or request.resolver_match.url_name == 'edit_partner' %}active{% endif %}">
             <i class="bi bi-people"></i>
-            <span class="label">{% trans "Partners" %}</span>
+            <span class="label">جهات التعامل (مورد/عميل)</span>
         </a>
 
         {% if user.is_superuser %}
         <a href="{% url 'users_list' %}" target="_blank">
             <i class="bi bi-people"></i>
-            <span class="label">{% trans "Users & Permissions" %}</span>
+            <span class="label">Users & Permissions</span>
         </a>
         {% endif %}
 
         {% if user.is_superuser %}
         <a href="{% url 'system_settings' %}" class="{% if request.resolver_match.url_name == 'system_settings' %}active{% endif %}">
             <i class="bi bi-gear"></i>
-            <span class="label">{% trans "Settings" %}</span>
+            <span class="label">Settings</span>
         </a>
         {% endif %}
 
@@ -128,31 +128,31 @@
 
 </aside>
 
-<nav class="mobile-nav" aria-label="{% trans 'التنقل الرئيسي' %}">
+<nav class="mobile-nav" aria-label="التنقل الرئيسي">
     <a href="{% url 'dashboard' %}" class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
         <i class="bi bi-grid-1x2" aria-hidden="true"></i>
-        <span>{% trans "Home" %}</span>
+        <span>Home</span>
     </a>
     <a href="{% url 'products_list' %}" class="{% if request.resolver_match.url_name == 'products_list' %}active{% endif %}">
         <i class="bi bi-box-seam" aria-hidden="true"></i>
-        <span>{% trans "Products" %}</span>
+        <span>المنتجات</span>
     </a>
     {% if perms.inventory.add_product %}
     <a href="{% url 'add_product' %}" class="{% if request.resolver_match.url_name == 'add_product' %}active{% endif %}">
         <i class="bi bi-plus-circle" aria-hidden="true"></i>
-        <span>{% trans "Add" %}</span>
+        <span>Add</span>
     </a>
     {% endif %}
     {% if perms.inventory.view_inventorytransaction %}
     <a href="{% url 'transactions_list' %}" class="{% if request.resolver_match.url_name == 'transactions_list' %}active{% endif %}">
         <i class="bi bi-arrow-left-right" aria-hidden="true"></i>
-        <span>{% trans "Transactions" %}</span>
+        <span>Transactions</span>
     </a>
     {% endif %}
     {% if user.is_superuser %}
     <a href="{% url 'system_settings' %}" class="{% if request.resolver_match.url_name == 'system_settings' %}active{% endif %}">
         <i class="bi bi-three-dots" aria-hidden="true"></i>
-        <span>{% trans "More" %}</span>
+        <span>More</span>
     </a>
     {% endif %}
 </nav>

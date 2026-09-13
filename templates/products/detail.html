@@ -1,5 +1,5 @@
 {% extends "layout/base.html" %}
-{% load static i18n %}
+{% load static %}
 
 {% block title %}
 {{ product.name }}
@@ -15,22 +15,22 @@
 
     <a href="{% url 'products_list' %}" class="back-btn">
         <i class="bi bi-arrow-left"></i>
-        {% trans "Back" %}
+        Back
     </a>
 
     <div class="detail-heading">
-        <span class="eyebrow">{% trans "Product details" %}</span>
+        <span class="eyebrow">Product details</span>
         <h1>{{ product.name }}</h1>
         
     </div>
 
     <span class="stock-status stock-{{ product.stock_status }}">
         {% if product.stock_status == "available" %}
-            {% trans "Available" %}
+            Available
         {% elif product.stock_status == "low" %}
-            {% trans "Low" %}
+            Low
         {% else %}
-            {% trans "Out of stock" %}
+            Out of stock
         {% endif %}
     </span>
 
@@ -40,10 +40,14 @@
 
     <div class="summary-card">
 
-        
+        <div class="summary-card-heading">
+            <span class="eyebrow">Product code</span>
+        </div>
+
+        <strong class="product-code">{{ product.id }}</strong>
 
         <div class="quantity-highlight">
-            <span>{% trans "Current quantity" %}</span>
+            <span>Current quantity</span>
             <strong>{{ product.quantity }}</strong>
         </div>
 
@@ -53,8 +57,8 @@
 
         <div class="section-heading">
             <div>
-                <span class="eyebrow">{% trans "Overview" %}</span>
-                <h2>{% trans "Product information" %}</h2>
+                <span class="eyebrow">Overview</span>
+                <h2>Product information</h2>
             </div>
             <i class="bi bi-info-circle" aria-hidden="true"></i>
         </div>
@@ -62,38 +66,38 @@
         <div class="info-grid">
 
         <div class="info-row">
-            <span>{% trans "Name" %}</span>
+            <span>Name</span>
             <strong>{{ product.name }}</strong>
         </div>
 
         <div class="info-row">
-            <span>{% trans "Category" %}</span>
+            <span>Category</span>
             <strong>{{ product.category }}</strong>
         </div>
 
         <div class="info-row">
-            <span>{% trans "Color" %}</span>
+            <span>Color</span>
             <strong>{{ product.color }}</strong>
         </div>
 
         <div class="info-row">
-            <span>{% trans "Size" %}</span>
+            <span>Size</span>
             <strong>{{ product.size }}</strong>
         </div>
 
         <div class="info-row">
-            <span>{% trans "Price" %}</span>
+            <span>Price</span>
             <strong>{{ product.price }} {{ system_settings.currency }}</strong>
         </div>
 
         <div class="info-row">
-            <span>{% trans "Quantity" %}</span>
+            <span>Quantity</span>
             <strong>{{ product.quantity }}</strong>
         </div>
 
         <div class="info-row">
-            <span>{% trans "Description" %}</span>
-            <strong>{% if product.description %}{{ product.description }}{% else %}{% trans "No description" %}{% endif %}</strong>
+            <span>Description</span>
+            <strong>{% if product.description %}{{ product.description }}{% else %}No description{% endif %}</strong>
         </div>
 
         </div>
@@ -102,16 +106,16 @@
 
 </div>
 
-<div class="detail-actions" aria-label="{% trans 'Product actions' %}">
+<div class="detail-actions" aria-label="Product actions">
 
     <a href="{% url 'edit_product' product.id %}" class="action-btn">
         <i class="bi bi-pencil-square"></i>
-        {% trans "Edit" %}
+        Edit
     </a>
 
     <a href="{% url 'delete_product' product.id %}" class="action-btn delete-btn">
         <i class="bi bi-trash3"></i>
-        {% trans "Delete" %}
+        Delete
     </a>
 
 </div>
@@ -119,8 +123,8 @@
 <section class="transactions-panel">
 <div class="section-heading">
     <div>
-        <span class="eyebrow">{% trans "Activity" %}</span>
-        <h2>{% trans "Latest transactions" %}</h2>
+        <span class="eyebrow">Activity</span>
+        <h2>Latest transactions</h2>
     </div>
     <i class="bi bi-arrow-left-right" aria-hidden="true"></i>
 </div>
@@ -131,11 +135,11 @@
 
         <tr>
 
-            <th>{% trans "Type" %}</th>
+            <th>النوع</th>
 
-            <th>{% trans "Quantity" %}</th>
+            <th>الكمية</th>
 
-            <th>{% trans "Date" %}</th>
+            <th>التاريخ</th>
 
         </tr>
 
@@ -160,7 +164,7 @@
         <tr>
 
             <td colspan="3">
-                {% trans "No transactions" %}
+                No transactions
             </td>
 
         </tr>

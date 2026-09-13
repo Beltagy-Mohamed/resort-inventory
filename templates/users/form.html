@@ -1,5 +1,5 @@
 {% extends 'layout/base.html' %}
-{% load i18n static %}
+{% load static %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/products.css' %}">
@@ -53,7 +53,7 @@
 
 <h1><i class="bi bi-person-badge"></i> {{ title }}</h1>
 <p style="color: var(--text-muted); margin-bottom: 2rem;">
-    {% trans 'أدخل بيانات الموظف وحدد الصلاحيات التي يتمتع بها في النظام بدقة.' %}
+    أدخل بيانات الموظف وحدد الصلاحيات التي يتمتع بها في النظام بدقة.
 </p>
 
 <form method="post" class="product-form">
@@ -65,7 +65,7 @@
         </div>
     {% endif %}
 
-    <h2 class="form-section-title"><i class="bi bi-info-circle"></i> {% trans 'معلومات الحساب' %}</h2>
+    <h2 class="form-section-title"><i class="bi bi-info-circle"></i> معلومات الحساب</h2>
     <div class="form-grid">
         {% for field in form %}
             {% if field.field.widget.input_type != 'checkbox' %}
@@ -85,7 +85,7 @@
         {% endfor %}
     </div>
 
-    <h2 class="form-section-title"><i class="bi bi-shield-lock"></i> {% trans 'صلاحيات الموظف (الأدوار)' %}</h2>
+    <h2 class="form-section-title"><i class="bi bi-shield-lock"></i> صلاحيات الموظف (الأدوار)</h2>
     <div class="checkbox-list">
         {% for field in form %}
             {% if field.field.widget.input_type == 'checkbox' %}
@@ -104,10 +104,10 @@
 
     <div style="display: flex; gap: 1rem; margin-top: 2rem;">
         <button type="submit" class="btn-save" style="flex: 1; justify-content: center; display: flex; align-items: center; gap: 0.5rem;">
-            <i class="bi bi-check2-circle"></i> {% trans 'حفظ البيانات' %}
+            <i class="bi bi-check2-circle"></i> حفظ البيانات
         </button>
         <a href="{% url 'users_list' %}" class="btn-save" style="flex: 1; background-color: var(--bg-color); color: var(--text-color); border: 1px solid var(--border-color); text-align: center; justify-content: center; display: flex; align-items: center; gap: 0.5rem; text-decoration: none;">
-            <i class="bi bi-x-lg"></i> {% trans 'إلغاء' %}
+            <i class="bi bi-x-lg"></i> إلغاء
         </a>
     </div>
 

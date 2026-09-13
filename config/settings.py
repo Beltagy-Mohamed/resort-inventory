@@ -176,8 +176,6 @@ MIDDLEWARE = [
 
     'django.middleware.common.CommonMiddleware',
 
-    'django.middleware.locale.LocaleMiddleware',
-
     'django.middleware.csrf.CsrfViewMiddleware',
 
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -355,21 +353,15 @@ AUTH_PASSWORD_VALIDATORS = [
 
 
 
-LANGUAGE_CODE = 'en'
+LANGUAGE_CODE = 'ar'
 
 
 
-LANGUAGES = [
-
-    ('en', 'English'),
-
-    ('ar', 'العربية'),
-
-]
 
 
 
-LOCALE_PATHS = [BASE_DIR / 'locale']
+
+
 
 
 

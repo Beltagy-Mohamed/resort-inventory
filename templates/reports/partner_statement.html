@@ -1,5 +1,4 @@
 {% extends "layout/base.html" %}
-{% load i18n %}
 {% load static %}
 
 {% block title %}كشف حساب جهة تعامل{% endblock %}
@@ -10,30 +9,30 @@
 
 {% block content %}
 <div class="page-header">
-    <h1>{% trans 'كشف حساب جهة تعامل (مورد / عميل)' %}</h1>
+    <h1>كشف حساب جهة تعامل (مورد / عميل)</h1>
 </div>
 
 <div class="search-bar">
     <form method="get">
         <select name="partner_id" class="form-control" style="min-width: 200px;" required>
-            <option value="">{% trans '-- اختر الجهة --' %}</option>
+            <option value="">-- اختر الجهة --</option>
             {% for p in partners %}
             <option value="{{ p.id }}" {% if selected_partner == p.id %}selected{% endif %}>{{ p.name }} ({{ p.get_partner_type_display }})</option>
             {% endfor %}
         </select>
         <select name="month_filter" class="form-control" style="min-width: 120px;">
-            <option value="">{% trans '-- الشهر --' %}</option>
+            <option value="">-- الشهر --</option>
             {% for m_id, m_name in months %}
             <option value="{{ m_id }}" {% if month_filter == m_id %}selected{% endif %}>{{ m_name }}</option>
             {% endfor %}
         </select>
         <select name="year_filter" class="form-control" style="min-width: 100px;">
-            <option value="">{% trans '-- السنة --' %}</option>
+            <option value="">-- السنة --</option>
             {% for y in years %}
             <option value="{{ y }}" {% if year_filter == y %}selected{% endif %}>{{ y }}</option>
             {% endfor %}
         </select>
-        <button type="submit" class="btn-primary" style="padding: 10px 15px; background: #3A5457; color: white; border: none; border-radius: 4px;">{% trans 'بحث' %}</button>
+        <button type="submit" class="btn-primary" style="padding: 10px 15px; background: #3A5457; color: white; border: none; border-radius: 4px;">بحث</button>
     </form>
 </div>
 
@@ -42,37 +41,37 @@
     <table class="products-table">
         <thead>
             <tr>
-                <th>{% trans 'التاريخ' %}</th>
-                <th>{% trans 'نوع الحركة' %}</th>
-                <th>{% trans 'المنتج' %}</th>
-                <th>{% trans 'الكمية' %}</th>
-                <th>{% trans 'سعر الوحدة' %}</th>
-                <th>{% trans 'الإجمالي' %}</th>
-                <th>{% trans 'المخزن' %}</th>
-                <th>{% trans 'ملاحظات' %}</th>
+                <th>التاريخ</th>
+                <th>نوع الحركة</th>
+                <th>المنتج</th>
+                <th>الكمية</th>
+                <th>سعر الوحدة</th>
+                <th>الإجمالي</th>
+                <th>المخزن</th>
+                <th>ملاحظات</th>
             </tr>
         </thead>
         <tbody>
             {% for trans in transactions %}
             <tr>
-                <td data-label="{% trans 'التاريخ' %}">{{ trans.created_at|date:"Y-m-d H:i" }}</td>
-                <td data-label="{% trans 'نوع الحركة' %}">{{ trans.get_transaction_type_display }}</td>
-                <td data-label="{% trans 'المنتج' %}">{{ trans.product.name }}</td>
-                <td data-label="{% trans 'الكمية' %}">{{ trans.quantity }}</td>
-                <td data-label="{% trans 'سعر الوحدة' %}">{{ trans.unit_price }}</td>
-                <td data-label="{% trans 'الإجمالي' %}">{% widthratio trans.unit_price 1 trans.quantity %}</td>
-                <td data-label="{% trans 'المخزن' %}">{{ trans.warehouse.name|default:"-" }}</td>
-                <td data-label="{% trans 'ملاحظات' %}">{{ trans.notes|default:"-" }}</td>
+                <td data-label="التاريخ">{{ trans.created_at|date:"Y-m-d H:i" }}</td>
+                <td data-label="نوع الحركة">{{ trans.get_transaction_type_display }}</td>
+                <td data-label="المنتج">{{ trans.product.name }}</td>
+                <td data-label="الكمية">{{ trans.quantity }}</td>
+                <td data-label="سعر الوحدة">{{ trans.unit_price }}</td>
+                <td data-label="الإجمالي">{% widthratio trans.unit_price 1 trans.quantity %}</td>
+                <td data-label="المخزن">{{ trans.warehouse.name|default:"-" }}</td>
+                <td data-label="ملاحظات">{{ trans.notes|default:"-" }}</td>
             </tr>
             {% empty %}
             <tr>
-                <td colspan="8" style="text-align: center;">{% trans 'لا توجد حركات لهذه الجهة في الفترة المحددة' %}</td>
+                <td colspan="8" style="text-align: center;">لا توجد حركات لهذه الجهة في الفترة المحددة</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
 </div>
 {% else %}
-<p style="text-align: center; margin-top: 50px;">{% trans 'يرجى اختيار جهة تعامل للبدء' %}</p>
+<p style="text-align: center; margin-top: 50px;">يرجى اختيار جهة تعامل للبدء</p>
 {% endif %}
 {% endblock %}

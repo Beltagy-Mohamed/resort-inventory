@@ -1,5 +1,4 @@
 {% extends "layout/base.html" %}
-{% load i18n %}
 {% load static %}
 
 {% block title %}جرد المخازن التفصيلي{% endblock %}
@@ -10,18 +9,18 @@
 
 {% block content %}
 <div class="page-header">
-    <h1>{% trans 'جرد المخازن التفصيلي' %}</h1>
+    <h1>جرد المخازن التفصيلي</h1>
 </div>
 
 <div class="search-bar">
     <form method="get">
         <select name="warehouse_id" class="form-control" style="min-width: 200px;">
-            <option value="">{% trans '-- كل المخازن --' %}</option>
+            <option value="">-- كل المخازن --</option>
             {% for w in warehouses %}
             <option value="{{ w.id }}" {% if selected_warehouse == w.id %}selected{% endif %}>{{ w.name }}</option>
             {% endfor %}
         </select>
-        <button type="submit" class="btn-primary" style="padding: 10px 15px; background: #3A5457; color: white; border: none; border-radius: 4px;">{% trans 'بحث' %}</button>
+        <button type="submit" class="btn-primary" style="padding: 10px 15px; background: #3A5457; color: white; border: none; border-radius: 4px;">بحث</button>
     </form>
 </div>
 
@@ -29,27 +28,27 @@
     <table class="products-table">
         <thead>
             <tr>
-                <th>{% trans 'المخزن' %}</th>
+                <th>المخزن</th>
                 
-                <th>{% trans 'اسم المنتج' %}</th>
-                <th>{% trans 'الكمية المتاحة' %}</th>
-                <th>{% trans 'سعر التكلفة' %}</th>
-                <th>{% trans 'سعر البيع' %}</th>
+                <th>اسم المنتج</th>
+                <th>الكمية المتاحة</th>
+                <th>سعر التكلفة</th>
+                <th>سعر البيع</th>
             </tr>
         </thead>
         <tbody>
             {% for stock in stocks %}
             <tr>
-                <td data-label="{% trans 'المخزن' %}">{{ stock.warehouse.name }}</td>
+                <td data-label="المخزن">{{ stock.warehouse.name }}</td>
                 
-                <td data-label="{% trans 'اسم المنتج' %}">{{ stock.product.name }}</td>
-                <td data-label="{% trans 'الكمية المتاحة' %}">{{ stock.quantity }}</td>
-                <td data-label="{% trans 'سعر التكلفة' %}">{{ stock.product.cost_price }}</td>
-                <td data-label="{% trans 'سعر البيع' %}">{{ stock.product.selling_price }}</td>
+                <td data-label="اسم المنتج">{{ stock.product.name }}</td>
+                <td data-label="الكمية المتاحة">{{ stock.quantity }}</td>
+                <td data-label="سعر التكلفة">{{ stock.product.cost_price }}</td>
+                <td data-label="سعر البيع">{{ stock.product.selling_price }}</td>
             </tr>
             {% empty %}
             <tr>
-                <td colspan="6" style="text-align: center;">{% trans 'لا توجد أرصدة مطابقة للبحث' %}</td>
+                <td colspan="6" style="text-align: center;">لا توجد أرصدة مطابقة للبحث</td>
             </tr>
             {% endfor %}
         </tbody>

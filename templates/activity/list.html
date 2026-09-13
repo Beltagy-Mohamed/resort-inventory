@@ -1,8 +1,8 @@
 {% extends "layout/base.html" %}
-{% load static i18n %}
+{% load static %}
 
 {% block title %}
-{% trans "Activity Log" %}
+Activity Log
 {% endblock %}
 
 {% block extra_css %}
@@ -11,7 +11,7 @@
 
 {% block content %}
 
-<h1>{% trans "Activity Log" %}</h1>
+<h1>Activity Log</h1>
 
 <table class="products-table">
 
@@ -19,14 +19,14 @@
 
         <tr>
 
-            <th>{% trans "Time" %}</th>
-            <th>{% trans "User" %}</th>
+            <th>Time</th>
+            <th>المستخدم</th>
 
-            <th>{% trans "Action" %}</th>
+            <th>Action</th>
 
-            <th>{% trans "Product" %}</th>
+            <th>المنتج</th>
 
-            <th>{% trans "Description" %}</th>
+            <th>Description</th>
 
         </tr>
 
@@ -38,8 +38,8 @@
 
         <tr>
 
-            <td data-label="{% trans 'Date' %}">{{ log.created_at|date:"Y-m-d H:i" }}</td>
-            <td data-label="{% trans 'المستخدم' %}">{% if log.user %}{{ log.user.username }}{% else %}-{% endif %}</td>
+            <td data-label="التاريخ">{{ log.created_at|date:"Y-m-d H:i" }}</td>
+            <td data-label="المستخدم">{% if log.user %}{{ log.user.username }}{% else %}-{% endif %}</td>
 
             <td>{{ log.get_action_display }}</td>
 
@@ -67,7 +67,7 @@
 
             <td colspan="5">
 
-                {% trans "No activity" %}
+                No activity
 
             </td>
 
@@ -84,22 +84,22 @@
     {% if page_obj.has_previous %}
 
         <a href="?page={{ page_obj.previous_page_number }}">
-            {% trans "Previous" %}
+            Previous
         </a>
 
     {% endif %}
 
     <span>
-        {% trans "Page" %}
+        Page
         {{ page_obj.number }}
-        {% trans "of" %}
+        of
         {{ page_obj.paginator.num_pages }}
     </span>
 
     {% if page_obj.has_next %}
 
         <a href="?page={{ page_obj.next_page_number }}">
-            {% trans "Next" %}
+            Next
         </a>
 
     {% endif %}

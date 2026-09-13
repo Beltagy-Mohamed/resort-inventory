@@ -1,8 +1,8 @@
 {% extends "layout/base.html" %}
-{% load static i18n %}
+{% load static %}
 
 {% block title %}
-{% trans "Products" %}
+المنتجات
 {% endblock %}
 
 {% block extra_css %}
@@ -13,10 +13,10 @@
 
 <div class="page-header">
 
-    <h1>{% trans "Products" %}</h1>
+    <h1>المنتجات</h1>
 
     <a href="{% url 'add_product' %}" class="btn-save">
-        + {% trans "Add Product" %}
+        + إضافة منتج
     </a>
 
 </div>
@@ -28,37 +28,37 @@
         <input
             type="text"
             name="search"
-            placeholder="{% trans 'Search by name...' %}"
+            placeholder="Search by name or code..."
             value="{{ search }}">
 
         <select name="status">
 
             <option value="">
-                {% trans "All products" %}
+                All products
             </option>
 
             <option
                 value="available"
                 {% if status == "available" %}selected{% endif %}>
-                {% trans "Available" %}
+                Available
             </option>
 
             <option
                 value="low"
                 {% if status == "low" %}selected{% endif %}>
-                {% trans "Low" %}
+                Low
             </option>
 
             <option
                 value="out"
                 {% if status == "out" %}selected{% endif %}>
-                {% trans "Out of stock" %}
+                Out of stock
             </option>
 
         </select>
 
         <button type="submit">
-            {% trans "Search" %}
+            بحث
         </button>
 
     </form>
@@ -74,19 +74,17 @@
 
             
 
-            
+            <th>اسم المنتج</th>
 
-            <th>{% trans "Name" %}</th>
+            <th>الفئة</th>
 
-            <th>{% trans "Category" %}</th>
+            <th>سعر الشراء</th><th>سعر البيع</th>
 
-            <th>{% trans 'سعر الشراء' %}</th><th>{% trans 'سعر البيع' %}</th>
+            <th>الكمية</th>
 
-            <th>{% trans "Quantity" %}</th>
+            <th>حالة المخزون</th>
 
-            <th>{% trans "Status" %}</th>
-
-            <th>{% trans "Actions" %}</th>
+            <th>الإجراءات</th>
 
         </tr>
 
@@ -100,47 +98,45 @@
 
             
 
-            
+            <td data-label="اسم المنتج">{{ product.name }}</td>
 
-            <td data-label="{% trans 'Name' %}">{{ product.name }}</td>
+            <td data-label="الفئة">{{ product.category }}</td>
 
-            <td data-label="{% trans 'Category' %}">{{ product.category }}</td>
+            <td data-label="سعر الشراء">{{ product.cost_price }} {{ system_settings.currency }}</td>
+<td data-label="سعر البيع">{{ product.selling_price }} {{ system_settings.currency }}</td>
 
-            <td data-label="{% trans 'سعر الشراء' %}">{{ product.cost_price }} {{ system_settings.currency }}</td>
-<td data-label="{% trans 'سعر البيع' %}">{{ product.selling_price }} {{ system_settings.currency }}</td>
+            <td data-label="الكمية">{{ product.quantity }}</td>
 
-            <td data-label="{% trans 'Quantity' %}">{{ product.quantity }}</td>
-
-            <td data-label="{% trans 'Status' %}">
+            <td data-label="حالة المخزون">
 
                 {% if product.stock_status == "available" %}
 
                     <span class="badge badge-success">
-                        {% trans "Available" %}
+                        Available
                     </span>
 
                 {% elif product.stock_status == "low" %}
 
                     <span class="badge badge-warning">
-                        {% trans "Low" %}
+                        Low
                     </span>
 
                 {% else %}
 
                     <span class="badge badge-danger">
-                        {% trans "Out of stock" %}
+                        Out of stock
                     </span>
 
                 {% endif %}
 
             </td>
 
-            <td data-label="{% trans 'Actions' %}">
+            <td data-label="الإجراءات">
 
                 <a
                     href="{% url 'product_detail' product.id %}"
                     class="action-btn"
-                    title="{% trans 'View' %}">
+                    title="View">
 
                     <i class="bi bi-eye"></i>
 
@@ -149,7 +145,7 @@
                 <a
                     href="{% url 'edit_product' product.id %}"
                     class="action-btn"
-                    title="{% trans 'Edit' %}">
+                    title="Edit">
 
                     <i class="bi bi-pencil-square"></i>
 
@@ -158,7 +154,7 @@
                 <a
                     href="{% url 'delete_product' product.id %}"
                     class="action-btn"
-                    title="{% trans 'Delete' %}">
+                    title="Delete">
 
                     <i class="bi bi-trash3"></i>
 
@@ -175,7 +171,7 @@
             <td colspan="8">
 
                 <h3>
-                    {% trans "No products yet" %}
+                    No products yet
                 </h3>
 
                 <br>
@@ -184,7 +180,7 @@
                     href="{% url 'add_product' %}"
                     class="btn-save">
 
-                    {% trans "Add first product" %}
+                    Add first product
 
                 </a>
 
@@ -204,18 +200,18 @@
     {% if page_obj.has_previous %}
 
         <a href="?page={{ page_obj.previous_page_number }}&search={{ search }}&status={{ status }}">
-            {% trans "Previous" %}
+            Previous
         </a>
 
     {% endif %}
 
     <span>
 
-        {% trans "Page" %}
+        Page
 
         {{ page_obj.number }}
 
-        {% trans "of" %}
+        of
 
         {{ page_obj.paginator.num_pages }}
 
@@ -224,7 +220,7 @@
     {% if page_obj.has_next %}
 
         <a href="?page={{ page_obj.next_page_number }}&search={{ search }}&status={{ status }}">
-            {% trans "Next" %}
+            Next
         </a>
 
     {% endif %}

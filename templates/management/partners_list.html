@@ -1,5 +1,4 @@
 {% extends "layout/base.html" %}
-{% load i18n %}
 {% load static %}
 {% block title %}جهات التعامل (مورد / عميل){% endblock %}
 {% block extra_css %}
@@ -7,31 +6,31 @@
 {% endblock %}
 {% block content %}
 <div class="page-header">
-    <h1>{% trans 'جهات التعامل' %}</h1>
-    <a href="{% url 'add_partner' %}" class="btn-primary">{% trans 'إضافة جهة جديدة' %}</a>
+    <h1>جهات التعامل</h1>
+    <a href="{% url 'add_partner' %}" class="btn-primary">إضافة جهة جديدة</a>
 </div>
 <div class="table-responsive">
     <table class="products-table">
         <thead>
             <tr>
-                <th>{% trans 'الاسم' %}</th>
-                <th>{% trans 'النوع' %}</th>
-                <th>{% trans 'بيانات التواصل' %}</th>
-                <th>{% trans 'إجراءات' %}</th>
+                <th>الاسم</th>
+                <th>النوع</th>
+                <th>بيانات التواصل</th>
+                <th>إجراءات</th>
             </tr>
         </thead>
         <tbody>
             {% for p in partners %}
             <tr>
-                <td data-label="{% trans 'اسم الجهة' %}">{{ p.name }}</td>
-                <td data-label="{% trans 'النوع' %}">{{ p.get_partner_type_display }}</td>
-                <td data-label="{% trans 'معلومات الاتصال' %}">{{ p.contact_info|default:"-" }}</td>
+                <td data-label="اسم الجهة">{{ p.name }}</td>
+                <td data-label="النوع">{{ p.get_partner_type_display }}</td>
+                <td data-label="معلومات الاتصال">{{ p.contact_info|default:"-" }}</td>
                 <td>
-                    <a href="{% url 'edit_partner' p.id %}" class="btn-icon"><i class="bi bi-pencil"></i> {% trans 'تعديل' %}</a>
+                    <a href="{% url 'edit_partner' p.id %}" class="btn-icon"><i class="bi bi-pencil"></i> تعديل</a>
                 </td>
             </tr>
             {% empty %}
-            <tr><td colspan="4" style="text-align: center;">{% trans 'لا توجد جهات تعامل' %}</td></tr>
+            <tr><td colspan="4" style="text-align: center;">لا توجد جهات تعامل</td></tr>
             {% endfor %}
         </tbody>
     </table>

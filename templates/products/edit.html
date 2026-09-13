@@ -1,15 +1,15 @@
 {% extends "layout/base.html" %}
-{% load static i18n %}
+{% load static %}
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/products.css' %}">
 {% endblock %}
 {% block title %}
-{% trans "Edit Product" %}
+Edit Product
 {% endblock %}
 
 {% block content %}
 
-<h1>{% trans "Edit Product" %}</h1>
+<h1>Edit Product</h1>
 <form method="post" class="product-form">
 
     {% csrf_token %}
@@ -64,7 +64,7 @@
 
     <button type="submit" class="btn-save">
 
-    {% trans "Save changes" %}
+    Save changes
 
 </button>
 

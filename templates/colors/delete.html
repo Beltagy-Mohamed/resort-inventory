@@ -1,5 +1,4 @@
 {% extends "layout/base.html" %}
-{% load i18n %}
 
 {% block title %}
 حذف اللون
@@ -9,11 +8,11 @@
 
 <h2>
 
-{% trans 'هل تريد حذف اللون' %}
+هل تريد حذف اللون
 
 <b>{{ color.name }}</b>
 
-{% trans '؟' %}
+؟
 
 </h2>
 
@@ -23,13 +22,13 @@
 
     <button class="btn-save">
 
-        {% trans 'نعم، احذف' %}
+        نعم، احذف
 
     </button>
 
     <a href="{% url 'colors_list' %}">
 
-        {% trans 'إلغاء' %}
+        إلغاء
 
     </a>
 

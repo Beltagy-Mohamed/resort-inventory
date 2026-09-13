@@ -1,8 +1,8 @@
 {% extends "layout/base.html" %}
-{% load static i18n %}
+{% load static %}
 
 {% block title %}
-{% trans "Inventory transactions" %}
+Inventory transactions
 {% endblock %}
 
 {% block extra_css %}
@@ -13,7 +13,7 @@
 
 <div class="page-header">
 
-    <h1>{% trans "Inventory transactions" %}</h1>
+    <h1>Inventory transactions</h1>
 
 </div>
 
@@ -25,12 +25,12 @@
             type="text"
             name="search"
             value="{{ search }}"
-            placeholder="{% trans 'Search by product or code' %}">
+            placeholder="Search by product or code">
 
         <select name="type">
 
             <option value="">
-                {% trans "All transactions" %}
+                All transactions
             </option>
 
             <option value="IN"
@@ -38,7 +38,7 @@
                 selected
                 {% endif %}>
 
-                {% trans "Received" %}
+                Received
 
             </option>
 
@@ -47,7 +47,7 @@
                 selected
                 {% endif %}>
 
-                {% trans "Issued" %}
+                Issued
 
             </option>
 
@@ -56,26 +56,26 @@
                 selected
                 {% endif %}>
 
-                {% trans "Adjustment" %}
+                Adjustment
 
             </option>
 
         </select>
 
         <select name="month_filter" class="form-control" style="min-width: 120px;">
-            <option value="">{% trans '-- الشهر --' %}</option>
+            <option value="">-- الشهر --</option>
             {% for m_id, m_name in months %}
             <option value="{{ m_id }}" {% if month_filter == m_id %}selected{% endif %}>{{ m_name }}</option>
             {% endfor %}
         </select>
         <select name="year_filter" class="form-control" style="min-width: 100px;">
-            <option value="">{% trans '-- السنة --' %}</option>
+            <option value="">-- السنة --</option>
             {% for y in years %}
             <option value="{{ y }}" {% if year_filter == y %}selected{% endif %}>{{ y }}</option>
             {% endfor %}
         </select>
         <button class="btn-save">
-            {% trans "Search" %}
+            بحث
         </button>
 
     </form>
@@ -89,17 +89,15 @@
 
 <tr>
 
-<th>{% trans "Product" %}</th>
-                <th>{% trans "User" %}</th>
+<th>المنتج</th>
+                <th>المستخدم</th>
 
+<th>النوع</th>
+<th>الجهة</th>
+<th>المخزن</th>
+<th>الكمية</th>
 
-
-<th>{% trans "Type" %}</th>
-<th>{% trans 'الجهة' %}</th>
-<th>{% trans 'المخزن' %}</th>
-<th>{% trans "Quantity" %}</th>
-
-<th>{% trans "Date" %}</th>
+<th>التاريخ</th>
 
 </tr>
 
@@ -111,13 +109,12 @@
 
 <tr>
 
-<td data-label="{% trans 'Product' %}">{{ t.product.name }}</td>
-<td data-label="{% trans 'User' %}">{% if t.user %}{{ t.user.username }}{% else %}-{% endif %}</td>
-
-<td data-label="{% trans 'Type' %}">{{ t.get_transaction_type_display }}</td>
-<td data-label="{% trans 'الجهة' %}">{% if t.partner %}{{ t.partner.name }}{% else %}-{% endif %}</td>
-<td data-label="{% trans 'المخزن' %}">{% if t.warehouse %}{{ t.warehouse.name }}{% else %}-{% endif %}</td>
-<td data-label="{% trans 'Quantity' %}">{{ t.quantity }}</td>
+<td data-label="المنتج">{{ t.product.name }}</td>
+<td data-label="المستخدم">{% if t.user %}{{ t.user.username }}{% else %}-{% endif %}</td>
+<td data-label="النوع">{{ t.get_transaction_type_display }}</td>
+<td data-label="الجهة">{% if t.partner %}{{ t.partner.name }}{% else %}-{% endif %}</td>
+<td data-label="المخزن">{% if t.warehouse %}{{ t.warehouse.name }}{% else %}-{% endif %}</td>
+<td data-label="الكمية">{{ t.quantity }}</td>
 
 <td>{{ t.created_at|date:"Y-m-d H:i" }}</td>
 
@@ -129,7 +126,7 @@
 
 <td colspan="8">
 
-{% trans "No transactions" %}
+No transactions
 
 </td>
 

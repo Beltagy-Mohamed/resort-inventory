@@ -1,15 +1,15 @@
 {% extends "layout/base.html" %}
-{% load static i18n %}
+{% load static %}
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/products.css' %}">
 {% endblock %}
 {% block title %}
-{% trans "Add Product" %}
+إضافة منتج
 {% endblock %}
 
 {% block content %}
 
-<h1>{% trans "Add new product" %}</h1>
+<h1>Add new product</h1>
 
 <form method="post" class="product-form">
 
@@ -64,7 +64,7 @@
     </div>
 
     <button type="submit" class="btn-save">
-        {% trans "Save product" %}
+        Save product
     </button>
 
 </form>

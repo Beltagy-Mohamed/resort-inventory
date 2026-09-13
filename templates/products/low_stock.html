@@ -1,8 +1,8 @@
 {% extends "layout/base.html" %}
-{% load static i18n %}
+{% load static %}
 
 {% block title %}
-{% trans "Low-stock products" %}
+Low-stock products
 {% endblock %}
 
 {% block extra_css %}
@@ -15,7 +15,7 @@
 
     <h1>
 
-        {% trans "Low-stock products" %}
+        Low-stock products
 
     </h1>
 
@@ -27,15 +27,13 @@
 
 <tr>
 
+<th>المنتج</th>
 
+<th>Current quantity</th>
 
-<th>{% trans "Product" %}</th>
+<th>Minimum</th>
 
-<th>{% trans "Current quantity" %}</th>
-
-<th>{% trans "Minimum" %}</th>
-
-<th>{% trans "Status" %}</th>
+<th>حالة المخزون</th>
 
 </tr>
 
@@ -61,7 +59,7 @@
 
 <span class="badge badge-danger">
 
-{% trans "Out of stock" %}
+Out of stock
 
 </span>
 
@@ -69,7 +67,7 @@
 
 <span class="badge badge-warning">
 
-{% trans "Low" %}
+Low
 
 </span>
 
@@ -85,7 +83,7 @@
 
 <td colspan="5">
 
-{% trans "No low-stock products" %}
+No low-stock products
 
 </td>
 

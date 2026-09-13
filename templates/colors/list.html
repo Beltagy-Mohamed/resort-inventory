@@ -1,8 +1,8 @@
 {% extends "layout/base.html" %}
-{% load static i18n %}
+{% load static %}
 
 {% block title %}
-{% trans "Colors" %}
+الألوان
 {% endblock %}
 
 {% block extra_css %}
@@ -13,10 +13,10 @@
 
 <div class="page-header">
 
-    <h1>{% trans "Colors" %}</h1>
+    <h1>الألوان</h1>
 
     <a href="{% url 'add_color' %}" class="btn-save">
-        + {% trans "Add Color" %}
+        + Add Color
     </a>
 
 </div>
@@ -29,8 +29,8 @@
         <tr>
 
             <th>#</th>
-            <th>{% trans "Color" %}</th>
-            <th>{% trans "Actions" %}</th>
+            <th>Color</th>
+            <th>الإجراءات</th>
 
         </tr>
 
@@ -44,9 +44,9 @@
 
             <td>{{ forloop.counter }}</td>
 
-            <td data-label="{% trans 'Name' %}">{{ color.name }}</td>
+            <td data-label="اسم المنتج">{{ color.name }}</td>
 
-            <td data-label="{% trans 'Actions' %}"><a
+            <td data-label="الإجراءات"><a
                     href="{% url 'edit_color' color.id %}"
                     class="action-btn">
 
@@ -70,7 +70,7 @@
 
             <td colspan="3">
 
-                {% trans "No colors" %}
+                No colors
 
             </td>
 

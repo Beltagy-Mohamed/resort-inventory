@@ -1,8 +1,8 @@
 {% extends "layout/base.html" %}
-{% load static i18n %}
+{% load static %}
 
 {% block title %}
-{% if action == 'IN' %}إذن إضافة / استلام بضاعة{% elif action == 'OUT' %}إذن صرف بضاعة{% else %}تسوية مخزنية{% endif %}
+{% if action == 'IN' %}إذن إضافة / استلام بضاعة{% elif action == 'OUT' %}إذن صرف بضاعة{% else %}تسجيل حركة{% endif %}
 {% endblock %}
 
 {% block extra_css %}
@@ -22,49 +22,46 @@
     <h1>
         {% if action == 'IN' %}<i class="bi bi-box-arrow-in-down"></i> إذن إضافة / استلام بضاعة{% endif %}
         {% if action == 'OUT' %}<i class="bi bi-box-arrow-up"></i> إذن صرف بضاعة{% endif %}
-        {% if action == 'ADJUST' %}<i class="bi bi-sliders"></i> تسوية جردية{% endif %}
+        {% if action == 'ADJUST' %}<i class="bi bi-sliders"></i> تسجيل حركة{% endif %}
     </h1>
 </div>
 
 <form method="post" class="product-form">
     {% csrf_token %}
     
-    <!-- Hidden transaction type field to enforce logic -->
     <input type="hidden" name="transaction_type" value="{{ action }}">
 
     <div class="form-grid">
         <div class="form-group">
-            <label>{% trans "Product" %} (المنتج)</label>
+            <label>المنتج</label>
             {{ form.product }}
         </div>
         
         <div class="form-group">
-            <label>{% trans 'المخزن (Warehouse)' %}</label>
+            <label>المخزن</label>
             {{ form.warehouse }}
         </div>
 
         <div class="form-group">
             <label>
-                {% if action == 'IN' %}المورد (Supplier){% elif action == 'OUT' %}الجهة المصرف لها (Client/Entity){% else %}جهة التعامل{% endif %}
+                {% if action == 'IN' %}الجهة الموردة (مورد){% elif action == 'OUT' %}الجهة المصرف لها (عميل){% else %}جهة التعامل{% endif %}
             </label>
             {{ form.partner }}
         </div>
 
         <div class="form-group">
-            <label>{% trans "Quantity" %} (الكمية)</label>
+            <label>الكمية</label>
             {{ form.quantity }}
         </div>
 
         <div class="form-group">
-            <label>
-                {% if action == 'IN' %}تكلفة الوحدة (Unit Cost){% elif action == 'OUT' %}سعر الصرف/البيع (Unit Price){% else %}السعر (Unit Price){% endif %}
-            </label>
+            <label>سعر الوحدة</label>
             {{ form.unit_price }}
         </div>
     </div>
 
     <div class="form-group">
-        <label>{% trans "Notes" %} (ملاحظات)</label>
+        <label>ملاحظات</label>
         {{ form.notes }}
     </div>
 
@@ -72,9 +69,7 @@
         {% if action == 'IN' %}تأكيد استلام البضاعة{% elif action == 'OUT' %}تأكيد صرف البضاعة{% else %}حفظ الحركة{% endif %}
     </button>
 </form>
-
 {% endblock %}
-
 {% block extra_js %}
 <script>
     const productsData = {{ products_data_json|safe }};
@@ -88,7 +83,6 @@
             productSelect.addEventListener("change", function() {
                 const productId = this.value;
                 if (productId && productsData[productId]) {
-                    // Autofill logic based on action type
                     if (actionType === "IN") {
                         priceInput.value = productsData[productId].cost_price;
                     } else if (actionType === "OUT") {
