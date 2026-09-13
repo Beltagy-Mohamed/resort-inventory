@@ -33,6 +33,28 @@ class ProductForm(StripWhitespaceMixin, forms.ModelForm):
         return cleaned_data
 
 
+    
+    initial_warehouse = forms.ModelChoiceField(
+        queryset=Warehouse.objects.all(),
+        required=False,
+        label="المخزن (للرصيد الافتتاحي)",
+        help_text="المخزن الذي سيتم إضافة هذه الكمية إليه."
+    )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance and self.instance.pk:
+            # Editing existing product
+            if 'initial_warehouse' in self.fields:
+                self.fields.pop('initial_warehouse')
+            if 'quantity' in self.fields:
+                self.fields['quantity'].widget.attrs['readonly'] = True
+                self.fields['quantity'].help_text = "لتعديل الكمية قم بعمل حركة استلام أو صرف أو جرد."
+        else:
+            # Adding new product
+            if 'quantity' in self.fields:
+                self.fields['quantity'].help_text = "الرصيد الافتتاحي للمنتج."
+
     class Meta:
 
         model = Product

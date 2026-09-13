@@ -95,14 +95,17 @@ def add_product(request):
                 from inventory.models import InventoryTransaction, Warehouse
                 from inventory.services.inventory_service import InventoryService
                 
-                default_warehouse = Warehouse.objects.first()
-                if default_warehouse:
+                selected_warehouse = form.cleaned_data.get('initial_warehouse')
+                if not selected_warehouse:
+                    selected_warehouse = Warehouse.objects.first()
+                    
+                if selected_warehouse:
                     trans = InventoryTransaction(
                         product=product,
                         transaction_type='IN',
                         quantity=product.quantity,
-                        warehouse=default_warehouse,
-                        notes='رصيد افتتاحي (عند الإضافة)'
+                        warehouse=selected_warehouse,
+                        notes='رصيد افتتاحي (عند إضافة المنتج)'
                     )
                     InventoryService.process(trans)
 
