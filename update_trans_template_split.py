@@ -1,4 +1,12 @@
-{% extends "layout/base.html" %}
+import os
+
+path = r'g:\client_delivery\templates\transactions\add.html'
+with open(path, 'r', encoding='utf-8') as f:
+    c = f.read()
+
+target_all = c
+
+new_html = '''{% extends "layout/base.html" %}
 {% load static i18n %}
 
 {% block title %}
@@ -100,3 +108,7 @@
     });
 </script>
 {% endblock %}
+'''
+
+with open(path, 'w', encoding='utf-8') as f:
+    f.write(new_html)
