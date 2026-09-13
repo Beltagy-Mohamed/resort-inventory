@@ -110,11 +110,6 @@
             <span class="label">جهات التعامل (مورد/عميل)</span>
         </a>
 
-        <a href="{% url 'products_list' %}">
-            <i class="bi bi-upc-scan"></i>
-            <span class="label">{% trans "Barcode / Labels" %}</span>
-        </a>
-
         {% if user.is_superuser %}
         <a href="{% url 'users_list' %}" target="_blank">
             <i class="bi bi-people"></i>
