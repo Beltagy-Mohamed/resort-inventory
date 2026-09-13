@@ -55,7 +55,8 @@ class ProductForm(StripWhitespaceMixin, forms.ModelForm):
             if 'initial_warehouse' in self.fields:
                 self.fields.pop('initial_warehouse')
             if 'quantity' in self.fields:
-                self.fields['quantity'].disabled = True
+                if not getattr(self.instance, 'is_leadership_restricted', False):
+                    self.fields['quantity'].disabled = True
                 self.fields['quantity'].help_text = "لتعديل الكمية قم بعمل حركة استلام أو صرف أو جرد."
         else:
             # Adding new product
