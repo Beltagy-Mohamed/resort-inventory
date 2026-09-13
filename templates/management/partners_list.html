@@ -1,0 +1,38 @@
+{% extends "layout/base.html" %}
+{% load static %}
+{% block title %}جهات التعامل (مورد / عميل){% endblock %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/products.css' %}">
+{% endblock %}
+{% block content %}
+<div class="page-header">
+    <h1>جهات التعامل</h1>
+    <a href="{% url 'add_partner' %}" class="btn-primary">إضافة جهة جديدة</a>
+</div>
+<div class="table-responsive">
+    <table class="data-table">
+        <thead>
+            <tr>
+                <th>الاسم</th>
+                <th>النوع</th>
+                <th>بيانات التواصل</th>
+                <th>إجراءات</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in partners %}
+            <tr>
+                <td>{{ p.name }}</td>
+                <td>{{ p.get_partner_type_display }}</td>
+                <td>{{ p.contact_info|default:"-" }}</td>
+                <td>
+                    <a href="{% url 'edit_partner' p.id %}" class="btn-icon"><i class="bi bi-pencil"></i> تعديل</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4" style="text-align: center;">لا توجد جهات تعامل</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

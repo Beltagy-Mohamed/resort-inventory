@@ -100,6 +100,16 @@
 
         <h5>{% trans "Management" %}</h5>
 
+        <a href="{% url 'warehouses_list' %}" class="{% if request.resolver_match.url_name == 'warehouses_list' or request.resolver_match.url_name == 'add_warehouse' or request.resolver_match.url_name == 'edit_warehouse' %}active{% endif %}">
+            <i class="bi bi-building"></i>
+            <span class="label">المخازن (فروع)</span>
+        </a>
+
+        <a href="{% url 'partners_list' %}" class="{% if request.resolver_match.url_name == 'partners_list' or request.resolver_match.url_name == 'add_partner' or request.resolver_match.url_name == 'edit_partner' %}active{% endif %}">
+            <i class="bi bi-people"></i>
+            <span class="label">جهات التعامل (مورد/عميل)</span>
+        </a>
+
         <a href="{% url 'products_list' %}">
             <i class="bi bi-upc-scan"></i>
             <span class="label">{% trans "Barcode / Labels" %}</span>

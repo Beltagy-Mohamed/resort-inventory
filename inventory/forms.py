@@ -1,6 +1,7 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
 from .models import Product
+from .models import Warehouse, Partner
 from .models import Category
 from .models import Color
 from .models import InventoryTransaction
@@ -265,3 +266,25 @@ class CustomUserEditForm(forms.ModelForm):
         if commit:
             user.save()
         return user
+
+
+class WarehouseForm(forms.ModelForm):
+    class Meta:
+        model = Warehouse
+        fields = ["name", "location", "manager"]
+        labels = {
+            "name": "اسم المخزن",
+            "location": "الموقع / العنوان",
+            "manager": "أمين المخزن",
+        }
+
+
+class PartnerForm(forms.ModelForm):
+    class Meta:
+        model = Partner
+        fields = ["name", "partner_type", "contact_info"]
+        labels = {
+            "name": "اسم الجهة",
+            "partner_type": "نوع الجهة",
+            "contact_info": "بيانات التواصل (هاتف، عنوان..)",
+        }

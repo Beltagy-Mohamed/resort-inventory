@@ -13,3 +13,5 @@ from .settings import *
 from .users import *
 
 from .analytics import *
+
+from .management import *

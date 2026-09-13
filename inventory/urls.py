@@ -202,7 +202,16 @@ path(
     views.activity_logs,
     name="activity_logs",
 ),
-path(
+
+    path("management/warehouses/", views.warehouses_list, name="warehouses_list"),
+    path("management/warehouses/add/", views.add_warehouse, name="add_warehouse"),
+    path("management/warehouses/<int:pk>/edit/", views.edit_warehouse, name="edit_warehouse"),
+
+    path("management/partners/", views.partners_list, name="partners_list"),
+    path("management/partners/add/", views.add_partner, name="add_partner"),
+    path("management/partners/<int:pk>/edit/", views.edit_partner, name="edit_partner"),
+
+    path(
     "settings/",
     views.system_settings,
     name="system_settings",
