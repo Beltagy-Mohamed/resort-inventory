@@ -16,7 +16,7 @@
     <h1>الفئات</h1>
 
     <a href="{% url 'add_category' %}" class="btn-save">
-        + Add الفئة
+        + إضافة فئة
     </a>
 
 </div>
@@ -57,7 +57,7 @@
                 <span class="category-color-code">{{ category.color }}</span>
             </td>
 
-            <td data-label="Products">{{ category.product_set.count }}</td>
+            <td data-label="المنتجات">{{ category.product_set.count }}</td>
 
             <td data-label="الإجراءات"><a
                     href="{% url 'edit_category' category.id %}"

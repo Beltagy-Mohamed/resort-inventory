@@ -16,7 +16,7 @@ class StripWhitespaceMixin:
             if isinstance(value, str):
                 stripped = value.strip()
                 if not stripped and self.fields[field].required:
-                    self.add_error(field, ValidationError("This field cannot be empty or just spaces."))
+                    self.add_error(field, ValidationError("هذا الحقل لا يمكن أن يكون فارغاً أو مجرد مسافات."))
                 cleaned_data[field] = stripped
         return cleaned_data
         
@@ -24,7 +24,7 @@ class StripWhitespaceMixin:
         for field in fields:
             val = cleaned_data.get(field)
             if val is not None and val < 0:
-                self.add_error(field, ValidationError("Value cannot be negative."))
+                self.add_error(field, ValidationError("القيمة لا يمكن أن تكون سالبة."))
 
 class ProductForm(StripWhitespaceMixin, forms.ModelForm):
     def clean(self):
@@ -50,15 +50,15 @@ class ProductForm(StripWhitespaceMixin, forms.ModelForm):
         ]
 
         labels = {
-            "name": "Product name",
-            "category": "Category",
-            "color": "Color",
+            "name": "اسم المنتج",
+            "category": "الفئة",
+            "color": "اللون",
             "size": "Size",
             "cost_price": "سعر الشراء / التكلفة",
             "selling_price": "سعر البيع / التوريد",
-            "quantity": "Quantity",
-            "description": "Description",
-            "minimum_stock": "Minimum stock",
+            "quantity": "الكمية",
+            "description": "الوصف",
+            "minimum_stock": "الحد الأدنى للمخزون",
         }
 
         widgets = {
@@ -107,7 +107,7 @@ class CategoryForm(StripWhitespaceMixin, forms.ModelForm):
             "name": forms.TextInput(
                 attrs={
                     "class": "form-control",
-                    "placeholder": "Category name"
+                    "placeholder": "اسم الفئة"
                 }
             ),
             "color": forms.TextInput(
@@ -134,7 +134,7 @@ class ColorForm(StripWhitespaceMixin, forms.ModelForm):
             "name": forms.TextInput(
                 attrs={
                     "class": "form-control",
-                    "placeholder": "Color name"
+                    "placeholder": "اسم اللون"
                 }
             )
 
@@ -146,7 +146,7 @@ class InventoryTransactionForm(StripWhitespaceMixin, forms.ModelForm):
         self.clean_positive_numbers(cleaned_data, ['quantity', 'unit_price'])
         qty = cleaned_data.get('quantity')
         if qty is not None and qty == 0:
-            self.add_error('quantity', ValidationError("Quantity cannot be zero."))
+            self.add_error('quantity', ValidationError("الكمية لا يمكن أن تكون صفراً."))
         return cleaned_data
 
 
@@ -208,7 +208,7 @@ class SizeForm(StripWhitespaceMixin, forms.ModelForm):
             "name": forms.TextInput(
                 attrs={
                     "class": "form-control",
-                    "placeholder": "Size name"
+                    "placeholder": "اسم المقاس"
                 }
             )
 

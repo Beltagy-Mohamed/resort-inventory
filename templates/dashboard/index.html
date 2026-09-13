@@ -352,7 +352,7 @@
                 <a href="{% url 'product_detail' product.id %}" class="active-product-row">
                     <span>
                         <strong>{{ product.name }}</strong>
-                        <small>{{ product.id }}</small>
+                        
                     </span>
                     <b>{{ product.movement_count }}</b>
                 </a>
@@ -370,7 +370,7 @@
         <div class="alert-header">
             <h2>
                 <i class="bi bi-exclamation-triangle-fill"></i>
-                منخفض-stock alerts
+                تنبيهات نقص المخزون
             </h2>
 
             <a href="{% url 'low_stock_products' %}" class="view-all">
@@ -505,11 +505,11 @@ new Chart(ctx, {
 
     {
 
-        label: "Products",
+        label: "المنتجات",
 
         data: {{ category_counts|safe }},
 
-                backgroundاللون: {{ category_colors|safe }} || [
+                backgroundColor: {{ category_colors|safe }} || [
             {% for color in category_colors %}"{{ color }}"{% if not forloop.last %},{% endif %}{% endfor %}
         ],
 
@@ -567,10 +567,10 @@ new Chart(txCtx, {
 
         datasets: [
             {
-                label: "Transactions",
+                label: "الحركات",
                 data: {{ transactions_counts|safe }},
-                borderاللون: "#3a5457",
-                backgroundاللون: "rgba(58, 84, 87, 0.15)",
+                borderColor: "#3a5457",
+                backgroundColor: "rgba(58, 84, 87, 0.15)",
                 tension: 0.3,
                 fill: true,
             }
@@ -609,7 +609,7 @@ new Chart(valueCtx, {
         labels: {{ category_value_labels|safe }},
         datasets: [{
             data: {{ category_value_counts|safe }},
-            backgroundاللون: {{ category_colors|safe }} || [{% for color in category_value_colors %}"{{ color }}"{% if not forloop.last %},{% endif %}{% endfor %}],
+            backgroundColor: {{ category_colors|safe }} || [{% for color in category_value_colors %}"{{ color }}"{% if not forloop.last %},{% endif %}{% endfor %}],
             borderWidth: 0,
         }]
     },

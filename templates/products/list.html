@@ -28,7 +28,7 @@
         <input
             type="text"
             name="search"
-            placeholder="Search by name or code..."
+            placeholder="البحث عن منتج بالاسم..."
             value="{{ search }}">
 
         <select name="status">
@@ -136,7 +136,7 @@
                 <a
                     href="{% url 'product_detail' product.id %}"
                     class="action-btn"
-                    title="View">
+                    title="عرض">
 
                     <i class="bi bi-eye"></i>
 
@@ -207,7 +207,7 @@
 
     <span>
 
-        Page
+        صفحة
 
         {{ page_obj.number }}
 
