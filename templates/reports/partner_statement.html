@@ -1,3 +1,4 @@
+{% load i18n %}
 {% extends "layout/base.html" %}
 {% load static %}
 
@@ -9,30 +10,30 @@
 
 {% block content %}
 <div class="page-header">
-    <h1>كشف حساب جهة تعامل (مورد / عميل)</h1>
+    <h1>{% trans "Partner Statement" } (مورد / عميل)</h1>
 </div>
 
 <div class="search-bar">
     <form method="get">
         <select name="partner_id" class="form-control" style="min-width: 200px;" required>
-            <option value="">-- اختر الجهة --</option>
+            <option value="">-- اختر {% trans "Partner" %} --</option>
             {% for p in partners %}
             <option value="{{ p.id }}" {% if selected_partner == p.id %}selected{% endif %}>{{ p.name }} ({{ p.get_partner_type_display }})</option>
             {% endfor %}
         </select>
         <select name="month_filter" class="form-control" style="min-width: 120px;">
-            <option value="">-- الشهر --</option>
+            <option value="">{% trans "-- Month --" %}/option>
             {% for m_id, m_name in months %}
             <option value="{{ m_id }}" {% if month_filter == m_id %}selected{% endif %}>{{ m_name }}</option>
             {% endfor %}
         </select>
         <select name="year_filter" class="form-control" style="min-width: 100px;">
-            <option value="">-- السنة --</option>
+            <option value="">{% trans "-- Year --" %}/option>
             {% for y in years %}
             <option value="{{ y }}" {% if year_filter == y %}selected{% endif %}>{{ y }}</option>
             {% endfor %}
         </select>
-        <button type="submit" class="btn-primary" style="padding: 10px 15px; background: #3A5457; color: white; border: none; border-radius: 4px;">بحث</button>
+        <button type="submit" class="btn-primary" style="padding: 10px 15px; background: #3A5457; color: white; border: none; border-radius: 4px;">{% trans "Search" %}/button>
     </form>
 </div>
 
@@ -41,14 +42,14 @@
     <table class="data-table">
         <thead>
             <tr>
-                <th>التاريخ</th>
-                <th>نوع الحركة</th>
-                <th>المنتج</th>
-                <th>الكمية</th>
-                <th>سعر الوحدة</th>
-                <th>الإجمالي</th>
-                <th>المخزن</th>
-                <th>ملاحظات</th>
+                <th>{% trans "Date" %}/th>
+                <th>{% trans "Transaction Type" %}/th>
+                <th>{% trans "Product" %}/th>
+                <th>{% trans "Quantity" %}/th>
+                <th>{% trans "Unit Price" %}/th>
+                <th>{% trans "Total" %}/th>
+                <th>{% trans "Warehouse" %}/th>
+                <th>م{% trans "No" %}حظات</th>
             </tr>
         </thead>
         <tbody>
@@ -65,13 +66,13 @@
             </tr>
             {% empty %}
             <tr>
-                <td colspan="8" style="text-align: center;">لا توجد حركات لهذه الجهة في الفترة المحددة</td>
+                <td colspan="8" style="text-align: center;">{% trans "No" } توجد حركات لهذه {% trans "Partner" %} في الفترة المحددة</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
 </div>
 {% else %}
-<p style="text-align: center; margin-top: 50px;">يرجى اختيار جهة تعامل للبدء</p>
+<p style="text-align: center; margin-top: 50px;">{% trans "Please select a partner to begin" %}/p>
 {% endif %}
 {% endblock %}

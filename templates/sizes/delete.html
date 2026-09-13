@@ -1,14 +1,15 @@
+{% load i18n %}
 {% extends "layout/base.html" %}
 
 {% block title %}
-حذف المقاس
+{% trans "Delete" %} المقاس
 {% endblock %}
 
 {% block content %}
 
 <h2>
 
-هل تريد حذف المقاس
+هل تريد {% trans "Delete" %} المقاس
 
 <b>{{ size.name }}</b>
 
@@ -22,13 +23,13 @@
 
     <button class="btn-save">
 
-        نعم، احذف
+        {% trans "Yes" %}، ا{% trans "Delete" %}
 
     </button>
 
     <a href="{% url 'sizes_list' %}">
 
-        إلغاء
+        {% trans "Cancel" %}
 
     </a>
 

@@ -1,3 +1,4 @@
+{% load i18n %}
 {% extends "layout/base.html" %}
 {% load static %}
 
@@ -17,38 +18,38 @@
 
 {% block content %}
 <div class="page-header">
-    <h1>تقرير الأرباح والمبيعات (الحركات الصادرة فقط)</h1>
+    <h1>{% trans "Profit & Sales Report" } (الحركات الصادرة فقط)</h1>
 </div>
 
 <div class="search-bar">
     <form method="get">
         <select name="month_filter" class="form-control" style="min-width: 120px;">
-            <option value="">-- الشهر --</option>
+            <option value="">{% trans "-- Month --" %}/option>
             {% for m_id, m_name in months %}
             <option value="{{ m_id }}" {% if month_filter == m_id %}selected{% endif %}>{{ m_name }}</option>
             {% endfor %}
         </select>
         <select name="year_filter" class="form-control" style="min-width: 100px;">
-            <option value="">-- السنة --</option>
+            <option value="">{% trans "-- Year --" %}/option>
             {% for y in years %}
             <option value="{{ y }}" {% if year_filter == y %}selected{% endif %}>{{ y }}</option>
             {% endfor %}
         </select>
-        <button type="submit" class="btn-primary" style="padding: 10px 15px; background: #3A5457; color: white; border: none; border-radius: 4px;">عرض التقرير</button>
+        <button type="submit" class="btn-primary" style="padding: 10px 15px; background: #3A5457; color: white; border: none; border-radius: 4px;">{% trans "View Report" %}/button>
     </form>
 </div>
 
 <div class="summary-cards">
     <div class="summary-card">
-        <h3>إجمالي المبيعات (قيمة البضاعة المنصرفة)</h3>
+        <h3>{% trans "Total Sales (Value of issued goods)" %}/h3>
         <div class="value">{{ total_sales|floatformat:2 }}</div>
     </div>
     <div class="summary-card">
-        <h3>إجمالي التكلفة</h3>
+        <h3>{% trans "Total Cost" %}/h3>
         <div class="value">{{ total_cost|floatformat:2 }}</div>
     </div>
     <div class="summary-card">
-        <h3>صافي الربح</h3>
+        <h3>صافي {% trans "Profit" %}</h3>
         <div class="value {% if total_profit > 0 %}profit-positive{% elif total_profit < 0 %}profit-negative{% endif %}">
             {{ total_profit|floatformat:2 }}
         </div>
@@ -59,14 +60,14 @@
     <table class="data-table">
         <thead>
             <tr>
-                <th>التاريخ</th>
-                <th>المنتج</th>
-                <th>الكمية المنصرفة</th>
-                <th>تكلفة الوحدة</th>
-                <th>سعر البيع الفعلي</th>
-                <th>إجمالي التكلفة</th>
-                <th>إجمالي البيع</th>
-                <th>الربح</th>
+                <th>{% trans "Date" %}/th>
+                <th>{% trans "Product" %}/th>
+                <th>{% trans "Quantity" } المنصرفة</th>
+                <th>{% trans "Unit Cost" %}/th>
+                <th>{% trans "Selling Price" } الفعلي</th>
+                <th>{% trans "Total Cost" %}/th>
+                <th>{% trans "Total Sales" %}/th>
+                <th>{% trans "Profit" %}/th>
             </tr>
         </thead>
         <tbody>
@@ -85,7 +86,7 @@
             </tr>
             {% empty %}
             <tr>
-                <td colspan="8" style="text-align: center;">لا توجد مبيعات (حركات منصرفة) في الفترة المحددة</td>
+                <td colspan="8" style="text-align: center;">{% trans "No" } توجد مبيعات (حركات منصرفة) في الفترة المحددة</td>
             </tr>
             {% endfor %}
         </tbody>

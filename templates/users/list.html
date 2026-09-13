@@ -5,13 +5,13 @@
 <link rel="stylesheet" href="{% static 'css/products.css' %}">
 {% endblock %}
 
-{% block title %}المستخدمون والصلاحيات{% endblock %}
+{% block title %}المستخدمون والص{% trans "No" %}حيات{% endblock %}
 
 {% block content %}
 <div class="page-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-    <h1 style="margin: 0;">المستخدمون والصلاحيات</h1>
+    <h1 style="margin: 0;">{% trans "Users & Permissions" %}/h1>
     <a href="{% url 'add_user' %}" class="btn-save" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
-        <i class="bi bi-person-plus"></i> إضافة موظف
+        <i class="bi bi-person-plus"></i> {% trans "Add Employee" %}
     </a>
 </div>
 
@@ -19,43 +19,43 @@
     <table class="products-table">
         <thead>
             <tr>
-                <th>اسم المستخدم</th>
-                <th>الاسم الكامل</th>
-                <th>حالة الحساب</th>
-                <th>مدير نظام؟</th>
-                <th style="text-align: center;">الإجراءات</th>
+                <th>{% trans "Username" %}/th>
+                <th>{% trans "Name" } الكامل</th>
+                <th>{% trans "Account Status" %}/th>
+                <th>{% trans "System Admin?" %}/th>
+                <th style="text-align: center;">ال{% trans "Actions" %}</th>
             </tr>
         </thead>
         <tbody>
             {% for u in users %}
             <tr>
-                <td data-label="اسم المستخدم">
+                <td data-label="{% trans 'Username' %}">
                     <strong>{{ u.username }}</strong>
                 </td>
-                <td data-label="الاسم الكامل">
+                <td data-label="{% trans 'Full Name' %}">
                     {{ u.first_name }} {{ u.last_name }}
                 </td>
-                <td data-label="حالة الحساب">
+                <td data-label="{% trans 'Account Status' %}">
                     {% if u.is_active %}
-                        <span class="badge badge-success">نشط</span>
+                        <span class="badge badge-success">{% trans "Active" %}/span>
                     {% else %}
-                        <span class="badge badge-danger">موقوف</span>
+                        <span class="badge badge-danger">{% trans "Suspended" %}/span>
                     {% endif %}
                 </td>
-                <td data-label="مدير نظام؟">
+                <td data-label="{% trans 'System Admin?' %}">
                     {% if u.is_superuser %}
-                        <i class="bi bi-check-circle-fill" style="color: #059669;"></i> نعم
+                        <i class="bi bi-check-circle-fill" style="color: #059669;"></i> {% trans "Yes" %}
                     {% else %}
-                        <i class="bi bi-x-circle" style="color: #6b7280;"></i> لا
+                        <i class="bi bi-x-circle" style="color: #6b7280;"></i> {% trans "No" %}
                     {% endif %}
                 </td>
-                <td data-label="الإجراءات" style="text-align: center;">
-                    <a href="{% url 'edit_user' u.id %}" class="action-btn" title="تعديل">
+                <td data-label="{% trans 'Actions' %}" style="text-align: center;">
+                    <a href="{% url 'edit_user' u.id %}" class="action-btn" title="{% trans 'Edit' %}">
                         <i class="bi bi-pencil-square"></i> تعديل
                     </a>
                     {% if not u.is_superuser %}
-                    <a href="{% url 'delete_user' u.id %}" class="action-btn" title="إيقاف/حذف" onclick="return confirm('هل أنت متأكد من إيقاف/حذف هذا الموظف؟')" style="color: #dc2626;">
-                        <i class="bi bi-trash3"></i> حذف
+                    <a href="{% url 'delete_user' u.id %}" class="action-btn" title="{% trans 'Suspend/Delete' %}" onclick="return confirm('{% trans "Are you sure you want to suspend/delete this employee?" %}')" style="color: #dc2626;">
+                        <i class="bi bi-trash3"></i> {% trans "Delete" %}
                     </a>
                     {% endif %}
                 </td>
@@ -63,7 +63,7 @@
             {% empty %}
             <tr>
                 <td colspan="5" style="text-align: center; padding: 40px; color: var(--ink-text-muted);">
-                    لا يوجد مستخدمين.
+                    {% trans "No" %} يوجد مستخدمين.
                 </td>
             </tr>
             {% endfor %}

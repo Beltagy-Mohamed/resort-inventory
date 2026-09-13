@@ -3076,11 +3076,11 @@ html[data-theme="dark"] .detail-header h1 {
     height: auto !important; 
     background: var(--surface) !important; 
     border-radius: 40px !important; 
-    margin: 6px 24px 16px 24px !important; 
+    margin: 8px 24px 16px 24px !important; 
     border: 1px solid var(--border-soft) !important; 
     box-shadow: 0 10px 30px rgba(0,0,0,0.05) !important; 
-    top: 16px !important; 
-    position: static !important; 
+    top: 8px !important; 
+    position: sticky !important; 
 }
 
 /* Hide scrollbar for sidebar */

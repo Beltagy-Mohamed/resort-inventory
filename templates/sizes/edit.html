@@ -1,8 +1,9 @@
+{% load i18n %}
 {% extends "layout/base.html" %}
 {% load static %}
 
 {% block title %}
-تعديل المقاس
+{% trans "Edit Size" %}
 {% endblock %}
 
 {% block extra_css %}
@@ -11,7 +12,7 @@
 
 {% block content %}
 
-<h1>تعديل المقاس</h1>
+<h1>{% trans "Edit Size" %}/h1>
 
 <form method="post" class="product-form">
 
@@ -21,7 +22,7 @@
 
     <button class="btn-save">
 
-        حفظ التعديل
+        {% trans "Save" %} التعديل
 
     </button>
 

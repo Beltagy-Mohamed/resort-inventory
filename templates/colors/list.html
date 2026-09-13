@@ -1,3 +1,4 @@
+{% load i18n %}
 {% extends "layout/base.html" %}
 {% load static i18n %}
 
@@ -44,9 +45,9 @@
 
             <td>{{ forloop.counter }}</td>
 
-            <td data-label="{% trans 'Name' %}">{{ color.name }}</td>
+            <td data-label="{% trans '{% trans 'Name' %}' %}">{{ color.name }}</td>
 
-            <td data-label="{% trans 'Actions' %}"><a
+            <td data-label="{% trans '{% trans 'Actions' %}' %}"><a
                     href="{% url 'edit_color' color.id %}"
                     class="action-btn">
 

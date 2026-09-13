@@ -1,7 +1,8 @@
+{% load i18n %}
 {% extends "layout/base.html" %}
 {% load static %}
 
-{% block title %}جرد المخازن التفصيلي{% endblock %}
+{% block title %}جرد {% trans "Warehouses" %} التفصيلي{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/products.css' %}">
@@ -9,18 +10,18 @@
 
 {% block content %}
 <div class="page-header">
-    <h1>جرد المخازن التفصيلي</h1>
+    <h1>جرد {% trans "Warehouses" %} التفصيلي</h1>
 </div>
 
 <div class="search-bar">
     <form method="get">
         <select name="warehouse_id" class="form-control" style="min-width: 200px;">
-            <option value="">-- كل المخازن --</option>
+            <option value="">-- كل {% trans "Warehouses" %} --</option>
             {% for w in warehouses %}
             <option value="{{ w.id }}" {% if selected_warehouse == w.id %}selected{% endif %}>{{ w.name }}</option>
             {% endfor %}
         </select>
-        <button type="submit" class="btn-primary" style="padding: 10px 15px; background: #3A5457; color: white; border: none; border-radius: 4px;">بحث</button>
+        <button type="submit" class="btn-primary" style="padding: 10px 15px; background: #3A5457; color: white; border: none; border-radius: 4px;">{% trans "Search" %}/button>
     </form>
 </div>
 
@@ -28,12 +29,12 @@
     <table class="data-table">
         <thead>
             <tr>
-                <th>المخزن</th>
-                <th>كود المنتج</th>
-                <th>اسم المنتج</th>
-                <th>الكمية المتاحة</th>
-                <th>سعر التكلفة</th>
-                <th>سعر البيع</th>
+                <th>{% trans "Warehouse" %}/th>
+                <th>كود {% trans "Product" %}</th>
+                <th>{% trans "Product Name" %}/th>
+                <th>{% trans "Quantity" } المتاحة</th>
+                <th>{% trans "Cost Price" %}/th>
+                <th>{% trans "Selling Price" %}/th>
             </tr>
         </thead>
         <tbody>
@@ -48,7 +49,7 @@
             </tr>
             {% empty %}
             <tr>
-                <td colspan="6" style="text-align: center;">لا توجد أرصدة مطابقة للبحث</td>
+                <td colspan="6" style="text-align: center;">{% trans "No" } توجد أرصدة مطابقة لل{% trans "Search" %}</td>
             </tr>
             {% endfor %}
         </tbody>

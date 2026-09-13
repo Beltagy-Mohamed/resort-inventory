@@ -497,3 +497,235 @@ msgstr "المخازن (فروع)"
 
 msgid "Partners"
 msgstr "جهات التعامل (مورد/عميل)"
+
+
+msgid "Billion"
+msgstr "مليار"
+
+msgid "Million"
+msgstr "مليون"
+
+msgid "Thousand"
+msgstr "ألف"
+
+msgid "Enter employee details and carefully select system permissions."
+msgstr "أدخل بيانات الموظف وحدد الصلاحيات التي يتمتع بها في النظام بدقة."
+
+msgid "Storekeeper"
+msgstr "أمين المخزن"
+
+msgid "Total Sales"
+msgstr "إجمالي البيع"
+
+msgid "Total Cost"
+msgstr "إجمالي التكلفة"
+
+msgid "Total Sales (Value of issued goods)"
+msgstr "إجمالي المبيعات (قيمة البضاعة المنصرفة)"
+
+msgid "Stock Receipt"
+msgstr "إذن إضافة / استلام بضاعة"
+
+msgid "Stock Issue"
+msgstr "إذن صرف بضاعة"
+
+msgid "Add New Partner"
+msgstr "إضافة جهة جديدة"
+
+msgid "Add New Warehouse"
+msgstr "إضافة مخزن جديد"
+
+msgid "Add Employee"
+msgstr "إضافة موظف"
+
+msgid "Product Name"
+msgstr "اسم المنتج"
+
+msgid "Total"
+msgstr "الإجمالي"
+
+msgid "Full Name"
+msgstr "الاسم الكامل"
+
+msgid "Partner"
+msgstr "الجهة"
+
+msgid "Client/Entity"
+msgstr "الجهة المصرف لها (Client/Entity)"
+
+msgid "Profit"
+msgstr "الربح"
+
+msgid "Available Quantity"
+msgstr "الكمية المتاحة"
+
+msgid "Issued Quantity"
+msgstr "الكمية المنصرفة"
+
+msgid "Warehouse"
+msgstr "المخزن"
+
+msgid "Supplier"
+msgstr "المورد (Supplier)"
+
+msgid "Location"
+msgstr "الموقع"
+
+msgid "Contact Info"
+msgstr "بيانات التواصل"
+
+msgid "Confirm Receipt"
+msgstr "تأكيد استلام البضاعة"
+
+msgid "Confirm Issue"
+msgstr "تأكيد صرف البضاعة"
+
+msgid "Inventory Adjustment"
+msgstr "تسوية جردية"
+
+msgid "Stock Adjustment"
+msgstr "تسوية مخزنية"
+
+msgid "Edit Color"
+msgstr "تعديل اللون"
+
+msgid "Edit Size"
+msgstr "تعديل المقاس"
+
+msgid "Profit & Sales Report"
+msgstr "تقرير الأرباح والمبيعات"
+
+msgid "Profit & Sales Report (Issues Only)"
+msgstr "تقرير الأرباح والمبيعات (الحركات الصادرة فقط)"
+
+msgid "Unit Cost"
+msgstr "تكلفة الوحدة"
+
+msgid "Detailed Warehouse Stock"
+msgstr "جرد المخازن التفصيلي"
+
+msgid "Partners (Supplier/Client)"
+msgstr "جهات التعامل (مورد / عميل)"
+
+msgid "Account Status"
+msgstr "حالة الحساب"
+
+msgid "Delete Color"
+msgstr "حذف اللون"
+
+msgid "Delete Size"
+msgstr "حذف المقاس"
+
+msgid "Save"
+msgstr "حفظ"
+
+msgid "Save Data"
+msgstr "حفظ البيانات"
+
+msgid "Save Changes"
+msgstr "حفظ التعديل"
+
+msgid "Save Transaction"
+msgstr "حفظ الحركة"
+
+msgid "Selling Price"
+msgstr "سعر البيع"
+
+msgid "Actual Selling Price"
+msgstr "سعر البيع الفعلي"
+
+msgid "Cost Price"
+msgstr "سعر التكلفة"
+
+msgid "Purchase Price"
+msgstr "سعر الشراء"
+
+msgid "Unit Price"
+msgstr "سعر الصرف/البيع (Unit Price)"
+
+msgid "Net Profit"
+msgstr "صافي الربح"
+
+msgid "Employee Permissions"
+msgstr "صلاحيات الموظف (الأدوار)"
+
+msgid "View Report"
+msgstr "عرض التقرير"
+
+msgid "Partner Statement (Supplier/Client)"
+msgstr "كشف حساب جهة تعامل (مورد / عميل)"
+
+msgid "Product Code"
+msgstr "كود المنتج"
+
+msgid "No"
+msgstr "لا"
+
+msgid "No stock matches search"
+msgstr "لا توجد أرصدة مطابقة للبحث"
+
+msgid "No partners found"
+msgstr "لا توجد جهات تعامل"
+
+msgid "No transactions for this partner in the specified period"
+msgstr "لا توجد حركات لهذه الجهة في الفترة المحددة"
+
+msgid "No sales in the specified period"
+msgstr "لا توجد مبيعات (حركات منصرفة) في الفترة المحددة"
+
+msgid "No warehouses found"
+msgstr "لا توجد مخازن"
+
+msgid "No users found."
+msgstr "لا يوجد مستخدمين."
+
+msgid "System Admin?"
+msgstr "مدير نظام؟"
+
+msgid "Account Information"
+msgstr "معلومات الحساب"
+
+msgid "Suspended"
+msgstr "موقوف"
+
+msgid "Active"
+msgstr "نشط"
+
+msgid "Yes"
+msgstr "نعم"
+
+msgid "Yes, Delete"
+msgstr "نعم، احذف"
+
+msgid "Transaction Type"
+msgstr "نوع الحركة"
+
+msgid "Are you sure you want to delete color"
+msgstr "هل تريد حذف اللون"
+
+msgid "Are you sure you want to delete size"
+msgstr "هل تريد حذف المقاس"
+
+msgid "Please select a partner to begin"
+msgstr "يرجى اختيار جهة تعامل للبدء"
+
+msgid "-- Select Partner --"
+msgstr "-- اختر الجهة --"
+
+msgid "-- Year --"
+msgstr "-- السنة --"
+
+msgid "-- Month --"
+msgstr "-- الشهر --"
+
+msgid "-- All Warehouses --"
+msgstr "-- كل المخازن --"
+
+msgid "Suspend/Delete"
+msgstr "إيقاف/حذف"
+
+msgid "Are you sure you want to suspend/delete this employee?"
+msgstr "هل أنت متأكد من إيقاف/حذف هذا الموظف؟"
+
+msgid "Main Navigation"
+msgstr "التنقل الرئيسي"

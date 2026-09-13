@@ -1,8 +1,9 @@
+{% load i18n %}
 {% extends "layout/base.html" %}
 {% load static i18n %}
 
 {% block title %}
-{% if action == 'IN' %}إذن إضافة / استلام بضاعة{% elif action == 'OUT' %}إذن صرف بضاعة{% else %}تسوية مخزنية{% endif %}
+{% if action == 'IN' %}إذن إضافة / است{% trans "No" %}م بضاعة{% elif action == 'OUT' %}إذن صرف بضاعة{% else %}تسوية مخزنية{% endif %}
 {% endblock %}
 
 {% block extra_css %}
@@ -20,9 +21,9 @@
 {% block content %}
 <div class="page-header">
     <h1>
-        {% if action == 'IN' %}<i class="bi bi-box-arrow-in-down"></i> إذن إضافة / استلام بضاعة{% endif %}
-        {% if action == 'OUT' %}<i class="bi bi-box-arrow-up"></i> إذن صرف بضاعة{% endif %}
-        {% if action == 'ADJUST' %}<i class="bi bi-sliders"></i> تسوية جردية{% endif %}
+        {% if action == 'IN' %}<i class="bi bi-box-arrow-in-down"></i> {% trans "Stock Receipt" %}{% endif %}
+        {% if action == 'OUT' %}<i class="bi bi-box-arrow-up"></i> {% trans "Stock Issue" %}{% endif %}
+        {% if action == 'ADJUST' %}<i class="bi bi-sliders"></i> {% trans "Inventory Adjustment" %}{% endif %}
     </h1>
 </div>
 
@@ -34,12 +35,12 @@
 
     <div class="form-grid">
         <div class="form-group">
-            <label>{% trans "Product" %} (المنتج)</label>
+            <label>{% trans "Product" %} ({% trans "Product" %})</label>
             {{ form.product }}
         </div>
         
         <div class="form-group">
-            <label>المخزن (Warehouse)</label>
+            <label>{% trans "Warehouse" } (Warehouse)</label>
             {{ form.warehouse }}
         </div>
 
@@ -51,7 +52,7 @@
         </div>
 
         <div class="form-group">
-            <label>{% trans "Quantity" %} (الكمية)</label>
+            <label>{% trans "Quantity" %} ({% trans "Quantity" %})</label>
             {{ form.quantity }}
         </div>
 
@@ -64,12 +65,12 @@
     </div>
 
     <div class="form-group">
-        <label>{% trans "Notes" %} (ملاحظات)</label>
+        <label>{% trans "Notes" %} (م{% trans "No" %}حظات)</label>
         {{ form.notes }}
     </div>
 
     <button class="btn-save">
-        {% if action == 'IN' %}تأكيد استلام البضاعة{% elif action == 'OUT' %}تأكيد صرف البضاعة{% else %}حفظ الحركة{% endif %}
+        {% if action == 'IN' %}تأكيد است{% trans "No" %}م البضاعة{% elif action == 'OUT' %}تأكيد صرف البضاعة{% else %}حفظ الحركة{% endif %}
     </button>
 </form>
 

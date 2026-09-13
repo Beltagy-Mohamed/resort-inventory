@@ -53,7 +53,7 @@
                     {% for p in nav_alert_products %}
                     <a href="{% url 'product_detail' p.id %}" class="notif-item">
                         <strong>{{ p.name }}</strong>
-                        <span>{{ p.stock_status_text }} — الكمية: {{ p.quantity }}</span>
+                        <span>{{ p.stock_status_text }} — {% trans "Quantity" %}: {{ p.quantity }}</span>
                     </a>
                     {% endfor %}
 

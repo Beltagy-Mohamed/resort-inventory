@@ -1,3 +1,4 @@
+{% load i18n %}
 {% load static i18n %}
 
 <aside class="sidebar">
@@ -128,7 +129,7 @@
 
 </aside>
 
-<nav class="mobile-nav" aria-label="التنقل الرئيسي">
+<nav class="mobile-nav" aria-label="{% trans 'Main Navigation' %}">
     <a href="{% url 'dashboard' %}" class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
         <i class="bi bi-grid-1x2" aria-hidden="true"></i>
         <span>{% trans "Home" %}</span>

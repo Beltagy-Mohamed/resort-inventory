@@ -51,6 +51,23 @@
 
 <div class="cards">
 
+
+    <div class="card value-card">
+
+        <div class="card-icon">
+            <i class="bi bi-cash-stack"></i>
+        </div>
+
+        <div>
+
+            <h3>{% trans "Inventory Value" %}</h3>
+
+            <h2>{{ inventory_value|humanize_arabic }} <small>{{ system_settings.currency }}</small></h2>
+
+        </div>
+
+    </div>
+
     <div class="card products-card">
 
         <div class="card-icon">
@@ -94,22 +111,6 @@
             <h3>{% trans "Total Quantity" %}</h3>
 
             <h2>{{ total_quantity }}</h2>
-
-        </div>
-
-    </div>
-
-    <div class="card value-card">
-
-        <div class="card-icon">
-            <i class="bi bi-cash-stack"></i>
-        </div>
-
-        <div>
-
-            <h3>{% trans "Inventory Value" %}</h3>
-
-            <h2>{{ inventory_value }} {{ system_settings.currency }}</h2>
 
         </div>
 
@@ -509,9 +510,7 @@ new Chart(ctx, {
 
         data: {{ category_counts|safe }},
 
-                backgroundColor: [
-            {% for color in category_colors %}"{{ color }}"{% if not forloop.last %},{% endif %}{% endfor %}
-        ],
+                backgroundColor: {{ category_colors|safe }},
 
         borderRadius: 8
 
@@ -609,7 +608,7 @@ new Chart(valueCtx, {
         labels: {{ category_value_labels|safe }},
         datasets: [{
             data: {{ category_value_counts|safe }},
-            backgroundColor: [{% for color in category_value_colors %}"{{ color }}"{% if not forloop.last %},{% endif %}{% endfor %}],
+            backgroundColor: {{ category_value_colors|safe }},
             borderWidth: 0,
         }]
     },
