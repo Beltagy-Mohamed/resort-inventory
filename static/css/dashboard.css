@@ -573,3 +573,12 @@ html[data-theme="dark"] .dashboard-period-filter select {
         font-size: 14px;
     }
 }
+
+
+/* Fix overflow for large numbers */
+.card h2, .card h3 {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+}
+.card { overflow: hidden; }

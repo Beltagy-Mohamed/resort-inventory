@@ -21,13 +21,21 @@
     <form method="get" class="dashboard-filters">
         <label for="dashboard-period">{% trans "View period" %}</label>
         <select id="dashboard-period" name="period" onchange="this.form.submit()">
-            <option value="month" {% if dashboard_period == "month" %}selected{% endif %}>
-                {% trans "This month" %}
-            </option>
-            <option value="year" {% if dashboard_period == "year" %}selected{% endif %}>
-                {% trans "This year" %}
-            </option>
+            <option value="year" {% if dashboard_period == "year" %}selected{% endif %}>{% trans "This year" %}</option>
+            <option value="1" {% if dashboard_period == "1" %}selected{% endif %}>{% trans "January" %}</option>
+            <option value="2" {% if dashboard_period == "2" %}selected{% endif %}>{% trans "February" %}</option>
+            <option value="3" {% if dashboard_period == "3" %}selected{% endif %}>{% trans "March" %}</option>
+            <option value="4" {% if dashboard_period == "4" %}selected{% endif %}>{% trans "April" %}</option>
+            <option value="5" {% if dashboard_period == "5" %}selected{% endif %}>{% trans "May" %}</option>
+            <option value="6" {% if dashboard_period == "6" %}selected{% endif %}>{% trans "June" %}</option>
+            <option value="7" {% if dashboard_period == "7" %}selected{% endif %}>{% trans "July" %}</option>
+            <option value="8" {% if dashboard_period == "8" %}selected{% endif %}>{% trans "August" %}</option>
+            <option value="9" {% if dashboard_period == "9" %}selected{% endif %}>{% trans "September" %}</option>
+            <option value="10" {% if dashboard_period == "10" %}selected{% endif %}>{% trans "October" %}</option>
+            <option value="11" {% if dashboard_period == "11" %}selected{% endif %}>{% trans "November" %}</option>
+            <option value="12" {% if dashboard_period == "12" %}selected{% endif %}>{% trans "December" %}</option>
         </select>
+
         <label for="dashboard-category">{% trans "Category" %}</label>
         <select id="dashboard-category" name="category" onchange="this.form.submit()">
             <option value="">{% trans "All categories" %}</option>
