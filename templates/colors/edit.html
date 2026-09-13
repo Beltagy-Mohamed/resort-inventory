@@ -1,10 +1,9 @@
 {% extends "layout/base.html" %}
 {% load i18n %}
-
 {% load static %}
 
 {% block title %}
-{% trans "Edit Color" %}
+{% trans "Edit" %} {% trans "Color" %}
 {% endblock %}
 
 {% block extra_css %}
@@ -13,7 +12,7 @@
 
 {% block content %}
 
-<h1>{% trans "Edit Color" %}/h1>
+<h1>{% trans "Edit" %} {% trans "Color" %}</h1>
 
 <form method="post" class="product-form">
 
@@ -23,7 +22,7 @@
 
     <button class="btn-save">
 
-        {% trans "Save" %} التعديل
+        حفظ ال{% trans "Edit" %}
 
     </button>
 

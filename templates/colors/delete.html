@@ -1,16 +1,15 @@
 {% extends "layout/base.html" %}
 {% load i18n %}
 
-
 {% block title %}
-{% trans "Delete" %} اللون
+حذف {% trans "Color" %}
 {% endblock %}
 
 {% block content %}
 
 <h2>
 
-هل تريد {% trans "Delete" %} اللون
+هل تريد حذف {% trans "Color" %}
 
 <b>{{ color.name }}</b>
 
@@ -24,7 +23,7 @@
 
     <button class="btn-save">
 
-        {% trans "Yes" %}، ا{% trans "Delete" %}
+        نعم، احذف
 
     </button>
 

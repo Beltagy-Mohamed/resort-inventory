@@ -1,7 +1,8 @@
 {% extends "layout/base.html" %}
-{% load static i18n %}
+{% load i18n %}
+{% load static %}
 
-{% block title %}{% trans "Detailed Warehouse Stock" %}{% endblock %}
+{% block title %}جرد المخازن التفصيلي{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/products.css' %}">
@@ -25,28 +26,30 @@
 </div>
 
 <div class="table-responsive">
-    <table class="data-table">
+    <table class="products-table">
         <thead>
             <tr>
                 <th>{% trans "Warehouse" %}</th>
+                <th>كود {% trans "Product" %}</th>
                 <th>{% trans "Product Name" %}</th>
-                <th>{% trans "Available Quantity" %}</th>
-                <th>{% trans "Cost Price" %}</th>
+                <th>{% trans "Quantity" %} ال{% trans "Available" %}ة</th>
+                <th>سعر التكلفة</th>
                 <th>{% trans "Selling Price" %}</th>
             </tr>
         </thead>
         <tbody>
             {% for stock in stocks %}
             <tr>
-                <td>{{ stock.warehouse.name }}</td>
-                <td>{{ stock.product.name }}</td>
-                <td>{{ stock.quantity }}</td>
-                <td>{{ stock.product.cost_price }}</td>
-                <td>{{ stock.product.selling_price }}</td>
+                <td data-label="{% trans 'Warehouse' %}">{{ stock.warehouse.name }}</td>
+                <td>{{ stock.product.id }}</td>
+                <td data-label="{% trans 'Product Name' %}">{{ stock.product.name }}</td>
+                <td data-label="{% trans "Quantity" %} ال{% trans "Available" %}ة">{{ stock.quantity }}</td>
+                <td data-label="سعر التكلفة">{{ stock.product.cost_price }}</td>
+                <td data-label="{% trans 'Selling Price' %}">{{ stock.product.selling_price }}</td>
             </tr>
             {% empty %}
             <tr>
-                <td colspan="5" style="text-align: center;">{% trans "No stocks found matching the search" %}</td>
+                <td colspan="6" style="text-align: center;">لا توجد أرصدة مطابقة للبحث</td>
             </tr>
             {% endfor %}
         </tbody>

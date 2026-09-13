@@ -1,6 +1,4 @@
 {% extends "layout/base.html" %}
-{% load i18n %}
-
 {% load static i18n %}
 
 {% block title %}
@@ -52,16 +50,16 @@
 
             <td>{{ forloop.counter }}</td>
 
-            <td data-label="{% trans "Name" %}">{{ category.name }}</td>
+            <td data-label="{% trans 'Name' %}">{{ category.name }}</td>
 
             <td>
                 <span class="category-swatch" style="--category-color: {{ category.color }};" title="{{ category.color }}"></span>
                 <span class="category-color-code">{{ category.color }}</span>
             </td>
 
-            <td data-label="{% trans "Products" %}">{{ category.product_set.count }}</td>
+            <td data-label="{% trans 'Products' %}">{{ category.product_set.count }}</td>
 
-            <td data-label="{% trans "Actions" %}"><a
+            <td data-label="{% trans 'Actions' %}"><a
                     href="{% url 'edit_category' category.id %}"
                     class="action-btn"
                     title="{% trans 'Edit' %}">

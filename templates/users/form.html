@@ -53,7 +53,7 @@
 
 <h1><i class="bi bi-person-badge"></i> {{ title }}</h1>
 <p style="color: var(--text-muted); margin-bottom: 2rem;">
-    {% trans "Enter employee details and carefully select system permissions." %}
+    أدخل بيانات الموظف وحدد الصلاحيات التي يتمتع بها في النظام بدقة.
 </p>
 
 <form method="post" class="product-form">
@@ -104,7 +104,7 @@
 
     <div style="display: flex; gap: 1rem; margin-top: 2rem;">
         <button type="submit" class="btn-save" style="flex: 1; justify-content: center; display: flex; align-items: center; gap: 0.5rem;">
-            <i class="bi bi-check2-circle"></i> {% trans "Save" %} البيانات
+            <i class="bi bi-check2-circle"></i> {% trans "Save" %}
         </button>
         <a href="{% url 'users_list' %}" class="btn-save" style="flex: 1; background-color: var(--bg-color); color: var(--text-color); border: 1px solid var(--border-color); text-align: center; justify-content: center; display: flex; align-items: center; gap: 0.5rem; text-decoration: none;">
             <i class="bi bi-x-lg"></i> {% trans "Cancel" %}

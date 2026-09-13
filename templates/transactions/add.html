@@ -1,10 +1,8 @@
 {% extends "layout/base.html" %}
-{% load i18n %}
-
 {% load static i18n %}
 
 {% block title %}
-{% if action == 'IN' %}إذن إضافة / است{% trans "No" %}م بضاعة{% elif action == 'OUT' %}إذن صرف بضاعة{% else %}تسوية مخزنية{% endif %}
+{% if action == 'IN' %}{% trans "Receipt Voucher (IN)" %}{% elif action == 'OUT' %}{% trans "Issue Voucher (OUT)" %}{% else %}{% trans "Adjustment" %}{% endif %}
 {% endblock %}
 
 {% block extra_css %}
@@ -22,61 +20,56 @@
 {% block content %}
 <div class="page-header">
     <h1>
-        {% if action == 'IN' %}<i class="bi bi-box-arrow-in-down"></i> {% trans "Stock Receipt" %}{% endif %}
-        {% if action == 'OUT' %}<i class="bi bi-box-arrow-up"></i> {% trans "Stock Issue" %}{% endif %}
-        {% if action == 'ADJUST' %}<i class="bi bi-sliders"></i> {% trans "Inventory Adjustment" %}{% endif %}
+        {% if action == 'IN' %}<i class="bi bi-box-arrow-in-down"></i> {% trans "Receipt Voucher (IN)" %}{% endif %}
+        {% if action == 'OUT' %}<i class="bi bi-box-arrow-up"></i> {% trans "Issue Voucher (OUT)" %}{% endif %}
+        {% if action == 'ADJUST' %}<i class="bi bi-sliders"></i> {% trans "Adjustment" %}{% endif %}
     </h1>
 </div>
 
 <form method="post" class="product-form">
     {% csrf_token %}
     
-    <!-- Hidden transaction type field to enforce logic -->
     <input type="hidden" name="transaction_type" value="{{ action }}">
 
     <div class="form-grid">
         <div class="form-group">
-            <label>{% trans "Product" %} ({% trans "Product" %})</label>
+            <label>{% trans "Product" %}</label>
             {{ form.product }}
         </div>
         
         <div class="form-group">
-            <label>{% trans "Warehouse" } (Warehouse)</label>
+            <label>{% trans "Warehouse" %}</label>
             {{ form.warehouse }}
         </div>
 
         <div class="form-group">
             <label>
-                {% if action == 'IN' %}المورد (Supplier){% elif action == 'OUT' %}الجهة المصرف لها (Client/Entity){% else %}جهة التعامل{% endif %}
+                {% if action == 'IN' %}{% trans "Supplier" %}{% elif action == 'OUT' %}{% trans "Client / Entity" %}{% else %}{% trans "Partner" %}{% endif %}
             </label>
             {{ form.partner }}
         </div>
 
         <div class="form-group">
-            <label>{% trans "Quantity" %} ({% trans "Quantity" %})</label>
+            <label>{% trans "Quantity" %}</label>
             {{ form.quantity }}
         </div>
 
         <div class="form-group">
-            <label>
-                {% if action == 'IN' %}تكلفة الوحدة (Unit Cost){% elif action == 'OUT' %}سعر الصرف/البيع (Unit Price){% else %}السعر (Unit Price){% endif %}
-            </label>
+            <label>{% trans "Unit Price" %}</label>
             {{ form.unit_price }}
         </div>
     </div>
 
     <div class="form-group">
-        <label>{% trans "Notes" %} (م{% trans "No" %}حظات)</label>
+        <label>{% trans "Notes" %}</label>
         {{ form.notes }}
     </div>
 
     <button class="btn-save">
-        {% if action == 'IN' %}تأكيد است{% trans "No" %}م البضاعة{% elif action == 'OUT' %}تأكيد صرف البضاعة{% else %}حفظ الحركة{% endif %}
+        {% if action == 'IN' %}{% trans "Confirm Receipt" %}{% elif action == 'OUT' %}{% trans "Confirm Issue" %}{% else %}{% trans "Save" %}{% endif %}
     </button>
 </form>
-
 {% endblock %}
-
 {% block extra_js %}
 <script>
     const productsData = {{ products_data_json|safe }};
@@ -90,7 +83,6 @@
             productSelect.addEventListener("change", function() {
                 const productId = this.value;
                 if (productId && productsData[productId]) {
-                    // Autofill logic based on action type
                     if (actionType === "IN") {
                         priceInput.value = productsData[productId].cost_price;
                     } else if (actionType === "OUT") {

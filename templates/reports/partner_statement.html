@@ -1,7 +1,8 @@
 {% extends "layout/base.html" %}
-{% load static i18n %}
+{% load i18n %}
+{% load static %}
 
-{% block title %}{% trans "Partner Statement" %}{% endblock %}
+{% block title %}كشف حساب جهة تعامل{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/products.css' %}">
@@ -38,7 +39,7 @@
 
 {% if selected_partner %}
 <div class="table-responsive">
-    <table class="data-table">
+    <table class="products-table">
         <thead>
             <tr>
                 <th>{% trans "Date" %}</th>
@@ -54,24 +55,24 @@
         <tbody>
             {% for trans in transactions %}
             <tr>
-                <td>{{ trans.created_at|date:"Y-m-d H:i" }}</td>
-                <td>{{ trans.get_transaction_type_display }}</td>
-                <td>{{ trans.product.name }}</td>
-                <td>{{ trans.quantity }}</td>
-                <td>{{ trans.unit_price }}</td>
-                <td>{% widthratio trans.unit_price 1 trans.quantity %}</td>
-                <td>{{ trans.warehouse.name|default:"-" }}</td>
-                <td>{{ trans.notes|default:"-" }}</td>
+                <td data-label="{% trans 'Date' %}">{{ trans.created_at|date:"Y-m-d H:i" }}</td>
+                <td data-label="{% trans 'Transaction Type' %}">{{ trans.get_transaction_type_display }}</td>
+                <td data-label="{% trans 'Product' %}">{{ trans.product.name }}</td>
+                <td data-label="{% trans 'Quantity' %}">{{ trans.quantity }}</td>
+                <td data-label="{% trans 'Unit Price' %}">{{ trans.unit_price }}</td>
+                <td data-label="{% trans 'Total' %}">{% widthratio trans.unit_price 1 trans.quantity %}</td>
+                <td data-label="{% trans 'Warehouse' %}">{{ trans.warehouse.name|default:"-" }}</td>
+                <td data-label="{% trans 'Notes' %}">{{ trans.notes|default:"-" }}</td>
             </tr>
             {% empty %}
             <tr>
-                <td colspan="8" style="text-align: center;">{% trans "No transactions found for this partner in the selected period" %}</td>
+                <td colspan="8" style="text-align: center;">{% trans "No transactions" %} لهذه الجهة في {% trans "Period" %} المحددة</td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
 </div>
 {% else %}
-<p style="text-align: center; margin-top: 50px;">{% trans "Please select a partner to begin" %}</p>
+<p style="text-align: center; margin-top: 50px;">يرجى اختيار جهة تعامل للبدء</p>
 {% endif %}
 {% endblock %}

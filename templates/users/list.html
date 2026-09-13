@@ -5,11 +5,11 @@
 <link rel="stylesheet" href="{% static 'css/products.css' %}">
 {% endblock %}
 
-{% block title %}المستخدمون والص{% trans "No" %}حيات{% endblock %}
+{% block title %}المستخدمون والصلاحيات{% endblock %}
 
 {% block content %}
 <div class="page-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-    <h1 style="margin: 0;">{% trans "Users & Permissions" %}/h1>
+    <h1 style="margin: 0;">{% trans "Users & Permissions" %}</h1>
     <a href="{% url 'add_user' %}" class="btn-save" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
         <i class="bi bi-person-plus"></i> {% trans "Add Employee" %}
     </a>
@@ -19,11 +19,11 @@
     <table class="products-table">
         <thead>
             <tr>
-                <th>{% trans "Username" %}/th>
-                <th>{% trans "Name" } الكامل</th>
-                <th>{% trans "Account Status" %}/th>
-                <th>{% trans "System Admin?" %}/th>
-                <th style="text-align: center;">ال{% trans "Actions" %}</th>
+                <th>{% trans "Username" %}</th>
+                <th>{% trans "Full Name" %}</th>
+                <th>{% trans "Account Status" %}</th>
+                <th>{% trans "System Admin?" %}</th>
+                <th style="text-align: center;">{% trans "Actions" %}</th>
             </tr>
         </thead>
         <tbody>
@@ -37,9 +37,9 @@
                 </td>
                 <td data-label="{% trans 'Account Status' %}">
                     {% if u.is_active %}
-                        <span class="badge badge-success">{% trans "Active" %}/span>
+                        <span class="badge badge-success">{% trans "Active" %}</span>
                     {% else %}
-                        <span class="badge badge-danger">{% trans "Suspended" %}/span>
+                        <span class="badge badge-danger">{% trans "Suspended" %}</span>
                     {% endif %}
                 </td>
                 <td data-label="{% trans 'System Admin?' %}">
@@ -51,7 +51,7 @@
                 </td>
                 <td data-label="{% trans 'Actions' %}" style="text-align: center;">
                     <a href="{% url 'edit_user' u.id %}" class="action-btn" title="{% trans 'Edit' %}">
-                        <i class="bi bi-pencil-square"></i> تعديل
+                        <i class="bi bi-pencil-square"></i> {% trans "Edit" %}
                     </a>
                     {% if not u.is_superuser %}
                     <a href="{% url 'delete_user' u.id %}" class="action-btn" title="{% trans 'Suspend/Delete' %}" onclick="return confirm('{% trans "Are you sure you want to suspend/delete this employee?" %}')" style="color: #dc2626;">
@@ -63,7 +63,7 @@
             {% empty %}
             <tr>
                 <td colspan="5" style="text-align: center; padding: 40px; color: var(--ink-text-muted);">
-                    {% trans "No" %} يوجد مستخدمين.
+                    لا يوجد مستخدمين.
                 </td>
             </tr>
             {% endfor %}

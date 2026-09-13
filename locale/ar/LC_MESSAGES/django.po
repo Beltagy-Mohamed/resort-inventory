@@ -729,3 +729,102 @@ msgstr "هل أنت متأكد من إيقاف/حذف هذا الموظف؟"
 
 msgid "Main Navigation"
 msgstr "التنقل الرئيسي"
+
+msgid "Logout"
+msgstr "تسجيل الخروج"
+
+msgid "Receive (Supplier)"
+msgstr "إستلام (مورد)"
+
+msgid "Issue (Client/Entity)"
+msgstr "صرف (جهة/عميل)"
+
+msgid "Transactions History"
+msgstr "سجل الحركات"
+
+msgid "Partner Statements"
+msgstr "كشف حساب الجهات"
+
+msgid "Welcome back,"
+msgstr "مرحباً بعودتك،"
+
+msgid "Total Categories"
+msgstr "إجمالي الفئات"
+
+msgid "Recent Transactions"
+msgstr "أحدث الحركات"
+
+msgid "User"
+msgstr "المستخدم"
+
+msgid "Low Stock Products"
+msgstr "المنتجات منخفضة المخزون"
+
+msgid "Products by Category"
+msgstr "المنتجات حسب الفئة"
+
+msgid "Stock Status"
+msgstr "حالة المخزون"
+
+msgid "Search by name..."
+msgstr "البحث عن منتج بالاسم..."
+
+msgid "Category Name"
+msgstr "اسم الفئة"
+
+msgid "Add Warehouse"
+msgstr "إضافة مخزن جديد"
+
+msgid "Add Partner"
+msgstr "إضافة جهة جديدة"
+
+msgid "Warehouse Name"
+msgstr "اسم المخزن"
+
+msgid "Location / Description"
+msgstr "الموقع / الوصف"
+
+msgid "Partner Name"
+msgstr "اسم الجهة"
+
+msgid "Partner Type"
+msgstr "نوع الجهة"
+
+msgid "Client"
+msgstr "عميل / جهة صرف"
+
+msgid "Period"
+msgstr "الفترة"
+
+msgid "Total Sales (Issued Value)"
+msgstr "إجمالي المبيعات (قيمة البضاعة المنصرفة)"
+
+msgid "From"
+msgstr "من"
+
+msgid "To"
+msgstr "إلى"
+
+msgid "No products"
+msgstr "لا توجد منتجات"
+
+msgid "Receipt Voucher (IN)"
+msgstr "إذن إضافة / استلام بضاعة"
+
+msgid "Issue Voucher (OUT)"
+msgstr "إذن صرف بضاعة"
+
+msgid "Client / Entity"
+msgstr "الجهة المصرف لها (Client/Entity)"
+
+msgid "Main Branch"
+msgstr "المركز الرئيسي"
+
+msgid "-- Select Warehouse --"
+msgstr "-- اختر المخزن --"
+
+msgid "-- All Categories --"
+msgstr "-- كل الفئات --"
+
+msgid "-- All Status --"
+msgstr "-- كل الحالات --"

@@ -1,6 +1,4 @@
 {% extends "layout/base.html" %}
-{% load i18n %}
-
 {% load static i18n %}
 
 {% block title %}
@@ -82,7 +80,7 @@
 
             <th>{% trans "Category" %}</th>
 
-            <th>{% trans "Purchase Price" %}/th><th>{% trans "Selling Price" %}/th>
+            <th>{% trans "Purchase Price" %}</th><th>{% trans "Selling Price" %}</th>
 
             <th>{% trans "Quantity" %}</th>
 
@@ -104,16 +102,16 @@
 
             
 
-            <td data-label="{% trans "Name" %}">{{ product.name }}</td>
+            <td data-label="{% trans 'Name' %}">{{ product.name }}</td>
 
-            <td data-label="{% trans "Category" %}">{{ product.category }}</td>
+            <td data-label="{% trans 'Category' %}">{{ product.category }}</td>
 
             <td data-label="{% trans 'Purchase Price' %}">{{ product.cost_price }} {{ system_settings.currency }}</td>
 <td data-label="{% trans 'Selling Price' %}">{{ product.selling_price }} {{ system_settings.currency }}</td>
 
-            <td data-label="{% trans "Quantity" %}">{{ product.quantity }}</td>
+            <td data-label="{% trans 'Quantity' %}">{{ product.quantity }}</td>
 
-            <td data-label="{% trans "Status" %}">
+            <td data-label="{% trans 'Status' %}">
 
                 {% if product.stock_status == "available" %}
 
@@ -137,7 +135,7 @@
 
             </td>
 
-            <td data-label="{% trans "Actions" %}">
+            <td data-label="{% trans 'Actions' %}">
 
                 <a
                     href="{% url 'product_detail' product.id %}"
