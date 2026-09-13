@@ -151,7 +151,7 @@ def dashboard(request):
         }
         chart_counts = [
             counts_by_period.get(
-                (period_start + datetime.timedelta(days=offset)).date(),
+                (period_start + datetime.timedelta(days=offset)),
                 0,
             )
             for offset in range(day_count)
