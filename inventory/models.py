@@ -95,7 +95,64 @@ class Partner(models.Model):
         return f"{self.name} ({self.get_partner_type_display()})"
 
 
+
+class LeadershipAccessConfig(models.Model):
+    """
+    صف واحد فقط يوجد دائمًا بهذا الجدول (Singleton).
+    يحدد صراحة مين الشخص المسموح له برؤية أصناف القائد حاليًا.
+    """
+    id = models.PositiveSmallIntegerField(primary_key=True, default=1, editable=False)
+    holder = models.ForeignKey(
+        "auth.User",
+        on_delete=models.PROTECT,
+        related_name="leadership_access",
+        verbose_name="صاحب الصلاحية"
+    )
+    granted_at = models.DateTimeField(auto_now_add=True)
+    granted_by_note = models.CharField(
+        max_length=255,
+        help_text="ملاحظة يدوية توثّق سبب/جهة منح الصلاحية"
+    )
+
+    def save(self, *args, **kwargs):
+        self.pk = 1
+        super().save(*args, **kwargs)
+
+    class Meta:
+        verbose_name = "إعداد صلاحية القائد"
+        verbose_name_plural = "إعدادات صلاحية القائد"
+
+class LeadershipAccessLog(models.Model):
+    ACTION_CHOICES = [
+        ("VIEW_LIST", "عرض قائمة أصناف القائد"),
+        ("VIEW_DETAIL", "عرض تفاصيل صنف"),
+        ("CREATE", "إضافة صنف"),
+        ("UPDATE", "تعديل صنف"),
+        ("DELETE", "حذف صنف (Soft)"),
+        ("EXPORT", "تصدير ملف Excel"),
+    ]
+    user = models.ForeignKey("auth.User", on_delete=models.PROTECT)
+    action = models.CharField(max_length=20, choices=ACTION_CHOICES)
+    product = models.ForeignKey("Product", null=True, blank=True, on_delete=models.SET_NULL)
+    ip_address = models.GenericIPAddressField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        verbose_name = "سجل وصول القائد"
+        verbose_name_plural = "سجلات وصول القائد"
+
+
+class ProductManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(is_leadership_restricted=False)
+
+
 class Product(models.Model):
+    is_leadership_restricted = models.BooleanField(default=False, db_index=True, verbose_name="صنف قائد مقيد")
+
+    objects = ProductManager()
+    all_objects = models.Manager()
+
 
 
 
@@ -216,7 +273,7 @@ class InventoryTransaction(models.Model):
 
     product = models.ForeignKey(
         Product,
-        on_delete=models.CASCADE,
+        on_delete=models.PROTECT,
         related_name="transactions",
     )
 

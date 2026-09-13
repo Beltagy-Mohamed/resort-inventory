@@ -16,7 +16,17 @@
             <span class="label">لوحة التحكم</span>
         </a>
 
+        
+        {% if is_leader %}
+        <h5 style="color: #c0392b;">القسم المقيّد</h5>
+        <a href="{% url 'leadership_items_list' %}" class="{% if 'leadership' in request.resolver_match.url_name %}active{% endif %}" style="color: #e74c3c;">
+            <i class="bi bi-shield-lock"></i>
+            <span class="label">أصناف القائد</span>
+        </a>
+        {% endif %}
+
         <h5>المخزون</h5>
+
 
         <a href="{% url 'products_list' %}" class="{% if request.resolver_match.url_name == 'products_list' %}active{% endif %}">
             <i class="bi bi-box-seam"></i>

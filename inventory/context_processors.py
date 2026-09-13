@@ -1,6 +1,7 @@
 from django.db.models import F
 
 from .models import Product, SystemSettings
+from inventory.decorators import is_the_leader
 
 
 def inventory_notifications(request):
@@ -34,4 +35,5 @@ def inventory_notifications(request):
         "nav_out_of_stock_count": out_of_stock_qs.count(),
         "nav_alert_products": alerts[:6],
         "system_settings": SystemSettings.load(),
+        "is_leader": is_the_leader(request.user),
     }

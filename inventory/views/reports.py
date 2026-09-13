@@ -1,4 +1,4 @@
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.db.models import Sum, F, Q
@@ -7,6 +7,7 @@ import csv
 from ..models import Product, Category, Warehouse
 
 @login_required
+@permission_required("inventory.view_inventorytransaction", raise_exception=True)
 def inventory_report(request):
 
     search = request.GET.get("search", "")

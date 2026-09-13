@@ -13,13 +13,13 @@
 
 <div class="detail-header">
 
-    <a href="{% url 'products_list' %}" class="back-btn">
+    <a href="{% url 'leadership_items_list' %}" class="back-btn">
         <i class="bi bi-arrow-left"></i>
         عودة
     </a>
 
     <div class="detail-heading">
-        <span class="eyebrow">تفاصيل المنتج</span>
+        <span class="eyebrow">تفاصيل صنف القائد</span>
         <h1>{{ product.name }}</h1>
         
     </div>
@@ -41,7 +41,7 @@
     <div class="summary-card">
 
         <div class="summary-card-heading">
-            <span class="eyebrow">كود المنتج</span>
+            <span class="eyebrow">كود صنف القائد</span>
         </div>
 
         <strong class="product-code">{{ product.id }}</strong>
@@ -58,7 +58,7 @@
         <div class="section-heading">
             <div>
                 <span class="eyebrow">نظرة عامة</span>
-                <h2>معلومات المنتج</h2>
+                <h2>معلومات صنف القائد</h2>
             </div>
             <i class="bi bi-info-circle" aria-hidden="true"></i>
         </div>
@@ -86,13 +86,8 @@
         </div>
 
         <div class="info-row">
-            <span>سعر التكلفة</span>
-            <strong>{{ product.cost_price }} {{ system_settings.currency }}</strong>
-        </div>
-
-        <div class="info-row">
-            <span>سعر البيع</span>
-            <strong>{{ product.selling_price }} {{ system_settings.currency }}</strong>
+            <span>السعر</span>
+            <strong>{{ product.price }} {{ system_settings.currency }}</strong>
         </div>
 
         <div class="info-row">
@@ -113,7 +108,7 @@
 
 <div class="detail-actions" aria-label="Product actions">
 
-    <a href="{% url 'edit_product' product.id %}" class="action-btn">
+    <a href="{% url 'leadership_item_edit' product.id %}" class="action-btn">
         <i class="bi bi-pencil-square"></i>
         تعديل
     </a>

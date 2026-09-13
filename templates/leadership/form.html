@@ -1,0 +1,77 @@
+{% extends "layout/base.html" %}
+{% load static %}
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/products.css' %}">
+{% endblock %}
+{% block title %}
+{{ action_title }}
+{% endblock %}
+
+{% block content %}
+
+<h1>{{ action_title }} جديد</h1>
+
+<form method="post" class="product-form">
+
+    {% csrf_token %}
+
+    <div class="form-grid">
+
+        <div class="form-group">
+            <label>{{ form.name.label }}</label>
+            {{ form.name }}
+        </div>
+
+        <div class="form-group">
+            <label>{{ form.category.label }}</label>
+            {{ form.category }}
+        </div>
+
+        <div class="form-group">
+            <label>{{ form.color.label }}</label>
+            {{ form.color }}
+        </div>
+
+        <div class="form-group">
+            <label>{{ form.size.label }}</label>
+            {{ form.size }}
+        </div>
+
+        <div class="form-group">
+            <label>{{ form.cost_price.label }}</label>
+            {{ form.cost_price }}
+        </div>
+        <div class="form-group">
+            <label>{{ form.selling_price.label }}</label>
+            {{ form.selling_price }}
+        </div>
+
+     <div class="form-group">
+    <label>{{ form.quantity.label }}</label>
+    {{ form.quantity }}
+</div>
+
+<div class="form-group">
+    <label>{{ form.initial_warehouse.label }}</label>
+    {{ form.initial_warehouse }}
+</div>
+
+<div class="form-group">
+    <label>{{ form.minimum_stock.label }}</label>
+    {{ form.minimum_stock }}
+</div>
+
+    </div>
+
+    <div class="form-group">
+        <label>{{ form.description.label }}</label>
+        {{ form.description }}
+    </div>
+
+    <button type="submit" class="btn-save">
+        حفظ المنتج
+    </button>
+
+</form>
+
+{% endblock %}

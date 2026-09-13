@@ -1,17 +1,19 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.decorators import login_required, permission_required
 
 from ..models import Warehouse, Partner
 from ..forms import WarehouseForm, PartnerForm
 
 
 @login_required
+@permission_required("inventory.view_warehouse", raise_exception=True)
 def warehouses_list(request):
     warehouses = Warehouse.objects.all().order_by('id')
     return render(request, "management/warehouses_list.html", {"warehouses": warehouses})
 
 @login_required
+@permission_required("inventory.add_warehouse", raise_exception=True)
 def add_warehouse(request):
     if request.method == "POST":
         form = WarehouseForm(request.POST)
@@ -24,6 +26,7 @@ def add_warehouse(request):
     return render(request, "management/warehouse_form.html", {"form": form, "action": "إضافة مخزن"})
 
 @login_required
+@permission_required("inventory.change_warehouse", raise_exception=True)
 def edit_warehouse(request, pk):
     warehouse = get_object_or_404(Warehouse, pk=pk)
     if request.method == "POST":
@@ -38,11 +41,13 @@ def edit_warehouse(request, pk):
 
 
 @login_required
+@permission_required("inventory.view_partner", raise_exception=True)
 def partners_list(request):
     partners = Partner.objects.all().order_by('id')
     return render(request, "management/partners_list.html", {"partners": partners})
 
 @login_required
+@permission_required("inventory.add_partner", raise_exception=True)
 def add_partner(request):
     if request.method == "POST":
         form = PartnerForm(request.POST)
@@ -55,6 +60,7 @@ def add_partner(request):
     return render(request, "management/partner_form.html", {"form": form, "action": "إضافة جهة تعامل"})
 
 @login_required
+@permission_required("inventory.change_partner", raise_exception=True)
 def edit_partner(request, pk):
     partner = get_object_or_404(Partner, pk=pk)
     if request.method == "POST":

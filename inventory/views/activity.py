@@ -11,7 +11,7 @@ def is_superuser(u):
 @login_required
 @user_passes_test(is_superuser, login_url="/")
 def activity_logs(request):
-    logs = ActivityLog.objects.select_related("product").order_by("-created_at")
+    logs = ActivityLog.objects.select_related("product", "user").order_by("-created_at")
 
     month_filter = request.GET.get('month_filter')
     year_filter = request.GET.get('year_filter')

@@ -2,6 +2,16 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+
+    # ===========================
+    # Leadership Section
+    # ===========================
+    path('leadership-items/', views.leadership_items_list, name='leadership_items_list'),
+    path('leadership-items/add/', views.leadership_item_add, name='leadership_item_add'),
+    path('leadership-items/<int:pk>/edit/', views.leadership_item_edit, name='leadership_item_edit'),
+    path('leadership-items/<int:pk>/', views.leadership_item_detail, name='leadership_item_detail'),
+    path('leadership-items/export/excel/', views.leadership_items_export, name='leadership_items_export'),
+
     # ===========================
     # Users & Permissions
     # ===========================

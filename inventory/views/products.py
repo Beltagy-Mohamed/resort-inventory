@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.paginator import Paginator
+from django.db.models.deletion import ProtectedError
 from django.db.models import Q, F
 from django.shortcuts import (
     get_object_or_404,
@@ -10,6 +11,7 @@ from django.shortcuts import (
 from ..forms import ProductForm
 from ..models import Product, ActivityLog
 @login_required
+@permission_required("inventory.view_product", raise_exception=True)
 def products_list(request):
 
     search = request.GET.get("search", "")
@@ -173,13 +175,15 @@ def delete_product(request, pk):
 
     if request.method == "POST":
        
-        pass
-        product.delete()
-
-        messages.success(
-            request,
-            "تم حذف المنتج بنجاح."
-        )
+        try:
+            product.delete()
+        except ProtectedError:
+            messages.error(
+                request,
+                "لا يمكن حذف منتج له حركات مخزنية. احتفظ به للأرشفة التاريخية.",
+            )
+        else:
+            messages.success(request, "تم حذف المنتج بنجاح.")
 
         return redirect("products_list")
 
@@ -192,6 +196,7 @@ def delete_product(request, pk):
     )
     
 @login_required
+@permission_required("inventory.view_product", raise_exception=True)
 def product_detail(request, pk):
 
     product = get_object_or_404(Product, pk=pk)
@@ -209,6 +214,7 @@ def product_detail(request, pk):
 
 
 @login_required
+@permission_required("inventory.view_product", raise_exception=True)
 def low_stock_products(request):
 
     products = Product.objects.filter(

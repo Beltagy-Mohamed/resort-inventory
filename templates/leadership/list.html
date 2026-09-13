@@ -1,0 +1,230 @@
+{% extends "layout/base.html" %}
+{% load static %}
+
+{% block title %}
+أصناف القائد
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/products.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="page-header">
+
+    <h1>أصناف القائد</h1>
+
+    <a href="{% url 'leadership_item_add' %}" class="btn-save">
+        + إضافة صنف مقيد
+    </a>
+
+</div>
+
+<div class="search-bar">
+
+    <form method="get">
+
+        <input
+            type="text"
+            name="search"
+            placeholder="البحث عن منتج بالاسم..."
+            value="{{ search }}">
+
+        <select name="status">
+
+            <option value="">
+                جميع أصناف القائد
+            </option>
+
+            <option
+                value="available"
+                {% if status == "available" %}selected{% endif %}>
+                متاح
+            </option>
+
+            <option
+                value="low"
+                {% if status == "low" %}selected{% endif %}>
+                منخفض
+            </option>
+
+            <option
+                value="out"
+                {% if status == "out" %}selected{% endif %}>
+                نفد من المخزون
+            </option>
+
+        </select>
+
+        <button type="submit">
+            بحث
+        </button>
+
+    </form>
+
+</div>
+
+<div class="table-container">
+<table class="products-table">
+
+    <thead>
+
+        <tr>
+
+            
+
+            <th>اسم المنتج</th>
+
+            <th>الفئة</th>
+
+            <th>سعر الشراء</th><th>سعر البيع</th>
+
+            <th>الكمية</th>
+
+            <th>حالة المخزون</th>
+
+            <th>الإجراءات</th>
+
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+        {% for product in page_obj %}
+
+        <tr>
+
+            
+
+            <td data-label="اسم المنتج">{{ product.name }}</td>
+
+            <td data-label="الفئة">{{ product.category }}</td>
+
+            <td data-label="سعر الشراء">{{ product.cost_price }} {{ system_settings.currency }}</td>
+<td data-label="سعر البيع">{{ product.selling_price }} {{ system_settings.currency }}</td>
+
+            <td data-label="الكمية">{{ product.quantity }}</td>
+
+            <td data-label="حالة المخزون">
+
+                {% if product.stock_status == "available" %}
+
+                    <span class="badge badge-success">
+                        متاح
+                    </span>
+
+                {% elif product.stock_status == "low" %}
+
+                    <span class="badge badge-warning">
+                        منخفض
+                    </span>
+
+                {% else %}
+
+                    <span class="badge badge-danger">
+                        نفد من المخزون
+                    </span>
+
+                {% endif %}
+
+            </td>
+
+            <td data-label="الإجراءات">
+
+                <a
+                    href="{% url 'leadership_item_detail' product.id %}"
+                    class="action-btn"
+                    title="عرض">
+
+                    <i class="bi bi-eye"></i>
+
+                </a>
+
+                <a
+                    href="{% url 'edit_product' product.id %}"
+                    class="action-btn"
+                    title="تعديل">
+
+                    <i class="bi bi-pencil-square"></i>
+
+                </a>
+
+                <a
+                    href="{% url 'delete_product' product.id %}"
+                    class="action-btn"
+                    title="حذف">
+
+                    <i class="bi bi-trash3"></i>
+
+                </a>
+
+            </td>
+
+        </tr>
+
+        {% empty %}
+
+        <tr>
+
+            <td colspan="8">
+
+                <h3>
+                    لا يوجد منتجات بعد
+                </h3>
+
+                <br>
+
+                <a
+                    href="{% url 'leadership_item_add' %}"
+                    class="btn-save">
+
+                    إضافة أول منتج
+
+                </a>
+
+            </td>
+
+        </tr>
+
+        {% endfor %}
+
+    </tbody>
+
+</table>
+</div>
+
+<div class="pagination">
+
+    {% if page_obj.has_previous %}
+
+        <a href="?page={{ page_obj.previous_page_number }}&search={{ search }}&status={{ status }}">
+            السابق
+        </a>
+
+    {% endif %}
+
+    <span>
+
+        صفحة
+
+        {{ page_obj.number }}
+
+        من
+
+        {{ page_obj.paginator.num_pages }}
+
+    </span>
+
+    {% if page_obj.has_next %}
+
+        <a href="?page={{ page_obj.next_page_number }}&search={{ search }}&status={{ status }}">
+            التالي
+        </a>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

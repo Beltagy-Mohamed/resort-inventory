@@ -1,9 +1,10 @@
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import render
 from django.db.models import Sum, F, ExpressionWrapper, DecimalField
 from inventory.models import Stock, Warehouse, Partner, InventoryTransaction
 
 @login_required
+@permission_required("inventory.view_inventorytransaction", raise_exception=True)
 def warehouse_stock_report(request):
     warehouse_id = request.GET.get("warehouse_id", "")
     
@@ -23,6 +24,7 @@ def warehouse_stock_report(request):
 
 
 @login_required
+@permission_required("inventory.view_inventorytransaction", raise_exception=True)
 def partner_statement_report(request):
     partner_id = request.GET.get("partner_id", "")
     month_filter = request.GET.get("month_filter", "")
@@ -56,6 +58,7 @@ def partner_statement_report(request):
 
 
 @login_required
+@permission_required("inventory.view_inventorytransaction", raise_exception=True)
 def profit_report(request):
     month_filter = request.GET.get("month_filter", "")
     warehouse_filter = request.GET.get("warehouse", "")
@@ -85,6 +88,8 @@ def profit_report(request):
     
     context = {
         "transactions": transactions,
+        "warehouses": Warehouse.objects.order_by("name"),
+        "warehouse_filter": warehouse_filter,
         "month_filter": int(month_filter) if month_filter.isdigit() else "",
         "warehouse_filter": warehouse_filter,
         "warehouses": Warehouse.objects.all(),

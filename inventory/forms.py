@@ -8,6 +8,10 @@ from .models import Size
 from .models import SystemSettings
 
 from django.core.exceptions import ValidationError
+import re
+
+
+UNSAFE_TEXT_PATTERN = re.compile(r"[\u202A-\u202E\u2066-\u2069]")
 
 class StripWhitespaceMixin:
     def clean(self):
@@ -17,6 +21,8 @@ class StripWhitespaceMixin:
                 stripped = value.strip()
                 if not stripped and self.fields[field].required:
                     self.add_error(field, ValidationError("هذا الحقل لا يمكن أن يكون فارغاً أو مجرد مسافات."))
+                if "\x00" in stripped or UNSAFE_TEXT_PATTERN.search(stripped):
+                    self.add_error(field, ValidationError("النص يحتوي محارف غير مسموح بها."))
                 cleaned_data[field] = stripped
         return cleaned_data
         
@@ -49,7 +55,7 @@ class ProductForm(StripWhitespaceMixin, forms.ModelForm):
             if 'initial_warehouse' in self.fields:
                 self.fields.pop('initial_warehouse')
             if 'quantity' in self.fields:
-                self.fields['quantity'].widget.attrs['readonly'] = True
+                self.fields['quantity'].disabled = True
                 self.fields['quantity'].help_text = "لتعديل الكمية قم بعمل حركة استلام أو صرف أو جرد."
         else:
             # Adding new product
@@ -86,29 +92,6 @@ class ProductForm(StripWhitespaceMixin, forms.ModelForm):
             "minimum_stock",
             "description",
         ]
-        labels = {
-            "name": "اسم المنتج",
-            "category": "الفئة",
-            "color": "اللون",
-            "size": "المقاس",
-            "cost_price": "سعر التكلفة",
-            "selling_price": "سعر البيع",
-            "quantity": "الكمية المتاحة",
-            "minimum_stock": "الحد الأدنى للمخزون",
-            "description": "الوصف",
-        }
-        labels = {
-            "name": "اسم المنتج",
-            "category": "الفئة",
-            "color": "اللون",
-            "size": "المقاس",
-            "cost_price": "سعر التكلفة",
-            "selling_price": "سعر البيع",
-            "quantity": "الكمية المتاحة",
-            "minimum_stock": "الحد الأدنى للمخزون",
-            "description": "الوصف",
-        }
-
         labels = {
             "name": "اسم المنتج",
             "category": "الفئة",
