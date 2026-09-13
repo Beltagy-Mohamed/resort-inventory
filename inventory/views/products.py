@@ -26,9 +26,7 @@ def products_list(request):
 
         products = products.filter(
 
-            Q(name__icontains=search) |
-
-            Q(product_code__icontains=search)
+            Q(name__icontains=search)
 
         )
 
@@ -90,8 +88,6 @@ def add_product(request):
 
             product = form.save(commit=False)
 
-            product.product_code = CodeGenerator.generate()
-
             product.save()
             
             # Create initial stock transaction if quantity > 0
@@ -133,10 +129,7 @@ def add_product(request):
 @permission_required("inventory.change_product", raise_exception=True)
 def edit_product(request, pk):
 
-    product = get_object_or_404(
-        Product,
-        product_code=product_code
-    )
+    product = get_object_or_404(Product, pk=pk)
 
     if request.method == "POST":
 
@@ -154,10 +147,7 @@ def edit_product(request, pk):
                 "تم تعديل المنتج بنجاح."
             )
 
-            return redirect(
-                "product_detail",
-                product.product_code
-            )
+            return redirect("product_detail", pk=product.pk)
 
     else:
 
@@ -176,10 +166,7 @@ def edit_product(request, pk):
 @permission_required("inventory.delete_product", raise_exception=True)
 def delete_product(request, pk):
 
-    product = get_object_or_404(
-        Product,
-        product_code=product_code
-    )
+    product = get_object_or_404(Product, pk=pk)
 
     if request.method == "POST":
        
@@ -204,10 +191,7 @@ def delete_product(request, pk):
 @login_required
 def product_detail(request, pk):
 
-    product = get_object_or_404(
-        Product,
-        product_code=product_code
-    )
+    product = get_object_or_404(Product, pk=pk)
 
     transactions = product.transactions.all()[:10]
 
