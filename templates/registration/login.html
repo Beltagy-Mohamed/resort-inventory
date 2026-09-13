@@ -137,12 +137,7 @@ body{
 
 <body>
 
-<form method="post" action="{% url 'set_language' %}" class="login-language-form">
-    {% csrf_token %}
-    <input type="hidden" name="next" value="{{ request.get_full_path }}">
-    <input type="hidden" name="language" value="{% if LANGUAGE_CODE == 'ar' %}en{% else %}ar{% endif %}">
-    <button type="submit">{% if LANGUAGE_CODE == 'ar' %}EN{% else %}ع{% endif %}</button>
-</form>
+
 
 <div class="login-card">
 
@@ -165,16 +160,16 @@ body{
         {% endif %}
 
         <div class="form-group">
-            <label for="id_username">Username</label>
+            <label for="id_username">اسم المستخدم</label>
             {{ form.username }}
         </div>
 
         <div class="form-group">
-            <label for="id_password">Password</label>
+            <label for="id_password">كلمة المرور</label>
             {{ form.password }}
         </div>
 
-        <button type="submit" class="btn-save">Log in</button>
+        <button type="submit" class="btn-save">تسجيل الدخول</button>
 
     </form>
 
