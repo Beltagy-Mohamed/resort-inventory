@@ -36,6 +36,7 @@ class ProductForm(StripWhitespaceMixin, forms.ModelForm):
     
     initial_warehouse = forms.ModelChoiceField(
         queryset=Warehouse.objects.all(),
+        empty_label='-- اختر المخزن --',
         required=False,
         label="المخزن (للرصيد الافتتاحي)",
         help_text="المخزن الذي سيتم إضافة هذه الكمية إليه."
@@ -54,6 +55,21 @@ class ProductForm(StripWhitespaceMixin, forms.ModelForm):
             # Adding new product
             if 'quantity' in self.fields:
                 self.fields['quantity'].help_text = "الرصيد الافتتاحي للمنتج."
+
+        # Set Arabic empty labels
+        for field_name, field in self.fields.items():
+            if hasattr(field, 'empty_label'):
+                if field_name == 'category':
+                    field.empty_label = '-- اختر الفئة --'
+                elif field_name == 'color':
+                    field.empty_label = '-- اختر اللون --'
+                elif field_name == 'size':
+                    field.empty_label = '-- اختر المقاس --'
+                elif field_name == 'initial_warehouse':
+                    field.empty_label = '-- اختر المخزن --'
+                else:
+                    field.empty_label = '-- اختر --'
+
 
     class Meta:
 
@@ -97,7 +113,7 @@ class ProductForm(StripWhitespaceMixin, forms.ModelForm):
             "name": "اسم المنتج",
             "category": "الفئة",
             "color": "اللون",
-            "size": "Size",
+            "size": "المقاس",
             "cost_price": "سعر الشراء / التكلفة",
             "selling_price": "سعر البيع / التوريد",
             "quantity": "الكمية",
