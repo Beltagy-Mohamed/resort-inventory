@@ -3,7 +3,7 @@
 <aside class="sidebar">
 
     <div class="sidebar-header">
-        <h2>Resort Inventory</h2>
+        <h2>مخزون المنتجع</h2>
         <button type="button" class="sidebar-collapse-btn" id="sidebar-toggle" title="Collapse sidebar">
             <i class="bi bi-layout-sidebar"></i>
         </button>
@@ -93,7 +93,7 @@
         {% if user.is_superuser %}
         <a href="{% url 'activity_logs' %}" class="{% if request.resolver_match.url_name == 'activity_logs' %}active{% endif %}">
             <i class="bi bi-clock-history"></i>
-            <span class="label">Activity Log</span>
+            <span class="label">سجل النشاطات</span>
         </a>
         {% endif %}
         {% endif %}
@@ -113,14 +113,14 @@
         {% if user.is_superuser %}
         <a href="{% url 'users_list' %}" target="_blank">
             <i class="bi bi-people"></i>
-            <span class="label">Users & Permissions</span>
+            <span class="label">المستخدمون والصلاحيات</span>
         </a>
         {% endif %}
 
         {% if user.is_superuser %}
         <a href="{% url 'system_settings' %}" class="{% if request.resolver_match.url_name == 'system_settings' %}active{% endif %}">
             <i class="bi bi-gear"></i>
-            <span class="label">Settings</span>
+            <span class="label">الإعدادات</span>
         </a>
         {% endif %}
 

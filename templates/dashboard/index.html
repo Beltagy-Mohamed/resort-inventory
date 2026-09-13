@@ -15,30 +15,30 @@
 
     <div>
         <h1>لوحة التحكم</h1>
-        <p class="dashboard-subtitle">A clear view of your inventory health</p>
+        <p class="dashboard-subtitle">نظرة شاملة على حالة مخزونك</p>
     </div>
 
     <form method="get" class="dashboard-filters">
-        <label for="dashboard-period">View period</label>
+        <label for="dashboard-period">عرض الفترة</label>
         <select id="dashboard-period" name="period" onchange="this.form.submit()">
-            <option value="year" {% if dashboard_period == "year" %}selected{% endif %}>This year</option>
-            <option value="1" {% if dashboard_period == "1" %}selected{% endif %}>January</option>
-            <option value="2" {% if dashboard_period == "2" %}selected{% endif %}>February</option>
-            <option value="3" {% if dashboard_period == "3" %}selected{% endif %}>March</option>
-            <option value="4" {% if dashboard_period == "4" %}selected{% endif %}>April</option>
-            <option value="5" {% if dashboard_period == "5" %}selected{% endif %}>May</option>
-            <option value="6" {% if dashboard_period == "6" %}selected{% endif %}>June</option>
-            <option value="7" {% if dashboard_period == "7" %}selected{% endif %}>July</option>
-            <option value="8" {% if dashboard_period == "8" %}selected{% endif %}>August</option>
-            <option value="9" {% if dashboard_period == "9" %}selected{% endif %}>September</option>
-            <option value="10" {% if dashboard_period == "10" %}selected{% endif %}>October</option>
-            <option value="11" {% if dashboard_period == "11" %}selected{% endif %}>November</option>
-            <option value="12" {% if dashboard_period == "12" %}selected{% endif %}>December</option>
+            <option value="year" {% if dashboard_period == "year" %}selected{% endif %}>هذا العام</option>
+            <option value="1" {% if dashboard_period == "1" %}selected{% endif %}>يناير</option>
+            <option value="2" {% if dashboard_period == "2" %}selected{% endif %}>فبراير</option>
+            <option value="3" {% if dashboard_period == "3" %}selected{% endif %}>مارس</option>
+            <option value="4" {% if dashboard_period == "4" %}selected{% endif %}>أبريل</option>
+            <option value="5" {% if dashboard_period == "5" %}selected{% endif %}>مايو</option>
+            <option value="6" {% if dashboard_period == "6" %}selected{% endif %}>يونيو</option>
+            <option value="7" {% if dashboard_period == "7" %}selected{% endif %}>يوليو</option>
+            <option value="8" {% if dashboard_period == "8" %}selected{% endif %}>أغسطس</option>
+            <option value="9" {% if dashboard_period == "9" %}selected{% endif %}>سبتمبر</option>
+            <option value="10" {% if dashboard_period == "10" %}selected{% endif %}>أكتوبر</option>
+            <option value="11" {% if dashboard_period == "11" %}selected{% endif %}>نوفمبر</option>
+            <option value="12" {% if dashboard_period == "12" %}selected{% endif %}>ديسمبر</option>
         </select>
 
-        <label for="dashboard-category">Category</label>
+        <label for="dashboard-category">الفئة</label>
         <select id="dashboard-category" name="category" onchange="this.form.submit()">
-            <option value="">All categories</option>
+            <option value="">كل الفئات</option>
             {% for category in dashboard_categories %}
                 <option value="{{ category.id }}" {% if dashboard_category == category.id %}selected{% endif %}>
                     {{ category.name }}
@@ -59,13 +59,15 @@
 
         <div>
 
-            <h3>Inventory Value</h3>
+            <h3>قيمة المخزون</h3>
 
             <h2>{{ inventory_value }} {{ system_settings.currency }}</h2>
 
         </div>
 
     </div>
+
+
 
     <div class="card products-card">
 
@@ -107,7 +109,7 @@
 
         <div>
 
-            <h3>Total Quantity</h3>
+            <h3>إجمالي الكميات</h3>
 
             <h2>{{ total_quantity }}</h2>
 
@@ -141,7 +143,7 @@
 
         <div>
 
-            <h3>Out Of Stock</h3>
+            <h3>نفد من المخزون</h3>
 
             <h2>{{ out_of_stock }}</h2>
 
@@ -157,7 +159,7 @@
 
         <div>
 
-            <h3>Today's Transactions</h3>
+            <h3>حركات اليوم</h3>
 
             <h2>{{ today_transactions }}</h2>
 
@@ -169,25 +171,25 @@
 
 <section class="movement-summary" aria-label="Period movement summary">
     <div class="insight-card insight-primary">
-        <span class="eyebrow">Period activity</span>
+        <span class="eyebrow">نشاط الفترة</span>
         <strong>{{ period_transactions }}</strong>
-        <span>transactions</span>
+        <span>حركات</span>
         <small>Compared with previous period: {{ activity_change }}%</small>
     </div>
     <div class="insight-card">
-        <span class="eyebrow">Received</span>
+        <span class="eyebrow">تم استلام</span>
         <strong>{{ received_quantity }}</strong>
-        <span>units in</span>
+        <span>وحدة (وارد)</span>
     </div>
     <div class="insight-card">
-        <span class="eyebrow">Issued</span>
+        <span class="eyebrow">تم صرف</span>
         <strong>{{ issued_quantity }}</strong>
-        <span>units out</span>
+        <span>وحدة (منصرف)</span>
     </div>
     <div class="insight-card">
-        <span class="eyebrow">Net movement</span>
+        <span class="eyebrow">صافي الحركة</span>
         <strong>{{ net_movement }}</strong>
-        <span>units balance</span>
+        <span>وحدة (الرصيد)</span>
     </div>
 </section>
 
@@ -195,7 +197,7 @@
 
     <div class="dashboard-card">
 
-        <h2>Latest Products</h2>
+        <h2>أحدث المنتجات</h2>
 
         <div class=table-container>
 <table class="products-table">
@@ -218,8 +220,6 @@
 
                 <tr>
 
-                    <td>{{ product.id }}</td>
-
                     <td>{{ product.name }}</td>
 
                     <td>{{ product.quantity }}</td>
@@ -232,7 +232,7 @@
 
                     <td colspan="3">
 
-                        No Products Found
+                        لا يوجد منتجات
 
                     </td>
 
@@ -249,7 +249,7 @@
 
     <div class="dashboard-card">
 
-        <h2>Latest Transactions</h2>
+        <h2>أحدث الحركات</h2>
 
         <div class=table-container>
 <table class="products-table">
@@ -292,7 +292,7 @@
 
                     <td colspan="4">
 
-                        No Transactions Found
+                        لا يوجد حركات
 
                     </td>
 
@@ -311,7 +311,7 @@
 
 <div class="dashboard-card">
 
-    <h2>Products By Category</h2>
+    <h2>المنتجات حسب الفئة</h2>
 
     <canvas id="categoryChart"></canvas>
 
@@ -329,8 +329,8 @@
 <div class="dashboard-card category-chart-card">
         <div class="section-heading">
             <div>
-                <span class="eyebrow">Capital allocation</span>
-                <h2>Inventory value by category</h2>
+                <span class="eyebrow">توزيع رأس المال</span>
+                <h2>قيمة المخزون حسب الفئة</h2>
             </div>
             <i class="bi bi-pie-chart" aria-hidden="true"></i>
         </div>
@@ -342,8 +342,8 @@
     <div class="dashboard-card">
         <div class="section-heading">
             <div>
-                <span class="eyebrow">Operational focus</span>
-                <h2>Most active products</h2>
+                <span class="eyebrow">التركيز التشغيلي</span>
+                <h2>المنتجات الأكثر نشاطاً</h2>
             </div>
             <i class="bi bi-activity" aria-hidden="true"></i>
         </div>
@@ -357,7 +357,7 @@
                     <b>{{ product.movement_count }}</b>
                 </a>
             {% empty %}
-                <p class="empty-state">No activity in this period</p>
+                <p class="empty-state">لا يوجد نشاط في هذه الفترة</p>
             {% endfor %}
         </div>
     </div>
@@ -404,7 +404,7 @@
 
             <p class="empty-state">
 
-                No low-stock products 🎉
+                لا يوجد منتجات منخفضة المخزون 🎉
 
             </p>
 
@@ -447,7 +447,7 @@
 
             <p class="empty-state">
 
-                No out-of-stock products 🎉
+                لا يوجد منتجات نفدت 🎉
 
             </p>
 
@@ -460,7 +460,7 @@
 
 <div class="dashboard-card">
 
-    <h2>⚡ Quick shortcuts</h2>
+    <h2>⚡ اختصارات سريعة</h2>
 
     <div class="quick-actions">
 
@@ -471,7 +471,7 @@
         {% endif %}
 
         <a href="{% url 'transactions_list' %}" class="quick-btn">
-            🔄 Inventory transactions
+            🔄 حركات المخزون
         </a>
 
         {% if perms.inventory.view_inventorytransaction %}
