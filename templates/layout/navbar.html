@@ -51,7 +51,7 @@
                 {% if nav_alert_products %}
 
                     {% for p in nav_alert_products %}
-                    <a href="{% url 'product_detail' p.product_code %}" class="notif-item">
+                    <a href="{% url 'product_detail' p.id %}" class="notif-item">
                         <strong>{{ p.name }}</strong>
                         <span>{{ p.stock_status_text }} — الكمية: {{ p.quantity }}</span>
                     </a>

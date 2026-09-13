@@ -7,7 +7,6 @@ from .sizes import *
 from .reports import *
 from .transactions import *
 from .activity import *
-from .barcode import *
 from .settings import *
 from .users import *
 

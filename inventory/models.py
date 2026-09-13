@@ -34,20 +34,6 @@ class Size(models.Model):
         return self.name
 
 
-class CodeSequence(models.Model):
-
-    prefix = models.CharField(
-        max_length=10,
-        unique=True
-    )
-
-    last_number = models.PositiveIntegerField(
-        default=0
-    )
-
-    def __str__(self):
-        return f"{self.prefix} - {self.last_number}"
-
 
 class SystemSettings(models.Model):
     """
@@ -112,12 +98,7 @@ class Partner(models.Model):
 
 class Product(models.Model):
 
-    product_code = models.CharField(
-        max_length=20,
-        unique=True,
-        editable=False,
-        db_index=True,
-    )
+
 
     name = models.CharField(
         max_length=200

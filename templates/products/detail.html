@@ -21,7 +21,7 @@
     <div class="detail-heading">
         <span class="eyebrow">{% trans "Product details" %}</span>
         <h1>{{ product.name }}</h1>
-        <span class="detail-code">{{ product.product_code }}</span>
+        <span class="detail-code">{{ product.id }}</span>
     </div>
 
     <span class="stock-status stock-{{ product.stock_status }}">
@@ -44,7 +44,7 @@
             <span class="eyebrow">{% trans "Product code" %}</span>
         </div>
 
-        <strong class="product-code">{{ product.product_code }}</strong>
+        <strong class="product-code">{{ product.id }}</strong>
 
         <div class="quantity-highlight">
             <span>{% trans "Current quantity" %}</span>
@@ -108,24 +108,12 @@
 
 <div class="detail-actions" aria-label="{% trans 'Product actions' %}">
 
-    <a href="{% url 'edit_product' product.product_code %}" class="action-btn">
+    <a href="{% url 'edit_product' product.id %}" class="action-btn">
         <i class="bi bi-pencil-square"></i>
         {% trans "Edit" %}
     </a>
 
-    
-
-    <a href="{% url 'print_barcode' product.product_code %}" class="action-btn">
-        <i class="bi bi-upc-scan"></i>
-        {% trans "Print Barcode" %}
-    </a>
-
-    <a href="{% url 'print_label' product.product_code %}" class="action-btn">
-        <i class="bi bi-tag"></i>
-        {% trans "Print label" %}
-    </a>
-
-    <a href="{% url 'delete_product' product.product_code %}" class="action-btn delete-btn">
+    <a href="{% url 'delete_product' product.id %}" class="action-btn delete-btn">
         <i class="bi bi-trash3"></i>
         {% trans "Delete" %}
     </a>

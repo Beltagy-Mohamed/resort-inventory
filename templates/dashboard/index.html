@@ -210,7 +210,7 @@
 
                 <tr>
 
-                    <td>{{ product.product_code }}</td>
+                    <td>{{ product.id }}</td>
 
                     <td>{{ product.name }}</td>
 
@@ -341,10 +341,10 @@
         </div>
         <div class="active-products-list">
             {% for product in top_active_products %}
-                <a href="{% url 'product_detail' product.product_code %}" class="active-product-row">
+                <a href="{% url 'product_detail' product.id %}" class="active-product-row">
                     <span>
                         <strong>{{ product.name }}</strong>
-                        <small>{{ product.product_code }}</small>
+                        <small>{{ product.id }}</small>
                     </span>
                     <b>{{ product.movement_count }}</b>
                 </a>
@@ -379,7 +379,7 @@
                     <strong>{{ product.name }}</strong>
 
                     <small>
-                        {{ product.product_code }}
+                        {{ product.id }}
                     </small>
 
                 </div>
@@ -422,7 +422,7 @@
                     <strong>{{ product.name }}</strong>
 
                     <small>
-                        {{ product.product_code }}
+                        {{ product.id }}
                     </small>
 
                 </div>

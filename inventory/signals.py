@@ -71,13 +71,13 @@ def user_deleted(sender, instance, **kwargs):
 @receiver(post_save, sender=Product)
 def product_saved(sender, instance, created, **kwargs):
     if created:
-        log_activity('ADD', f'تم إضافة منتج جديد: {instance.name} ({instance.product_code})', product=instance)
+        log_activity('ADD', f'تم إضافة منتج جديد: {instance.name} ', product=instance)
     else:
-        log_activity('EDIT', f'تم تعديل بيانات المنتج: {instance.name} ({instance.product_code})', product=instance)
+        log_activity('EDIT', f'تم تعديل بيانات المنتج: {instance.name} ', product=instance)
 
 @receiver(post_delete, sender=Product)
 def product_deleted(sender, instance, **kwargs):
-    log_activity('DELETE', f'تم حذف المنتج: {instance.name} ({instance.product_code})')
+    log_activity('DELETE', f'تم حذف المنتج: {instance.name} ')
 
 # --- InventoryTransaction ---
 @receiver(post_save, sender=InventoryTransaction)

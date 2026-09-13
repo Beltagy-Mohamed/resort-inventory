@@ -1,6 +1,5 @@
 from django.urls import path
 from . import views
-from inventory.views import media
 
 urlpatterns = [
     # ===========================
@@ -11,8 +10,7 @@ urlpatterns = [
     path('users/<int:pk>/edit/', views.edit_user, name='edit_user'),
     path('users/<int:pk>/delete/', views.delete_user, name='delete_user'),
 
-        path("media/dynamic_barcode/<str:product_code>.png", media.dynamic_barcode, name="dynamic_barcode"),
-
+    
 
     # Dashboard
     path(
@@ -44,32 +42,24 @@ urlpatterns = [
     ),
 
     path(
-        "products/<str:product_code>/",
+        "products/<int:pk>/",
         views.product_detail,
         name="product_detail"
     ),
 
     path(
-        "products/<str:product_code>/edit/",
+        "products/<int:pk>/edit/",
         views.edit_product,
         name="edit_product"
     ),
 
     path(
-        "products/<str:product_code>/delete/",
+        "products/<int:pk>/delete/",
         views.delete_product,
         name="delete_product"
     ),
-path(
-    "products/<str:product_code>/barcode/",
-    views.print_barcode,
-    name="print_barcode",
-),
-path(
-    "products/<str:product_code>/label/",
-    views.print_label,
-    name="print_label",
-),
+
+
     # ===========================
     # Categories
     # ===========================

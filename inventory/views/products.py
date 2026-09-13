@@ -9,7 +9,6 @@ from django.shortcuts import (
 )
 from ..forms import ProductForm
 from ..models import Product, ActivityLog
-from ..services.code_generator import CodeGenerator
 @login_required
 def products_list(request):
 
@@ -132,7 +131,7 @@ def add_product(request):
 
 @login_required
 @permission_required("inventory.change_product", raise_exception=True)
-def edit_product(request, product_code):
+def edit_product(request, pk):
 
     product = get_object_or_404(
         Product,
@@ -175,7 +174,7 @@ def edit_product(request, product_code):
     
 @login_required
 @permission_required("inventory.delete_product", raise_exception=True)
-def delete_product(request, product_code):
+def delete_product(request, pk):
 
     product = get_object_or_404(
         Product,
@@ -203,7 +202,7 @@ def delete_product(request, product_code):
     )
     
 @login_required
-def product_detail(request, product_code):
+def product_detail(request, pk):
 
     product = get_object_or_404(
         Product,

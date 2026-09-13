@@ -120,7 +120,7 @@
             {% for product in products %}
             <tr>
                 <td><strong>{{ product.name }}</strong></td>
-                <td style="color: var(--text-muted);">{{ product.product_code }}</td>
+                <td style="color: var(--text-muted);">{{ product.id }}</td>
                 <td>{{ product.category|default:"-" }}</td>
                 <td>{{ product.quantity }}</td>
                 <td>

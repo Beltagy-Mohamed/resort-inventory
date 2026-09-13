@@ -23,7 +23,7 @@
 
         {% trans "Code" %}:
 
-        <strong>{{ product.product_code }}</strong>
+        <strong>{{ product.id }}</strong>
 
     </p>
 
@@ -40,7 +40,7 @@
         </button>
 
         <a
-            href="{% url 'product_detail' product.product_code %}"
+            href="{% url 'product_detail' product.id %}"
             class="btn-save">
 
             {% trans "Cancel" %}
