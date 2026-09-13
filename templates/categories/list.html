@@ -16,7 +16,7 @@
     <h1>الفئات</h1>
 
     <a href="{% url 'add_category' %}" class="btn-save">
-        + Add Category
+        + Add الفئة
     </a>
 
 </div>
@@ -30,11 +30,11 @@
 
             <th>#</th>
 
-            <th>Category name</th>
+            <th>اسم الفئة</th>
 
-            <th>Color</th>
+            <th>اللون</th>
 
-            <th>Product count</th>
+            <th>عدد المنتجات</th>
 
             <th>الإجراءات</th>
 
@@ -62,7 +62,7 @@
             <td data-label="الإجراءات"><a
                     href="{% url 'edit_category' category.id %}"
                     class="action-btn"
-                    title="Edit">
+                    title="تعديل">
 
                     <i class="bi bi-pencil-square"></i>
 
@@ -71,7 +71,7 @@
                 <a
                     href="{% url 'delete_category' category.id %}"
                     class="action-btn"
-                    title="Delete">
+                    title="حذف">
 
                     <i class="bi bi-trash3"></i>
 
@@ -85,7 +85,7 @@
 
             <td colspan="5">
 
-                <h3>No categories</h3>
+                <h3>لا يوجد فئات</h3>
 
                 <br>
 
@@ -93,7 +93,7 @@
                     href="{% url 'add_category' %}"
                     class="btn-save">
 
-                    Add first category
+                    إضافة أول فئة
 
                 </a>
 

@@ -34,25 +34,25 @@
         <select name="status">
 
             <option value="">
-                All products
+                جميع المنتجات
             </option>
 
             <option
                 value="available"
                 {% if status == "available" %}selected{% endif %}>
-                Available
+                متاح
             </option>
 
             <option
                 value="low"
                 {% if status == "low" %}selected{% endif %}>
-                Low
+                منخفض
             </option>
 
             <option
                 value="out"
                 {% if status == "out" %}selected{% endif %}>
-                Out of stock
+                نفد من المخزون
             </option>
 
         </select>
@@ -112,19 +112,19 @@
                 {% if product.stock_status == "available" %}
 
                     <span class="badge badge-success">
-                        Available
+                        متاح
                     </span>
 
                 {% elif product.stock_status == "low" %}
 
                     <span class="badge badge-warning">
-                        Low
+                        منخفض
                     </span>
 
                 {% else %}
 
                     <span class="badge badge-danger">
-                        Out of stock
+                        نفد من المخزون
                     </span>
 
                 {% endif %}
@@ -145,7 +145,7 @@
                 <a
                     href="{% url 'edit_product' product.id %}"
                     class="action-btn"
-                    title="Edit">
+                    title="تعديل">
 
                     <i class="bi bi-pencil-square"></i>
 
@@ -154,7 +154,7 @@
                 <a
                     href="{% url 'delete_product' product.id %}"
                     class="action-btn"
-                    title="Delete">
+                    title="حذف">
 
                     <i class="bi bi-trash3"></i>
 
@@ -171,7 +171,7 @@
             <td colspan="8">
 
                 <h3>
-                    No products yet
+                    لا يوجد منتجات بعد
                 </h3>
 
                 <br>
@@ -180,7 +180,7 @@
                     href="{% url 'add_product' %}"
                     class="btn-save">
 
-                    Add first product
+                    إضافة أول منتج
 
                 </a>
 
@@ -200,7 +200,7 @@
     {% if page_obj.has_previous %}
 
         <a href="?page={{ page_obj.previous_page_number }}&search={{ search }}&status={{ status }}">
-            Previous
+            السابق
         </a>
 
     {% endif %}
@@ -211,7 +211,7 @@
 
         {{ page_obj.number }}
 
-        of
+        من
 
         {{ page_obj.paginator.num_pages }}
 
@@ -220,7 +220,7 @@
     {% if page_obj.has_next %}
 
         <a href="?page={{ page_obj.next_page_number }}&search={{ search }}&status={{ status }}">
-            Next
+            التالي
         </a>
 
     {% endif %}

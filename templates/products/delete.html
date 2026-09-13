@@ -2,18 +2,18 @@
 
 
 {% block title %}
-Delete Product
+حذف Product
 {% endblock %}
 
 {% block content %}
 
 <div class="delete-card">
 
-    <h2>Confirm product deletion</h2>
+    <h2>تأكيد حذف المنتج</h2>
 
     <p>
 
-        Are you sure you want to delete this product?
+        هل أنت متأكد من حذف هذا المنتج؟
 
         <strong>{{ product.name }}</strong>
 
@@ -21,7 +21,7 @@ Delete Product
 
     <p>
 
-        Code:
+        الكود:
 
         <strong>{{ product.id }}</strong>
 
@@ -35,7 +35,7 @@ Delete Product
 
             <i class="bi bi-trash3"></i>
 
-            Delete
+            حذف
 
         </button>
 
@@ -43,7 +43,7 @@ Delete Product
             href="{% url 'product_detail' product.id %}"
             class="btn-save">
 
-            Cancel
+            إلغاء
 
         </a>
 

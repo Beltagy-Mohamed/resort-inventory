@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block title %}
-Activity Log
+النشاط Log
 {% endblock %}
 
 {% block extra_css %}
@@ -11,7 +11,7 @@ Activity Log
 
 {% block content %}
 
-<h1>Activity Log</h1>
+<h1>سجل النشاطات</h1>
 
 <table class="products-table">
 
@@ -19,14 +19,14 @@ Activity Log
 
         <tr>
 
-            <th>Time</th>
+            <th>الوقت</th>
             <th>المستخدم</th>
 
-            <th>Action</th>
+            <th>الإجراء</th>
 
             <th>المنتج</th>
 
-            <th>Description</th>
+            <th>الوصف</th>
 
         </tr>
 
@@ -67,7 +67,7 @@ Activity Log
 
             <td colspan="5">
 
-                No activity
+                لا يوجد نشاط
 
             </td>
 
@@ -84,7 +84,7 @@ Activity Log
     {% if page_obj.has_previous %}
 
         <a href="?page={{ page_obj.previous_page_number }}">
-            Previous
+            السابق
         </a>
 
     {% endif %}
@@ -92,14 +92,14 @@ Activity Log
     <span>
         Page
         {{ page_obj.number }}
-        of
+        من
         {{ page_obj.paginator.num_pages }}
     </span>
 
     {% if page_obj.has_next %}
 
         <a href="?page={{ page_obj.next_page_number }}">
-            Next
+            التالي
         </a>
 
     {% endif %}

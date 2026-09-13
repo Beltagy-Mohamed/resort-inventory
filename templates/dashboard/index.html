@@ -174,7 +174,7 @@
         <span class="eyebrow">نشاط الفترة</span>
         <strong>{{ period_transactions }}</strong>
         <span>حركات</span>
-        <small>Compared with previous period: {{ activity_change }}%</small>
+        <small>مقارنة بالفترة السابقة: {{ activity_change }}%</small>
     </div>
     <div class="insight-card">
         <span class="eyebrow">تم استلام</span>
@@ -320,7 +320,7 @@
 <div class="dashboard-chart-grid">
 <div class="dashboard-card movement-chart-card">
 
-    <h2>{% if dashboard_period == "year" %}Inventory movement this year{% else %}Inventory movement this month{% endif %}</h2>
+    <h2>{% if dashboard_period == "year" %}حركة المخزون هذا العام{% else %}حركة المخزون هذا الشهر{% endif %}</h2>
 
     <canvas id="transactionsChart"></canvas>
 
@@ -370,11 +370,11 @@
         <div class="alert-header">
             <h2>
                 <i class="bi bi-exclamation-triangle-fill"></i>
-                Low-stock alerts
+                منخفض-stock alerts
             </h2>
 
             <a href="{% url 'low_stock_products' %}" class="view-all">
-                View all
+                عرض الكل
             </a>
         </div>
 
@@ -417,7 +417,7 @@
         <div class="alert-header">
             <h2>
                 <i class="bi bi-x-octagon-fill"></i>
-                Out-of-stock products
+                منتجات نفدت
             </h2>
         </div>
 
@@ -437,7 +437,7 @@
 
                 <span class="alert-badge danger">
 
-                    Out of stock
+                    نفد من المخزون
 
                 </span>
 
@@ -509,7 +509,7 @@ new Chart(ctx, {
 
         data: {{ category_counts|safe }},
 
-                backgroundColor: {{ category_colors|safe }} || [
+                backgroundاللون: {{ category_colors|safe }} || [
             {% for color in category_colors %}"{{ color }}"{% if not forloop.last %},{% endif %}{% endfor %}
         ],
 
@@ -569,8 +569,8 @@ new Chart(txCtx, {
             {
                 label: "Transactions",
                 data: {{ transactions_counts|safe }},
-                borderColor: "#3a5457",
-                backgroundColor: "rgba(58, 84, 87, 0.15)",
+                borderاللون: "#3a5457",
+                backgroundاللون: "rgba(58, 84, 87, 0.15)",
                 tension: 0.3,
                 fill: true,
             }
@@ -609,7 +609,7 @@ new Chart(valueCtx, {
         labels: {{ category_value_labels|safe }},
         datasets: [{
             data: {{ category_value_counts|safe }},
-            backgroundColor: {{ category_colors|safe }} || [{% for color in category_value_colors %}"{{ color }}"{% if not forloop.last %},{% endif %}{% endfor %}],
+            backgroundاللون: {{ category_colors|safe }} || [{% for color in category_value_colors %}"{{ color }}"{% if not forloop.last %},{% endif %}{% endfor %}],
             borderWidth: 0,
         }]
     },

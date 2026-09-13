@@ -131,7 +131,7 @@
 <nav class="mobile-nav" aria-label="التنقل الرئيسي">
     <a href="{% url 'dashboard' %}" class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
         <i class="bi bi-grid-1x2" aria-hidden="true"></i>
-        <span>Home</span>
+        <span>الرئيسية</span>
     </a>
     <a href="{% url 'products_list' %}" class="{% if request.resolver_match.url_name == 'products_list' %}active{% endif %}">
         <i class="bi bi-box-seam" aria-hidden="true"></i>
@@ -140,19 +140,19 @@
     {% if perms.inventory.add_product %}
     <a href="{% url 'add_product' %}" class="{% if request.resolver_match.url_name == 'add_product' %}active{% endif %}">
         <i class="bi bi-plus-circle" aria-hidden="true"></i>
-        <span>Add</span>
+        <span>إضافة</span>
     </a>
     {% endif %}
     {% if perms.inventory.view_inventorytransaction %}
     <a href="{% url 'transactions_list' %}" class="{% if request.resolver_match.url_name == 'transactions_list' %}active{% endif %}">
         <i class="bi bi-arrow-left-right" aria-hidden="true"></i>
-        <span>Transactions</span>
+        <span>الحركات</span>
     </a>
     {% endif %}
     {% if user.is_superuser %}
     <a href="{% url 'system_settings' %}" class="{% if request.resolver_match.url_name == 'system_settings' %}active{% endif %}">
         <i class="bi bi-three-dots" aria-hidden="true"></i>
-        <span>More</span>
+        <span>المزيد</span>
     </a>
     {% endif %}
 </nav>
