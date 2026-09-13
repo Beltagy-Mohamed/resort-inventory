@@ -39,7 +39,7 @@
 
         <tr>
 
-            <td data-label="{% trans '{% trans 'Date' %}' %}">{{ log.created_at|date:"Y-m-d H:i" }}</td>
+            <td data-label="{% trans "Date" %}">{{ log.created_at|date:"Y-m-d H:i" }}</td>
             <td data-label="{% trans 'المستخدم' %}">{% if log.user %}{{ log.user.username }}{% else %}-{% endif %}</td>
 
             <td>{{ log.get_action_display }}</td>

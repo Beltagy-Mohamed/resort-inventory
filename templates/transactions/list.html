@@ -112,13 +112,13 @@
 
 <tr>
 
-<td data-label="{% trans '{% trans 'Product' %}' %}">{{ t.product.name }}</td>
-<td data-label="{% trans '{% trans 'User' %}' %}">{% if t.user %}{{ t.user.username }}{% else %}-{% endif %}</td>
-<td data-label="{% trans '{% trans 'Code' %}' %}">{{ t.product.id }}</td>
-<td data-label="{% trans '{% trans 'Type' %}' %}">{{ t.get_transaction_type_display }}</td>
+<td data-label="{% trans "Product" %}">{{ t.product.name }}</td>
+<td data-label="{% trans "User" %}">{% if t.user %}{{ t.user.username }}{% else %}-{% endif %}</td>
+<td data-label="{% trans "Code" %}">{{ t.product.id }}</td>
+<td data-label="{% trans "Type" %}">{{ t.get_transaction_type_display }}</td>
 <td data-label="{% trans 'Partner' %}">{% if t.partner %}{{ t.partner.name }}{% else %}-{% endif %}</td>
 <td data-label="{% trans 'Warehouse' %}">{% if t.warehouse %}{{ t.warehouse.name }}{% else %}-{% endif %}</td>
-<td data-label="{% trans '{% trans 'Quantity' %}' %}">{{ t.quantity }}</td>
+<td data-label="{% trans "Quantity" %}">{{ t.quantity }}</td>
 
 <td>{{ t.created_at|date:"Y-m-d H:i" }}</td>
 
