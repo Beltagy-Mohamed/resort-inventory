@@ -19,6 +19,7 @@ def dashboard(request):
     products = Product.objects.all()
 
     categories = Category.objects.all()
+
     today = timezone.localdate()
     period = request.GET.get("period", str(today.month))
     if period not in {"year", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"}:
@@ -35,7 +36,85 @@ def dashboard(request):
 
     products = products.filter(category_id=category_id) if category_id else products
     categories = categories.filter(id=category_id) if category_id else categories
-    import calendar
+
+    if period == "year":
+        period_start = today.replace(month=1, day=1)
+        period_end = period_start.replace(year=period_start.year + 1)
+        previous_start = period_start.replace(year=period_start.year - 1)
+    else:
+        target_month = int(period)
+        period_start = today.replace(month=target_month, day=1)
+        if target_month == 12:
+            period_end = period_start.replace(year=period_start.year + 1, month=1)
+        else:
+            period_end = period_start.replace(month=target_month + 1)
+            
+        if target_month == 1:
+            previous_start = period_start.replace(year=period_start.year - 1, month=12)
+        else:
+            previous_start = period_start.replace(month=target_month - 1)
+
+    inventory_value = products.aggregate(
+        total=Sum(F("cost_price") * F("quantity"))
+    )["total"] or 0
+
+    # One grouped query instead of one .count() per category.
+    category_counts_qs = Product.objects.values(
+        "category__id", "category__name"
+    ).annotate(
+        product_count=Count("id")
+    )
+
+    counts_by_category_id = {
+        row["category__id"]: row["product_count"]
+        for row in category_counts_qs
+    }
+    category_color_map = {
+        category.id: category.color
+        for category in categories
+    }
+
+    transactions_in_period = InventoryTransaction.objects.filter(
+        created_at__date__gte=period_start,
+        created_at__date__lt=period_end,
+    )
+    previous_transactions = InventoryTransaction.objects.filter(
+        created_at__date__gte=previous_start,
+        created_at__date__lt=period_start,
+    )
+    if category_id:
+        transactions_in_period = transactions_in_period.filter(
+            product__category_id=category_id
+        )
+        previous_transactions = previous_transactions.filter(
+            product__category_id=category_id
+        )
+
+    transaction_totals = transactions_in_period.aggregate(
+        received=Sum("quantity", filter=Q(transaction_type="IN")),
+        issued=Sum("quantity", filter=Q(transaction_type="OUT")),
+        adjusted=Sum("quantity", filter=Q(transaction_type="ADJUST")),
+    )
+    received_quantity = transaction_totals["received"] or 0
+    issued_quantity = transaction_totals["issued"] or 0
+    adjusted_quantity = transaction_totals["adjusted"] or 0
+
+    current_transaction_count = transactions_in_period.count()
+    previous_transaction_count = previous_transactions.count()
+    if previous_transaction_count:
+        activity_change = round(
+            ((current_transaction_count - previous_transaction_count)
+             / previous_transaction_count) * 100,
+            1,
+        )
+    elif current_transaction_count:
+        activity_change = 100
+    else:
+        activity_change = 0
+
+    active_product_ids = transactions_in_period.values("product_id").distinct()
+    active_products_count = active_product_ids.count()
+
     if period == "year":
         chart_labels = [
             datetime.date(today.year, month, 1).strftime("%b")
@@ -55,13 +134,8 @@ def dashboard(request):
             for month in range(1, 13)
         ]
     else:
-        # Determine number of days in the selected month
         import calendar
         day_count = calendar.monthrange(period_start.year, period_start.month)[1]
-        
-        # If it's the current month, optionally we only chart up to today? 
-        # Actually better to chart the whole month to keep the x-axis consistent.
-        
         chart_labels = [
             (period_start + datetime.timedelta(days=offset)).strftime("%d")
             for offset in range(day_count)
@@ -72,28 +146,12 @@ def dashboard(request):
             total=Count("id")
         )
         counts_by_period = {
-            row["period"]: row["total"]
+            row["period"].date() if hasattr(row["period"], "date") else row["period"]: row["total"]
             for row in grouped_counts_qs
         }
         chart_counts = [
             counts_by_period.get(
-                period_start + datetime.timedelta(days=offset),
-                0,
-            )
-            for offset in range(day_count)
-        ]
-        grouped_counts_qs = transactions_in_period.annotate(
-            period=TruncDate("created_at")
-        ).values("period").annotate(
-            total=Count("id")
-        )
-        counts_by_period = {
-            row["period"]: row["total"]
-            for row in grouped_counts_qs
-        }
-        chart_counts = [
-            counts_by_period.get(
-                period_start + datetime.timedelta(days=offset),
+                (period_start + datetime.timedelta(days=offset)).date(),
                 0,
             )
             for offset in range(day_count)
