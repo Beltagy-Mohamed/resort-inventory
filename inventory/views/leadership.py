@@ -154,3 +154,16 @@ def leadership_items_export(request):
     
     return response
 
+
+@leadership_required
+def leadership_item_delete(request, pk):
+    """حذف صنف قائد"""
+    product = get_object_or_404(Product.all_objects.all(), pk=pk, is_leadership_restricted=True)
+    
+    if request.method == "POST":
+        product.delete()
+        log_leadership_access(request, "DELETE", product)
+        messages.success(request, "تم حذف صنف القائد بنجاح.")
+        return redirect("leadership_items_list")
+        
+    return render(request, "products/confirm_delete.html", {"product": product, "cancel_url": reverse("leadership_item_detail", args=[product.id])})
