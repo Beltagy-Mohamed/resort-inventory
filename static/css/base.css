@@ -3018,7 +3018,7 @@ html[data-theme="dark"] .detail-header h1 {
 
         border-inline-start: 0;
 
-        border-radius: 28px 0 0 28px;
+        border-radius: 0 28px 28px 0;
 
         box-shadow: 8px 0 26px rgba(41, 64, 67, .16);
 
@@ -3030,7 +3030,7 @@ html[data-theme="dark"] .detail-header h1 {
 
     body.sidebar-collapsed .sidebar {
 
-        border-radius: 22px 0 0 22px;
+        border-radius: 0 22px 22px 0;
 
     }
 
@@ -3308,4 +3308,11 @@ html[data-theme="dark"] .mobile-hamburger {
         border-radius: 50%;
         color: #fff;
     }
+}
+
+[dir="rtl"] .sidebar {
+    border-radius: 28px 0 0 28px !important;
+}
+[dir="rtl"] body.sidebar-collapsed .sidebar {
+    border-radius: 22px 0 0 22px !important;
 }

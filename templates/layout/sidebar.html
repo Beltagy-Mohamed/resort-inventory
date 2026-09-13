@@ -48,17 +48,17 @@
         {% if perms.inventory.view_inventorytransaction %}
         <a href="{% url 'add_transaction' %}?action=IN" class="{% if request.GET.action == 'IN' %}active{% endif %}">
             <i class="bi bi-box-arrow-in-down"></i>
-            <span class="label">إستلام (مورد)</span>
+            <span class="label">{% trans "Receive Stock" %}</span>
         </a>
 
         <a href="{% url 'add_transaction' %}?action=OUT" class="{% if request.GET.action == 'OUT' %}active{% endif %}">
             <i class="bi bi-box-arrow-up"></i>
-            <span class="label">صرف (جهة/عميل)</span>
+            <span class="label">{% trans "Issue Stock" %}</span>
         </a>
 
         <a href="{% url 'transactions_list' %}" class="{% if request.resolver_match.url_name == 'transactions_list' %}active{% endif %}">
             <i class="bi bi-arrow-left-right"></i>
-            <span class="label">سجل الحركات</span>
+            <span class="label">{% trans "Transactions Log" %}</span>
         </a>
         {% endif %}
 
@@ -72,17 +72,17 @@
 
         <a href="{% url 'warehouse_stock_report' %}" class="{% if request.resolver_match.url_name == 'warehouse_stock_report' %}active{% endif %}">
             <i class="bi bi-building"></i>
-            <span class="label">جرد المخازن التفصيلي</span>
+            <span class="label">{% trans "Warehouse Stock" %}</span>
         </a>
 
         <a href="{% url 'partner_statement_report' %}" class="{% if request.resolver_match.url_name == 'partner_statement_report' %}active{% endif %}">
             <i class="bi bi-person-lines-fill"></i>
-            <span class="label">كشف حساب الجهات</span>
+            <span class="label">{% trans "Partner Statement" %}</span>
         </a>
 
         <a href="{% url 'profit_report' %}" class="{% if request.resolver_match.url_name == 'profit_report' %}active{% endif %}">
             <i class="bi bi-graph-up-arrow"></i>
-            <span class="label">تقرير الأرباح والمبيعات</span>
+            <span class="label">{% trans "Profit & Sales" %}</span>
         </a>
 
         <a href="{% url 'low_stock_products' %}" class="{% if request.resolver_match.url_name == 'low_stock_products' %}active{% endif %}">
@@ -102,12 +102,12 @@
 
         <a href="{% url 'warehouses_list' %}" class="{% if request.resolver_match.url_name == 'warehouses_list' or request.resolver_match.url_name == 'add_warehouse' or request.resolver_match.url_name == 'edit_warehouse' %}active{% endif %}">
             <i class="bi bi-building"></i>
-            <span class="label">المخازن (فروع)</span>
+            <span class="label">{% trans "Warehouses" %}</span>
         </a>
 
         <a href="{% url 'partners_list' %}" class="{% if request.resolver_match.url_name == 'partners_list' or request.resolver_match.url_name == 'add_partner' or request.resolver_match.url_name == 'edit_partner' %}active{% endif %}">
             <i class="bi bi-people"></i>
-            <span class="label">جهات التعامل (مورد/عميل)</span>
+            <span class="label">{% trans "Partners" %}</span>
         </a>
 
         {% if user.is_superuser %}

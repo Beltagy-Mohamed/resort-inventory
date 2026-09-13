@@ -472,3 +472,28 @@ msgstr "لا توجد حركة خلال هذه الفترة"
 
 msgid "All categories"
 msgstr "كل الفئات"
+
+
+msgid "Receive Stock"
+msgstr "إستلام (مورد)"
+
+msgid "Issue Stock"
+msgstr "صرف (جهة/عميل)"
+
+msgid "Transactions Log"
+msgstr "سجل الحركات"
+
+msgid "Warehouse Stock"
+msgstr "جرد المخازن التفصيلي"
+
+msgid "Partner Statement"
+msgstr "كشف حساب الجهات"
+
+msgid "Profit & Sales"
+msgstr "تقرير الأرباح والمبيعات"
+
+msgid "Warehouses"
+msgstr "المخازن (فروع)"
+
+msgid "Partners"
+msgstr "جهات التعامل (مورد/عميل)"

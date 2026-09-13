@@ -582,3 +582,43 @@ html[data-theme="dark"] .dashboard-period-filter select {
     white-space: normal;
 }
 .card { overflow: hidden; }
+
+
+/* Hero Style for Inventory Value Card */
+.value-card {
+    grid-column: 1 / -1;
+    background: linear-gradient(135deg, var(--accent), #ff984d) !important;
+    color: white !important;
+    justify-content: center;
+    padding: 30px 20px !important;
+    gap: 24px;
+}
+.value-card .card-icon {
+    background: rgba(255, 255, 255, 0.25) !important;
+    color: white !important;
+    width: 60px;
+    height: 60px;
+    font-size: 28px;
+}
+.value-card h3 {
+    color: rgba(255, 255, 255, 0.9) !important;
+    font-size: 16px !important;
+}
+.value-card h2 {
+    color: white !important;
+    font-size: clamp(28px, 5vw, 42px) !important;
+    margin-top: 8px;
+}
+.value-card small {
+    font-size: 18px;
+    opacity: 0.8;
+}
+
+@media (max-width: 900px) {
+    .value-card {
+        grid-column: 1 / -1 !important;
+        flex-direction: column;
+        gap: 12px;
+        padding: 24px 16px !important;
+    }
+}
