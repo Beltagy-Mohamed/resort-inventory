@@ -39,7 +39,7 @@ def transactions_list(request):
         transactions = transactions.filter(
 
             Q(product__name__icontains=search) |
-            Q(product__product_code__icontains=search)
+            Q(product__id__icontains=search)
 
         )
 
@@ -133,7 +133,7 @@ def add_transaction(request):
 
                     "product_detail",
 
-                    product.product_code
+                    product.id
 
                 )
 

@@ -268,7 +268,7 @@ class InventoryTransaction(models.Model):
 
     def __str__(self):
 
-        return f"{self.product.product_code} - {self.transaction_type}"
+        return f"{self.product.id} - {self.transaction_type}"
 
     # NOTE: this model intentionally has NO save() override.
     # Stock mutation is handled exclusively by InventoryService.process().

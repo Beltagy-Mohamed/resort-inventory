@@ -26,7 +26,7 @@ def inventory_report(request):
     if search:
         products = products.filter(
             Q(name__icontains=search) |
-            Q(product_code__icontains=search)
+            Q(id__icontains=search)
         )
 
     if category:
@@ -77,7 +77,7 @@ def inventory_report(request):
 
         for row_num, p in enumerate(products_list, 2):
             row_data = [
-                p.product_code,
+                p.id,
                 p.name,
                 p.category.name if p.category else 'بدون تصنيف',
                 float(p.cost_price),
