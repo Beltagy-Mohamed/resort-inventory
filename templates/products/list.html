@@ -72,7 +72,7 @@
 
         <tr>
 
-            <th>{% trans "QR" %}</th>
+            
 
             <th>{% trans "Code" %}</th>
 
@@ -98,23 +98,7 @@
 
         <tr>
 
-            <td data-label="{% trans 'QR' %}">
-                {% if True %}
-
-                    <a
-                        href="/media/dynamic_qr/{{ product.product_code }}.png"
-                        target="_blank">
-
-                        <img
-                            src="/media/dynamic_qr/{{ product.product_code }}.png"
-                            class="qr-thumb"
-                            alt="QR">
-
-                    </a>
-
-                {% endif %}
-
-            </td>
+            
 
             <td data-label="{% trans 'Code' %}">{{ product.product_code }}</td>
 
@@ -180,14 +164,7 @@
 
                 </a>
 
-                <a
-                    href="{% url 'print_qr' product.product_code %}"
-                    class="action-btn"
-                    title="{% trans 'Print' %}">
-
-                    <i class="bi bi-printer"></i>
-
-                </a>
+                
 
                 <a
                     href="{% url 'print_label' product.product_code %}"

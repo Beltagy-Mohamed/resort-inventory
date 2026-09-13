@@ -170,17 +170,9 @@ class Product(models.Model):
         blank=True
     )
 
-    qr_code = models.ImageField(
-        upload_to="qrcodes/",
-        blank=True,
-        null=True,
-    )
 
-    barcode = models.ImageField(
-        upload_to="barcodes/",
-        blank=True,
-        null=True,
-    )
+
+
 
     created_at = models.DateTimeField(
         auto_now_add=True

@@ -7,7 +7,32 @@ from .models import Color
 from .models import InventoryTransaction
 from .models import Size
 from .models import SystemSettings
-class ProductForm(forms.ModelForm):
+
+from django.core.exceptions import ValidationError
+
+class StripWhitespaceMixin:
+    def clean(self):
+        cleaned_data = super().clean()
+        for field, value in cleaned_data.items():
+            if isinstance(value, str):
+                stripped = value.strip()
+                if not stripped and self.fields[field].required:
+                    self.add_error(field, ValidationError(_("This field cannot be empty or just spaces.")))
+                cleaned_data[field] = stripped
+        return cleaned_data
+        
+    def clean_positive_numbers(self, cleaned_data, fields):
+        for field in fields:
+            val = cleaned_data.get(field)
+            if val is not None and val < 0:
+                self.add_error(field, ValidationError(_("Value cannot be negative.")))
+
+class ProductForm(StripWhitespaceMixin, forms.ModelForm):
+    def clean(self):
+        cleaned_data = super().clean()
+        self.clean_positive_numbers(cleaned_data, ['cost_price', 'selling_price', 'quantity', 'minimum_stock'])
+        return cleaned_data
+
 
     class Meta:
 
@@ -67,7 +92,7 @@ class ProductForm(forms.ModelForm):
                 }
             ),
         }
-class CategoryForm(forms.ModelForm):
+class CategoryForm(StripWhitespaceMixin, forms.ModelForm):
 
     class Meta:
 
@@ -95,7 +120,7 @@ class CategoryForm(forms.ModelForm):
 
         }        
         
-class ColorForm(forms.ModelForm):
+class ColorForm(StripWhitespaceMixin, forms.ModelForm):
 
     class Meta:
 
@@ -116,7 +141,15 @@ class ColorForm(forms.ModelForm):
 
         }        
         
-class InventoryTransactionForm(forms.ModelForm):
+class InventoryTransactionForm(StripWhitespaceMixin, forms.ModelForm):
+    def clean(self):
+        cleaned_data = super().clean()
+        self.clean_positive_numbers(cleaned_data, ['quantity', 'unit_price'])
+        qty = cleaned_data.get('quantity')
+        if qty is not None and qty == 0:
+            self.add_error('quantity', ValidationError(_('Quantity cannot be zero.')))
+        return cleaned_data
+
 
     class Meta:
 
@@ -161,7 +194,7 @@ class InventoryTransactionForm(forms.ModelForm):
 
         }
         
-class SizeForm(forms.ModelForm):
+class SizeForm(StripWhitespaceMixin, forms.ModelForm):
 
     class Meta:
 
@@ -268,7 +301,7 @@ class CustomUserEditForm(forms.ModelForm):
         return user
 
 
-class WarehouseForm(forms.ModelForm):
+class WarehouseForm(StripWhitespaceMixin, forms.ModelForm):
     class Meta:
         model = Warehouse
         fields = ["name", "location", "manager"]
@@ -279,7 +312,7 @@ class WarehouseForm(forms.ModelForm):
         }
 
 
-class PartnerForm(forms.ModelForm):
+class PartnerForm(StripWhitespaceMixin, forms.ModelForm):
     class Meta:
         model = Partner
         fields = ["name", "partner_type", "contact_info"]

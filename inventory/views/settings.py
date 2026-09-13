@@ -1,13 +1,12 @@
 from django.contrib import messages
-from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
 from django.shortcuts import redirect, render
 
 from ..forms import SystemSettingsForm
 from ..models import SystemSettings
 
 
-@login_required
-@permission_required("inventory.change_systemsettings", raise_exception=True)
+@user_passes_test(lambda u: u.is_superuser)
 def system_settings(request):
 
     settings_obj = SystemSettings.load()

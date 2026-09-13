@@ -455,3 +455,8 @@ if os.environ.get('RENDER'):
 # Auto-allow Vercel hosts
 if os.environ.get('VERCEL'):
     ALLOWED_HOSTS.append('.vercel.app')
+
+# Session Security Settings
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_COOKIE_AGE = 3600 # 1 hour
+

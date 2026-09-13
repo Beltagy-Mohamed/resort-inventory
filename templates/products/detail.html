@@ -38,21 +38,11 @@
 
 <div class="detail-wrapper">
 
-    <div class="qr-card">
+    <div class="summary-card">
 
-        <div class="qr-card-heading">
+        <div class="summary-card-heading">
             <span class="eyebrow">{% trans "Product code" %}</span>
-            <i class="bi bi-qr-code" aria-hidden="true"></i>
         </div>
-
-        {% if True %}
-            <img src="/media/dynamic_qr/{{ product.product_code }}.png" alt="QR Code">
-        {% else %}
-            <div class="qr-placeholder">
-                <i class="bi bi-box-seam" aria-hidden="true"></i>
-                <span>{% trans "QR code not generated" %}</span>
-            </div>
-        {% endif %}
 
         <strong class="product-code">{{ product.product_code }}</strong>
 
@@ -123,10 +113,7 @@
         {% trans "Edit" %}
     </a>
 
-    <a href="{% url 'print_qr' product.product_code %}" class="action-btn">
-        <i class="bi bi-qr-code"></i>
-        {% trans "Print QR" %}
-    </a>
+    
 
     <a href="{% url 'print_barcode' product.product_code %}" class="action-btn">
         <i class="bi bi-upc-scan"></i>

@@ -1,7 +1,6 @@
 from .dashboard import *
 from .products import *
 from .categories import *
-from .qr import *
 from .colors import *
 from .transactions import *
 from .sizes import *

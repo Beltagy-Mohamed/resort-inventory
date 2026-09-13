@@ -11,8 +11,7 @@ urlpatterns = [
     path('users/<int:pk>/edit/', views.edit_user, name='edit_user'),
     path('users/<int:pk>/delete/', views.delete_user, name='delete_user'),
 
-    path("media/dynamic_qr/<str:product_code>.png", media.dynamic_qr, name="dynamic_qr"),
-    path("media/dynamic_barcode/<str:product_code>.png", media.dynamic_barcode, name="dynamic_barcode"),
+        path("media/dynamic_barcode/<str:product_code>.png", media.dynamic_barcode, name="dynamic_barcode"),
 
 
     # Dashboard
@@ -60,12 +59,6 @@ urlpatterns = [
         "products/<str:product_code>/delete/",
         views.delete_product,
         name="delete_product"
-    ),
-
-    path(
-        "products/<str:product_code>/print/",
-        views.print_qr,
-        name="print_qr"
     ),
 path(
     "products/<str:product_code>/barcode/",

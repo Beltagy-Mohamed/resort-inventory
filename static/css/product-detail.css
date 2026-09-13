@@ -18,7 +18,7 @@
     gap: 20px;
 }
 
-.qr-card,
+.summary-card,
 .info-card {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -27,18 +27,18 @@
     box-shadow: var(--shadow-sm);
 }
 
-.qr-card {
+.summary-card {
     text-align: center;
     align-self: start;
 }
 
-.qr-card img {
+.summary-card img {
     width: 190px;
     max-width: 100%;
     border-radius: var(--radius-sm);
 }
 
-.qr-card .product-code {
+.summary-card .product-code {
     display: block;
     margin-top: 12px;
     font-size: 15px;
@@ -164,7 +164,7 @@
     gap: 22px;
 }
 
-.qr-card,
+.summary-card,
 .info-card,
 .transactions-panel {
     background: var(--glass-light);
@@ -175,12 +175,12 @@
     -webkit-backdrop-filter: blur(18px) saturate(125%);
 }
 
-.qr-card,
+.summary-card,
 .info-card {
     padding: 26px;
 }
 
-.qr-card-heading,
+.summary-card-heading,
 .section-heading {
     display: flex;
     align-items: flex-start;
@@ -188,13 +188,13 @@
     gap: 16px;
 }
 
-.qr-card-heading > i,
+.summary-card-heading > i,
 .section-heading > i {
     color: var(--resort-gold);
     font-size: 20px;
 }
 
-.qr-card img {
+.summary-card img {
     display: block;
     width: min(190px, 100%);
     margin: 26px auto 18px;
@@ -222,7 +222,7 @@
     font-size: 34px;
 }
 
-.qr-card .product-code {
+.summary-card .product-code {
     display: block;
     margin: 0;
     color: var(--text);
@@ -354,7 +354,7 @@ html[data-theme="dark"] .detail-actions .action-btn:first-child {
         font-size: 28px;
     }
 
-    .qr-card,
+    .summary-card,
     .info-card,
     .transactions-panel {
         padding: 20px;

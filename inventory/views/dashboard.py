@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
+import json
 from django.db.models import Sum, F, Avg, Count, Q
 from django.db.models.functions import TruncDate, TruncMonth
 from django.utils import timezone
@@ -212,27 +213,27 @@ def dashboard(request):
         "latest_transactions": InventoryTransaction.objects.select_related(
             "product"
         ).order_by("-created_at")[:5],
-        "category_labels": [
+        "category_labels": json.dumps([
             category.name
             for category in categories
-        ],
-        "category_counts": [
+        ]),
+        "category_counts": json.dumps([
             counts_by_category_id.get(category.id, 0)
             for category in categories
-        ],
-        "category_colors": [
+        ]),
+        "category_colors": json.dumps([
             category_color_map.get(category.id, "#3A5457")
             for category in categories
-        ],
-        "category_value_labels": [
+        ]),
+        "category_value_labels": json.dumps([
             row["category__name"] or "Uncategorized"
             for row in category_value_qs
-        ],
-        "category_value_counts": [
+        ]),
+        "category_value_counts": json.dumps([
             float(row["total"] or 0)
             for row in category_value_qs
-        ],
-        "category_value_colors": [
+        ]),
+        "category_value_colors": json.dumps([
             category_color_map.get(
                 next(
                     (
@@ -245,9 +246,9 @@ def dashboard(request):
                 "#3A5457",
             )
             for row in category_value_qs
-        ],
-        "transactions_labels": chart_labels,
-        "transactions_counts": chart_counts,
+        ]),
+        "transactions_labels": json.dumps(chart_labels),
+        "transactions_counts": json.dumps(chart_counts),
         "dashboard_period": period,
         "dashboard_category": category_id,
         "dashboard_categories": Category.objects.order_by("name"),

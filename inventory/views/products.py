@@ -10,8 +10,6 @@ from django.shortcuts import (
 from ..forms import ProductForm
 from ..models import Product, ActivityLog
 from ..services.code_generator import CodeGenerator
-from ..services.qr_service import QRService
-from ..services.barcode_service import BarcodeService
 @login_required
 def products_list(request):
 
@@ -96,10 +94,7 @@ def add_product(request):
             product.product_code = CodeGenerator.generate()
 
             product.save()
-            pass
-            QRService.generate(product)
-            BarcodeService.generate(product)
-
+            
             # Create initial stock transaction if quantity > 0
             if product.quantity > 0:
                 from inventory.models import InventoryTransaction, Warehouse
@@ -207,23 +202,6 @@ def delete_product(request, product_code):
         }
     )
     
-@login_required
-def print_qr(request, product_code):
-
-    product = get_object_or_404(
-        Product,
-        product_code=product_code
-    )
-
-    QRService.get_or_generate(product)
-
-    return render(
-        request,
-        "products/print.html",
-        {
-            "product": product
-        }
-    )    
 @login_required
 def product_detail(request, product_code):
 
