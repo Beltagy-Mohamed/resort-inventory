@@ -86,8 +86,13 @@
         </div>
 
         <div class="info-row">
-            <span>السعر</span>
-            <strong>{{ product.price }} {{ system_settings.currency }}</strong>
+            <span>سعر التكلفة</span>
+            <strong>{{ product.cost_price }} {{ system_settings.currency }}</strong>
+        </div>
+
+        <div class="info-row">
+            <span>سعر البيع</span>
+            <strong>{{ product.selling_price }} {{ system_settings.currency }}</strong>
         </div>
 
         <div class="info-row">

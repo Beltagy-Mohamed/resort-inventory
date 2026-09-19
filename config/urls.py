@@ -2,6 +2,8 @@ from django.contrib import admin
 from django.contrib.auth import views as auth_views
 from django.urls import path, include
 
+from inventory.api.main import api
+
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -18,6 +20,7 @@ urlpatterns = [
         name="logout",
     ),
         path("", include("inventory.urls")),
+    path("api/v1/", api.urls),
 ]
 
 if settings.DEBUG:

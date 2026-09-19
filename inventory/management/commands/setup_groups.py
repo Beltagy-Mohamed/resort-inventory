@@ -19,22 +19,32 @@ ADMIN_PERMISSIONS = [
     "view_size", "add_size", "change_size", "delete_size",
     "view_inventorytransaction", "add_inventorytransaction",
     "view_activitylog",
-    "view_codesequence",
+    # تمت إزالة view_codesequence — النموذج محذوف من migration 0023
     "view_systemsettings", "change_systemsettings",
+    "view_warehouse", "add_warehouse", "change_warehouse",
+    "view_partner", "add_partner", "change_partner",
+]
+
+# موظف القائد: مدير مخزن القائد الكامل — مقيّد بـ is_leader_only في الكود لا هنا
+LEADER_STAFF_PERMISSIONS = [
+    "view_product", "add_product", "change_product", "delete_product",
+    "add_inventorytransaction", "view_inventorytransaction",
+    "view_warehouse",
+    "add_partner", "change_partner", "view_partner",
 ]
 
 
 class Command(BaseCommand):
     """
-    Creates (or updates) the two Groups the app relies on: Admin and
-    Staff. Safe to run repeatedly — uses get_or_create and always
-    re-syncs the permission set, so it never duplicates a group.
+    Creates (or updates) the Groups the app relies on: Admin, Staff, LeaderStaff.
+    Safe to run repeatedly — uses get_or_create and always re-syncs the
+    permission set, so it never duplicates a group.
 
     Usage:
         python manage.py setup_groups
     """
 
-    help = "Create/update the Admin and Staff groups with the correct inventory permissions."
+    help = "Create/update Admin, Staff, and LeaderStaff groups with the correct inventory permissions."
 
     def _assign(self, group_name, codenames):
         group, created = Group.objects.get_or_create(name=group_name)
@@ -59,8 +69,9 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         self._assign("Staff", STAFF_PERMISSIONS)
         self._assign("Admin", ADMIN_PERMISSIONS)
+        self._assign("LeaderStaff", LEADER_STAFF_PERMISSIONS)
 
         self.stdout.write(self.style.SUCCESS(
-            "Done. Assign a user to 'Admin' or 'Staff' via /admin/auth/user/, "
-            "or create one with: python manage.py createsuperuser"
+            "Done. Assign a user to 'Admin', 'Staff', or 'LeaderStaff' via /admin/auth/user/.\n"
+            "For leader staff: python manage.py create_leader_staff --username=NAME"
         ))

@@ -10,7 +10,7 @@ def warehouse_stock_report(request):
     
     stocks = Stock.objects.select_related("product", "warehouse").filter(quantity__gt=0)
     
-    if warehouse_id:
+    if warehouse_id and warehouse_id.isdigit():
         stocks = stocks.filter(warehouse_id=warehouse_id)
         
     stocks = stocks.order_by("warehouse__name", "product__name")
@@ -18,7 +18,7 @@ def warehouse_stock_report(request):
     context = {
         "stocks": stocks,
         "warehouses": Warehouse.objects.all(),
-        "selected_warehouse": int(warehouse_id) if warehouse_id else "",
+        "selected_warehouse": int(warehouse_id) if (warehouse_id and warehouse_id.isdigit()) else "",
     }
     return render(request, "reports/warehouse_stock.html", context)
 
@@ -34,7 +34,7 @@ def partner_statement_report(request):
     
     year_filter = request.GET.get("year_filter", "")
     
-    if partner_id:
+    if partner_id and partner_id.isdigit():
         transactions = InventoryTransaction.objects.select_related("product", "partner", "warehouse").filter(partner_id=partner_id)
         if month_filter and month_filter.isdigit():
             transactions = transactions.filter(created_at__month=int(month_filter))
@@ -46,7 +46,7 @@ def partner_statement_report(request):
     context = {
         "transactions": transactions,
         "partners": Partner.objects.all(),
-        "selected_partner": int(partner_id) if partner_id else "",
+        "selected_partner": int(partner_id) if (partner_id and partner_id.isdigit()) else "",
         "month_filter": int(month_filter) if month_filter.isdigit() else "",
         "warehouse_filter": warehouse_filter,
         "warehouses": Warehouse.objects.all(),
@@ -71,7 +71,7 @@ def profit_report(request):
         transactions = transactions.filter(created_at__month=int(month_filter))
     if year_filter and year_filter.isdigit():
         transactions = transactions.filter(created_at__year=int(year_filter))
-    if warehouse_filter:
+    if warehouse_filter and warehouse_filter.isdigit():
         transactions = transactions.filter(warehouse_id=warehouse_filter)
             
     # Calculate Profit: (unit_price - cost_price) * quantity

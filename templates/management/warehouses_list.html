@@ -1,38 +1,94 @@
 {% extends "layout/base.html" %}
 {% load static %}
-{% block title %}المخازن{% endblock %}
+{% block title %}المخازن والفروع{% endblock %}
+
 {% block extra_css %}
+<style>
+    .apple-card { background: #fff; border-radius: 20px; border: none; box-shadow: 0 4px 24px rgba(0,0,0,0.06); padding: 24px; margin-bottom: 24px; }
+    .apple-title { font-weight: 600; color: #1d1d1f; margin: 0; font-size: 1.75rem; letter-spacing: -0.5px; }
+    .apple-btn-primary { background-color: #0071e3; color: #fff; border-radius: 20px; padding: 8px 20px; font-weight: 500; text-decoration: none; display: inline-block; transition: background-color 0.2s; }
+    .apple-btn-primary:hover { background-color: #0077ed; color: #fff; }
+    .apple-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+    .apple-table th { background-color: #fbfbfd; padding: 14px 16px; color: #86868b; font-weight: 600; text-align: right; font-size: 0.85rem; border-bottom: 1px solid #d2d2d7; }
+    .apple-table td { padding: 16px; border-bottom: 1px solid #f2f2f7; color: #1d1d1f; font-size: 0.95rem; }
+    .apple-btn-icon { background-color: #f5f5f7; color: #0071e3; border-radius: 50%; width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.2s; }
+    .apple-btn-icon:hover { background-color: #0071e3; color: #fff; }
+    .badge-leader { background-color: #f2f2f7; color: #1d1d1f; padding: 4px 10px; border-radius: 12px; font-size: 0.8rem; }
+</style>
 <link rel="stylesheet" href="{% static 'css/products.css' %}">
 {% endblock %}
+
 {% block content %}
-<div class="page-header">
-    <h1>المخازن</h1>
-    <a href="{% url 'add_warehouse' %}" class="btn-primary">إضافة مخزن جديد</a>
+<div class="page-header" style="margin-bottom: 30px; margin-top: 10px;">
+    <h1 style="margin: 0; font-size: 1.75rem; font-weight: 600;">
+        <i class="bi bi-shop"></i> المخازن والفروع
+    </h1>
+    <a href="{% url 'add_warehouse' %}" class="btn-primary">
+        <i class="bi bi-plus-square"></i> إضافة مخزن
+    </a>
 </div>
-<div class="table-responsive">
-    <table class="products-table">
-        <thead>
-            <tr>
-                <th>الاسم</th>
-                <th>الموقع</th>
-                <th>أمين المخزن</th>
-                <th>إجراءات</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for w in warehouses %}
-            <tr>
-                <td data-label="اسم المخزن">{{ w.name }}</td>
-                <td data-label="الموقع">{{ w.location|default:"-" }}</td>
-                <td>{{ w.manager|default:"-" }}</td>
-                <td>
-                    <a href="{% url 'edit_warehouse' w.id %}" class="btn-icon"><i class="bi bi-pencil"></i> تعديل</a>
-                </td>
-            </tr>
-            {% empty %}
-            <tr><td colspan="4" style="text-align: center;">لا توجد مخازن</td></tr>
-            {% endfor %}
-        </tbody>
-    </table>
+
+
+<div class="apple-card mb-4">
+    <form method="get" class="row g-3 align-items-end">
+        <div class="col-md-4">
+            <label class="form-label text-muted small fw-bold">تصفية حسب الموقع / الفرع:</label>
+            <select name="location" class="form-select border-0 shadow-sm" style="background-color: #f8fafc;">
+                <option value="">-- كل المواقع --</option>
+                {% for loc in locations %}
+                <option value="{{ loc }}" {% if selected_location == loc %}selected{% endif %}>{{ loc }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-4">
+            <button type="submit" class="btn btn-primary rounded-pill px-4 shadow-sm"><i class="fas fa-filter me-2"></i> تصفية</button>
+            {% if selected_location %}
+            <a href="{% url 'warehouses_list' %}" class="btn btn-light rounded-pill px-4 shadow-sm ms-2"><i class="fas fa-times me-2"></i> مسح</a>
+            {% endif %}
+        </div>
+    </form>
+</div>
+
+<div class="apple-card p-0 overflow-hidden">
+    <div class="table-responsive">
+        <table class="apple-table">
+            <thead>
+                <tr>
+                    <th>اسم المخزن</th>
+                    <th>الموقع</th>
+                    <th>أمين المخزن</th>
+                    <th>مخصص للقائد</th>
+                    <th class="text-center">إجراءات</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for w in warehouses %}
+                <tr>
+                    <td style="font-weight: 600;">{{ w.name }}</td>
+                    <td>{{ w.location|default:"-" }}</td>
+                    <td>{{ w.manager|default:"-" }}</td>
+                    <td>
+                        {% if w.is_leader_only %}
+                        <span class="badge-leader"><i class="fas fa-lock text-warning"></i> نعم</span>
+                        {% else %}
+                        <span class="text-muted">لا</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        <a href="{% url 'edit_warehouse' w.id %}" class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm" style="transition: all 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'"><i class="fas fa-edit me-1"></i> تعديل</a>
+                        {% if perms.inventory.delete_warehouse %}
+                        <form method="post" action="{% url 'delete_warehouse' w.id %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-danger btn-sm rounded-pill px-3 shadow-sm ms-1" style="transition: all 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" onclick="return confirm('هل أنت متأكد من حذف هذا المخزن؟ لا يمكن التراجع عن هذه العملية.');"><i class="fas fa-trash me-1"></i> حذف</button>
+                        </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5" class="text-center py-5 text-muted">لا توجد مخازن.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 {% endblock %}

@@ -1,21 +1,39 @@
 {% extends "layout/base.html" %}
 {% load static %}
 {% block title %}{{ action }}{% endblock %}
+
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/products.css' %}">
 {% endblock %}
+
 {% block content %}
 <div class="page-header">
-    <h1>{{ action }}</h1>
+    <h1>
+        <i class="bi bi-building"></i> 
+        {{ action }}
+    </h1>
+    <a href="{% url 'partners_list' %}" class="btn-secondary" style="padding: 10px 20px; text-decoration: none; border-radius: 8px;">
+        <i class="bi bi-arrow-right"></i> تراجع
+    </a>
 </div>
-<div class="form-container">
-    <form method="post" class="product-form">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <div class="form-actions" style="margin-top: 20px;">
-            <button type="submit" class="btn-primary">حفظ</button>
-            <a href="{% url 'partners_list' %}" class="btn-secondary" style="margin-right: 10px; padding: 10px; text-decoration: none; border-radius: 4px; border: 1px solid #ccc; color: #333;">إلغاء</a>
-        </div>
-    </form>
-</div>
+
+<form method="post" class="product-form">
+    {% csrf_token %}
+    
+    {% if form.non_field_errors %}
+    <div class="errorlist" style="margin-bottom: 20px; padding: 15px; background: #fee2e2; color: #b91c1c; border-radius: 8px;">
+        {% for err in form.non_field_errors %}
+            <p style="margin:0;"><i class="bi bi-exclamation-triangle"></i> {{ err }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {{ form.as_p }}
+    
+    <div style="margin-top: 30px; text-align: left;">
+        <button type="submit" class="btn-primary" style="padding: 10px 30px; border-radius: 8px; font-weight: bold;">
+            <i class="bi bi-check-circle me-1"></i> حفظ البيانات
+        </button>
+    </div>
+</form>
 {% endblock %}

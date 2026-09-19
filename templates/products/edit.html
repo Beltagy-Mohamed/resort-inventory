@@ -1,73 +1,126 @@
 {% extends "layout/base.html" %}
 {% load static %}
+{% block title %}{% if is_leadership_form %}تعديل صنف القائد{% else %}تعديل المنتج{% endif %}{% endblock %}
+
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/products.css' %}">
 {% endblock %}
-{% block title %}
-تعديل المنتج
-{% endblock %}
 
 {% block content %}
+<div class="page-header">
+    <h1>
+        {% if is_leadership_form %}
+            <i class="bi bi-pencil-square"></i> تعديل صنف القائد
+        {% else %}
+            <i class="bi bi-pencil-square"></i> تعديل المنتج
+        {% endif %}
+    </h1>
+    <a href="javascript:history.back()" class="btn-secondary" style="padding: 10px 20px; text-decoration: none; border-radius: 8px;">
+        <i class="bi bi-arrow-right"></i> تراجع
+    </a>
+</div>
 
-<h1>تعديل المنتج</h1>
-<form method="post" class="product-form">
-
+<form method="post" enctype="multipart/form-data" class="product-form">
     {% csrf_token %}
-
+    
+    {% if form.non_field_errors %}
+    <div class="errorlist" style="margin-bottom: 20px; padding: 15px; background: #fee2e2; color: #b91c1c; border-radius: 8px;">
+        {% for err in form.non_field_errors %}
+            <p style="margin:0;"><i class="bi bi-exclamation-triangle"></i> {{ err }}</p>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
     <div class="form-grid">
-
-        <div class="form-group">
+        <div class="form-group" style="grid-column: 1 / -1;">
             <label>{{ form.name.label }}</label>
             {{ form.name }}
+            {{ form.name.errors }}
         </div>
-
+        
         <div class="form-group">
             <label>{{ form.category.label }}</label>
             {{ form.category }}
+            {{ form.category.errors }}
         </div>
-
+        
         <div class="form-group">
             <label>{{ form.color.label }}</label>
             {{ form.color }}
+            {{ form.color.errors }}
         </div>
-
+        
         <div class="form-group">
             <label>{{ form.size.label }}</label>
             {{ form.size }}
+            {{ form.size.errors }}
+        </div>
+        
+        <div class="form-group">
+            <label>{{ form.quantity.label }}</label>
+            {{ form.quantity }}
+            {% if form.quantity.help_text %}<small style="color: #64748b;">{{ form.quantity.help_text }}</small>{% endif %}
+            {{ form.quantity.errors }}
         </div>
 
         <div class="form-group">
             <label>{{ form.cost_price.label }}</label>
             {{ form.cost_price }}
+            {{ form.cost_price.errors }}
         </div>
+        
         <div class="form-group">
             <label>{{ form.selling_price.label }}</label>
             {{ form.selling_price }}
+            {{ form.selling_price.errors }}
         </div>
-
+        
+        {% if form.warehouse %}
         <div class="form-group">
-            <label>{{ form.quantity.label }}</label>
-            {{ form.quantity }}
+            <label>{{ form.warehouse.label }}</label>
+            {{ form.warehouse }}
+            {% if form.warehouse.help_text %}<small style="color: #64748b;">{{ form.warehouse.help_text }}</small>{% endif %}
+            {{ form.warehouse.errors }}
         </div>
-
+        {% endif %}
+        
+        {% if form.partner %}
+        <div class="form-group">
+            <label>{{ form.partner.label }}</label>
+            {{ form.partner }}
+            {% if form.partner.help_text %}<small style="color: #64748b;">{{ form.partner.help_text }}</small>{% endif %}
+            {{ form.partner.errors }}
+        </div>
+        {% endif %}
+        
         <div class="form-group">
             <label>{{ form.minimum_stock.label }}</label>
             {{ form.minimum_stock }}
+            {{ form.minimum_stock.errors }}
         </div>
-
     </div>
-
-    <div class="form-group">
+    
+    {% if 'is_leadership_restricted' in form.fields %}
+    <div class="form-group" style="margin-top: 15px; padding: 15px; background: #fff5f5; border: 1px solid #fed7d7; border-radius: 8px;">
+        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; color: #c53030; font-weight: bold; margin: 0;">
+            {{ form.is_leadership_restricted }}
+            {{ form.is_leadership_restricted.label }}
+        </label>
+        <small style="display: block; margin-top: 5px; color: #e53e3e; margin-right: 25px;">
+            إذا تم التحديد، سيكون هذا الصنف مخفياً عن الموظفين العاديين ولن يظهر إلا في "القسم المقيّد" لمديري النظام والقادة.
+        </small>
+        {{ form.is_leadership_restricted.errors }}
+    </div>
+    {% endif %}
+    
+    <div class="form-group" style="margin-top: 20px;">
         <label>{{ form.description.label }}</label>
         {{ form.description }}
+        {{ form.description.errors }}
     </div>
 
-    <button type="submit" class="btn-save">
-
-    حفظ التغييرات
-
-</button>
-
+    <button type="submit" class="btn-save" style="margin-top: 30px;">
+        <i class="bi bi-check-circle"></i> تحديث الصنف
+    </button>
 </form>
-
 {% endblock %}

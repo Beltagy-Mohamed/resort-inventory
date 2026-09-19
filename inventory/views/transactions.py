@@ -103,13 +103,15 @@ def add_transaction(request):
         # Force the transaction type based on the action parameter to ensure data integrity
         post_data = request.POST.copy()
         post_data['transaction_type'] = action
-        form = InventoryTransactionForm(post_data)
+        form = InventoryTransactionForm(post_data, user=request.user)
         
-        # Enforce partner filtering on POST
+        # Enforce partner type filtering on POST (respecting leader access)
+        from inventory.decorators import is_the_leader
+        partner_qs = Partner.all_objects if (request.user.is_superuser or is_the_leader(request.user)) else Partner.objects
         if action == "IN":
-            form.fields['partner'].queryset = Partner.objects.filter(partner_type="SUPPLIER")
+            form.fields['partner'].queryset = partner_qs.filter(partner_type="SUPPLIER")
         elif action == "OUT":
-            form.fields['partner'].queryset = Partner.objects.filter(partner_type__in=["CLIENT", "OTHER"])
+            form.fields['partner'].queryset = partner_qs.filter(partner_type__in=["CLIENT", "OTHER"])
 
         if form.is_valid():
 
@@ -148,21 +150,29 @@ def add_transaction(request):
                 )
 
     else:
-        form = InventoryTransactionForm()
+        form = InventoryTransactionForm(user=request.user)
         
-        # Enforce partner filtering on GET
+        # Enforce partner type filtering on GET (respecting leader access)
+        from inventory.decorators import is_the_leader
+        partner_qs = Partner.all_objects if (request.user.is_superuser or is_the_leader(request.user)) else Partner.objects
         if action == "IN":
-            form.fields['partner'].queryset = Partner.objects.filter(partner_type="SUPPLIER")
+            form.fields['partner'].queryset = partner_qs.filter(partner_type="SUPPLIER")
         elif action == "OUT":
-            form.fields['partner'].queryset = Partner.objects.filter(partner_type__in=["CLIENT", "OTHER"])
+            form.fields['partner'].queryset = partner_qs.filter(partner_type__in=["CLIENT", "OTHER"])
 
     
-    # Create dictionary mapping product ID to its prices for JS autofill
+    # Build product prices JSON for JS autofill — filtered by user role
+    from inventory.decorators import is_the_leader as _is_leader
+    products_qs = (
+        Product.all_objects.filter(is_archived=False)
+        if (request.user.is_superuser or _is_leader(request.user))
+        else Product.objects.filter(is_archived=False)
+    )
     products_data = {
         p.id: {
             "cost_price": float(p.cost_price), 
             "selling_price": float(p.selling_price)
-        } for p in Product.objects.all()
+        } for p in products_qs
     }
     
     return render(

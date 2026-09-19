@@ -52,6 +52,9 @@
             <th>المنتج</th>
 
             <th>الوصف</th>
+            <th>الكمية السابقة</th>
+            <th>المضافة/المنصرفة</th>
+            <th>الإجمالي</th>
 
         </tr>
 
@@ -83,6 +86,9 @@
             </td>
 
             <td>{{ log.description }}</td>
+            <td>{{ log.old_quantity|default:"-" }}</td>
+            <td dir="ltr" style="text-align: right;">{{ log.diff_quantity }}</td>
+            <td>{{ log.new_quantity|default:"-" }}</td>
 
         </tr>
 
@@ -90,7 +96,7 @@
 
         <tr>
 
-            <td colspan="5">
+            <td colspan="8">
 
                 لا يوجد نشاط
 

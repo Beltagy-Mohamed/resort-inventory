@@ -23,6 +23,10 @@
             <i class="bi bi-shield-lock"></i>
             <span class="label">أصناف القائد</span>
         </a>
+        <a href="{% url 'leadership_transactions_list' %}" class="{% if 'leadership_transactions' in request.resolver_match.url_name %}active{% endif %}" style="color: #e74c3c;">
+            <i class="bi bi-clock-history"></i>
+            <span class="label"> سجل نشاط القائد </span>
+        </a>
         {% endif %}
 
         <h5>المخزون</h5>
@@ -100,12 +104,10 @@
             <span class="label">منخفض المخزون</span>
         </a>
 
-        {% if user.is_superuser %}
         <a href="{% url 'activity_logs' %}" class="{% if request.resolver_match.url_name == 'activity_logs' %}active{% endif %}">
             <i class="bi bi-clock-history"></i>
             <span class="label">سجل النشاطات</span>
         </a>
-        {% endif %}
         {% endif %}
 
         <h5>الإدارة</h5>
@@ -124,6 +126,14 @@
         <a href="{% url 'users_list' %}" target="_blank">
             <i class="bi bi-people"></i>
             <span class="label">المستخدمون والصلاحيات</span>
+        </a>
+        {% endif %}
+
+
+        {% if user.is_superuser %}
+        <a href="{% url 'import_stock_excel' %}" class="{% if request.resolver_match.url_name == 'import_stock_excel' %}active{% endif %}">
+            <i class="bi bi-file-earmark-excel"></i>
+            <span class="label">استيراد من Excel</span>
         </a>
         {% endif %}
 

@@ -1,24 +1,20 @@
-import csv
 import logging
-from datetime import datetime
-
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.http import HttpResponse, Http404
+from django.db import transaction
+from django.db.models.deletion import ProtectedError
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from django.urls import reverse
-from django.utils.translation import gettext_lazy as _
 
-from inventory.decorators import leadership_required
+from inventory.decorators import leadership_required, leader_or_leaderstaff_required
 from inventory.forms import ProductForm
-from inventory.models import LeadershipAccessLog, Product
-from inventory.utils import get_client_ip
+from inventory.models import ActivityLog, InventoryTransaction, LeadershipAccessLog, Product, Warehouse
+from inventory.utils import get_client_ip, get_period_date_range
+from django.db.models import Sum, Q
 
-# Logger for sensitive section
 logger = logging.getLogger("inventory.leadership")
 
 def log_leadership_access(request, action, product=None):
-    """تسجيل العملية الخاصة بالقائد"""
     LeadershipAccessLog.objects.create(
         user=request.user,
         action=action,
@@ -26,144 +22,223 @@ def log_leadership_access(request, action, product=None):
         ip_address=get_client_ip(request)
     )
 
-@leadership_required
+@leader_or_leaderstaff_required
 def leadership_items_list(request):
-    """عرض قائمة أصناف القائد فقط"""
     log_leadership_access(request, "VIEW_LIST")
-    
-    # استخدام all_objects لجلب المنتجات المقيدة فقط
     products = Product.all_objects.filter(is_leadership_restricted=True).order_by("-id")
-    
-    # البحث
     search = request.GET.get("search", "")
     if search:
         products = products.filter(name__icontains=search)
 
-    # التصفح (Pagination)
+    # Period filtering
+    period = request.GET.get('period')
+    start_date = request.GET.get('start_date')
+    end_date = request.GET.get('end_date')
+    
+    period_data = None
+    if period:
+        start_dt, end_dt = get_period_date_range(period, start_date, end_date)
+        if start_dt and end_dt:
+            period_data = {}
+            for p in products:
+                # Opening balance: sum of IN minus sum of OUT before start_dt
+                past_in = InventoryTransaction.objects.filter(product=p, transaction_type='IN', created_at__lt=start_dt).aggregate(s=Sum('quantity'))['s'] or 0
+                past_out = InventoryTransaction.objects.filter(product=p, transaction_type='OUT', created_at__lt=start_dt).aggregate(s=Sum('quantity'))['s'] or 0
+                opening = past_in - past_out
+                
+                # Period transactions
+                added = InventoryTransaction.objects.filter(product=p, transaction_type='IN', created_at__range=(start_dt, end_dt)).aggregate(s=Sum('quantity'))['s'] or 0
+                issued = InventoryTransaction.objects.filter(product=p, transaction_type='OUT', created_at__range=(start_dt, end_dt)).aggregate(s=Sum('quantity'))['s'] or 0
+                
+                closing = opening + added - issued
+                period_data[p.id] = {
+                    'opening': opening,
+                    'added': added,
+                    'issued': issued,
+                    'closing': closing
+                }
+
     paginator = Paginator(products, 12)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
-    return render(
-        request,
-        "leadership/list.html",
-        {
-            "page_obj": page_obj,
-            "search": search,
-        }
+    # Build quantity log map for leader products
+    page_product_ids = [p.id for p in page_obj]
+    all_logs = (
+        ActivityLog.all_objects
+        .filter(product_id__in=page_product_ids, new_quantity__isnull=False)
+        .order_by('product_id', '-created_at')
     )
+    quantity_log_map = {}
+    for log in all_logs:
+        if log.product_id not in quantity_log_map:
+            quantity_log_map[log.product_id] = log
 
-@leadership_required
-def leadership_item_detail(request, pk):
-    """عرض تفاصيل صنف قائد"""
-    product = get_object_or_404(Product.all_objects.all(), pk=pk, is_leadership_restricted=True)
-    log_leadership_access(request, "VIEW_DETAIL", product)
-    
-    return render(
-        request,
-        "leadership/detail.html",
-        {"product": product}
-    )
+    return render(request, "products/list.html", {
+        "page_obj": page_obj,
+        "search": search,
+        "is_leadership": True,
+        "period": period,
+        "start_date": start_date,
+        "end_date": end_date,
+        "period_data": period_data,
+        "quantity_log_map": quantity_log_map,
+    })
 
-@leadership_required
+@leader_or_leaderstaff_required
 def leadership_item_add(request):
-    """إضافة صنف جديد مباشرة كصنف قائد مقيد"""
+    log_leadership_access(request, "ADD_ITEM")
     if request.method == "POST":
-        form = ProductForm(request.POST)
+        form = ProductForm(request.POST, is_leader=True)
         if form.is_valid():
-            product = form.save(commit=False)
-            product.is_leadership_restricted = True
-            product.save()
-            
-            # Create initial stock transaction if quantity > 0
-            if product.quantity > 0:
-                from inventory.models import InventoryTransaction, Warehouse
-                from inventory.services.inventory_service import InventoryService
-                selected_warehouse = form.cleaned_data.get('initial_warehouse')
-                if not selected_warehouse:
-                    selected_warehouse = Warehouse.objects.first()
-                if selected_warehouse:
+            with transaction.atomic():
+                product = form.save(commit=False)
+                # We no longer force is_leadership_restricted=True here; we respect the form's checkbox
+                product.save()
+                
+                warehouse = form.cleaned_data.get('warehouse')
+                quantity = form.cleaned_data.get('quantity', 0)
+                
+                if warehouse and quantity > 0:
                     trans = InventoryTransaction(
                         product=product,
+                        warehouse=warehouse,
                         transaction_type='IN',
-                        quantity=product.quantity,
-                        warehouse=selected_warehouse,
-                        notes='رصيد افتتاحي (عند إضافة صنف مقيد)'
+                        quantity=quantity,
+                        unit_price=product.cost_price,
+                        notes='رصيد افتتاحي (مضاف من واجهة القائد)'
                     )
+                    from inventory.services.inventory_service import InventoryService
                     InventoryService.process(trans)
-                    
-            log_leadership_access(request, "CREATE", product)
-            messages.success(request, "تمت إضافة صنف القائد بنجاح.")
+
+            messages.success(request, "تمت إضافة الصنف بنجاح.")
             return redirect("leadership_items_list")
     else:
-        form = ProductForm()
-        
-    return render(request, "leadership/form.html", {"form": form, "action_title": "إضافة صنف قائد"})
+        form = ProductForm(initial={'is_leadership_restricted': True}, is_leader=True)
+    
+    return render(request, "products/add.html", {"form": form, "is_leadership_form": True})
 
-@leadership_required
+@leader_or_leaderstaff_required
 def leadership_item_edit(request, pk):
-    """تعديل صنف قائد"""
-    product = get_object_or_404(Product.all_objects.all(), pk=pk, is_leadership_restricted=True)
+    product = get_object_or_404(Product.all_objects, pk=pk, is_leadership_restricted=True)
+    log_leadership_access(request, "EDIT_ITEM", product)
     
     if request.method == "POST":
-        form = ProductForm(request.POST, instance=product)
+        form = ProductForm(request.POST, instance=product, is_leader=True)
         if form.is_valid():
             form.save()
-            log_leadership_access(request, "UPDATE", product)
-            messages.success(request, "تم تحديث صنف القائد بنجاح.")
+            messages.success(request, "تم تعديل صنف القائد بنجاح.")
             return redirect("leadership_items_list")
     else:
-        form = ProductForm(instance=product)
-        
-    return render(request, "leadership/form.html", {"form": form, "action_title": "تعديل صنف قائد"})
+        form = ProductForm(instance=product, is_leader=True)
+    
+    return render(request, "products/edit.html", {"form": form, "is_leadership_form": True})
 
-@leadership_required
-def leadership_items_export(request):
-    """تصدير قائمة أصناف القائد"""
-    import openpyxl
-    
-    log_leadership_access(request, "EXPORT")
-    
-    wb = openpyxl.Workbook()
-    ws = wb.active
-    ws.title = "أصناف القائد"
-    
-    headers = [
-        "الرقم", "اسم المنتج", "الفئة", "اللون", "المقاس",
-        "سعر التكلفة", "سعر البيع", "الكمية", "الحد الأدنى"
-    ]
-    ws.append(headers)
-    
-    products = Product.all_objects.filter(is_leadership_restricted=True).order_by("-id")
-    for p in products:
-        ws.append([
-            p.id,
-            p.name,
-            p.category.name if p.category else "",
-            p.color.name if p.color else "",
-            p.size.name if p.size else "",
-            float(p.cost_price),
-            float(p.selling_price),
-            p.quantity,
-            p.minimum_stock
-        ])
-    
-    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-    response['Content-Disposition'] = 'attachment; filename="أصناف_القائد.xlsx"'
-    wb.save(response)
-    
-    return response
-
-
-@leadership_required
+@leader_or_leaderstaff_required
 def leadership_item_delete(request, pk):
-    """حذف صنف قائد"""
-    product = get_object_or_404(Product.all_objects.all(), pk=pk, is_leadership_restricted=True)
+    product = get_object_or_404(Product.all_objects, pk=pk, is_leadership_restricted=True)
+    log_leadership_access(request, "DELETE_ITEM", product)
     
     if request.method == "POST":
-        product.delete()
-        log_leadership_access(request, "DELETE", product)
-        messages.success(request, "تم حذف صنف القائد بنجاح.")
+        try:
+            product.delete()
+            messages.success(request, "تم حذف صنف القائد بنجاح.")
+        except ProtectedError:
+            messages.error(request, "لا يمكن حذف الصنف لارتباطه بحركات مخزنية.")
         return redirect("leadership_items_list")
+    
+    return render(request, "products/delete.html", {"product": product, "is_leadership_form": True})
+
+@leader_or_leaderstaff_required
+def leadership_item_detail(request, pk):
+    product = get_object_or_404(Product.all_objects, pk=pk, is_leadership_restricted=True)
+    log_leadership_access(request, "VIEW_DETAIL", product)
+    
+    return render(request, "products/detail.html", {"product": product, "is_leadership_form": True})
+
+@leader_or_leaderstaff_required
+def leadership_dashboard(request):
+    log_leadership_access(request, "VIEW_DASHBOARD")
+    products = Product.all_objects.filter(is_leadership_restricted=True)
+    from django.db.models import Sum, F
+    total_stock = products.aggregate(Sum('quantity'))['quantity__sum'] or 0
+    low_stock = products.filter(quantity__lte=F('minimum_stock'), quantity__gt=0).count()
+    out_of_stock = products.filter(quantity=0).count()
+    recent_transactions = InventoryTransaction.objects.filter(product__is_leadership_restricted=True).order_by('-created_at')[:10]
+
+    return render(request, "leadership/dashboard.html", {
+        "total_products": products.count(),
+        "total_stock": total_stock,
+        "low_stock": low_stock,
+        "out_of_stock": out_of_stock,
+        "recent_transactions": recent_transactions,
+    })
+
+@leader_or_leaderstaff_required
+def leadership_warehouses_list(request):
+    log_leadership_access(request, "VIEW_WAREHOUSES")
+    warehouses = Warehouse.all_objects.filter(is_leader_only=True)
+    return render(request, "leadership/warehouses.html", {"warehouses": warehouses})
+
+@leader_or_leaderstaff_required
+def leadership_transactions_list(request):
+    log_leadership_access(request, "VIEW_TRANSACTIONS")
+    
+    # Use all_objects to bypass the PublicManager filter
+    transactions = InventoryTransaction.all_objects.filter(product__is_leadership_restricted=True)
+    
+    search = request.GET.get("search", "")
+    if search:
+        transactions = transactions.filter(
+            Q(product__name__icontains=search) | Q(product__barcode__icontains=search)
+        )
         
-    return render(request, "products/confirm_delete.html", {"product": product, "cancel_url": reverse("leadership_item_detail", args=[product.id])})
+    transactions = transactions.select_related("product", "warehouse", "partner").order_by("-created_at")
+    
+    paginator = Paginator(transactions, 15)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+    
+    return render(request, "transactions/list.html", {
+        "page_obj": page_obj,
+        "search": search,
+        "is_leadership": True
+    })
+
+@leader_or_leaderstaff_required
+def leadership_report_print(request):
+    log_leadership_access(request, "PRINT_REPORT")
+    products = Product.all_objects.filter(is_leadership_restricted=True).order_by('category', 'name')
+    
+    try:
+        from weasyprint import HTML
+        from django.template.loader import render_to_string
+        html_string = render_to_string('reports/print_template.html', {'products': products})
+        pdf_file = HTML(string=html_string).write_pdf()
+        response = HttpResponse(pdf_file, content_type='application/pdf')
+        response['Content-Disposition'] = 'filename="leadership_report.pdf"'
+        return response
+    except Exception as e:
+        logger.error(f"WeasyPrint error: {e}")
+        messages.error(request, "عذراً، نظام الطباعة غير متوفر حالياً بسبب نقص بعض المكتبات على نظام ويندوز. يرجى استخدام متصفحك لطباعة الشاشة.")
+        return redirect("leadership_dashboard")
+
+
+@leader_or_leaderstaff_required
+def leadership_items_export(request):
+    import openpyxl
+    from django.http import HttpResponse
+    
+    products = Product.all_objects.filter(is_leadership_restricted=True)
+    wb = openpyxl.Workbook()
+    ws = wb.active
+    ws.title = "Leadership Items"
+    ws.append(["الكود", "الاسم", "الكمية", "السعر", "الفئة"])
+    
+    for p in products:
+        ws.append([p.id, p.name, p.quantity, p.selling_price, p.category.name if p.category else ""])
+        
+    response = HttpResponse(content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+    response['Content-Disposition'] = 'attachment; filename=leadership_items.xlsx'
+    wb.save(response)
+    return response

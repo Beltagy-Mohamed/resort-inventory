@@ -96,8 +96,20 @@
         </div>
 
         <div class="info-row">
-            <span>الكمية</span>
-            <strong>{{ product.quantity }}</strong>
+            <span>الكمية الأساسية (رصيد افتتاحي)</span>
+            <strong style="color: #6c757d;">{{ basic_qty }}</strong>
+        </div>
+        <div class="info-row">
+            <span>الكمية المضافة (الوارد)</span>
+            <strong style="color: #198754;">+{{ added_qty }}</strong>
+        </div>
+        <div class="info-row">
+            <span>الكمية المنصرفة (الصادر)</span>
+            <strong style="color: #dc3545;">-{{ out_qty }}</strong>
+        </div>
+        <div class="info-row">
+            <span>الإجمالي (الرصيد الحالي)</span>
+            <strong style="color: #0071e3; font-size: 1.15em;">{{ product.quantity }}</strong>
         </div>
 
         <div class="info-row">

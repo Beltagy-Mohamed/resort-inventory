@@ -1,230 +1,204 @@
 {% extends "layout/base.html" %}
-{% load static %}
-
-{% block title %}
-المنتجات
-{% endblock %}
+{% load static custom_filters %}
+{% block title %}{% if is_leadership %}أصناف القائد{% else %}المنتجات - المستودع العادي{% endif %}{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/products.css' %}">
 {% endblock %}
 
 {% block content %}
-
 <div class="page-header">
-
-    <h1>المنتجات</h1>
-
-    <a href="{% url 'add_product' %}" class="btn-save">
-        + إضافة منتج
-    </a>
-
+    <h1>
+        {% if is_leadership %}
+            <i class="bi bi-box-seam"></i> أصناف القائد
+        {% else %}
+            <i class="bi bi-boxes"></i> إدارة المنتجات
+        {% endif %}
+    </h1>
+    
+    <div>
+        {% if is_leadership %}
+            <a href="{% url 'leadership_items_export' %}" class="btn-secondary" style="margin-inline-end: 10px;">
+                <i class="bi bi-file-earmark-excel"></i> تصدير Excel
+            </a>
+            <a href="{% url 'leadership_item_add' %}" class="btn-primary">
+                <i class="bi bi-plus"></i> إضافة صنف
+            </a>
+        {% else %}
+            <a href="{% url 'add_product' %}" class="btn-primary">
+                <i class="bi bi-plus"></i> إضافة صنف
+            </a>
+        {% endif %}
+    </div>
 </div>
 
 <div class="search-bar">
-
     <form method="get">
-
-        <input
-            type="text"
-            name="search"
-            placeholder="البحث عن منتج بالاسم..."
-            value="{{ search }}">
-
-        <select name="status">
-
-            <option value="">
-                جميع المنتجات
-            </option>
-
-            <option
-                value="available"
-                {% if status == "available" %}selected{% endif %}>
-                متاح
-            </option>
-
-            <option
-                value="low"
-                {% if status == "low" %}selected{% endif %}>
-                منخفض
-            </option>
-
-            <option
-                value="out"
-                {% if status == "out" %}selected{% endif %}>
-                نفد من المخزون
-            </option>
-
+        <input type="text" name="search" placeholder="البحث عن منتج بالاسم أو الكود..." value="{{ search }}">
+        
+        {% if not is_leadership %}
+        <select name="category">
+            <option value="">كل الفئات</option>
+            {% for c in categories %}
+            <option value="{{ c.id }}" {% if category_id == c.id|stringformat:"s" %}selected{% endif %}>{{ c.name }}</option>
+            {% endfor %}
         </select>
+        <select name="color">
+            <option value="">كل الألوان</option>
+            {% for c in colors %}
+            <option value="{{ c.id }}" {% if color_id == c.id|stringformat:"s" %}selected{% endif %}>{{ c.name }}</option>
+            {% endfor %}
+        </select>
+        <select name="size">
+            <option value="">كل المقاسات</option>
+            {% for s in sizes %}
+            <option value="{{ s.id }}" {% if size_id == s.id|stringformat:"s" %}selected{% endif %}>{{ s.name }}</option>
+            {% endfor %}
+        </select>
+        <select name="status">
+            <option value="">كل الحالات</option>
+            <option value="available" {% if status == 'available' %}selected{% endif %}>متوفر</option>
+            <option value="low" {% if status == 'low' %}selected{% endif %}>منخفض</option>
+            <option value="out" {% if status == 'out' %}selected{% endif %}>نفد</option>
+        </select>
+        {% endif %}
+        
+        <!-- Period filter for everyone -->
+        <select name="period" id="period-select">
+            <option value="">الرصيد الحالي فقط</option>
+            <option value="week" {% if period == 'week' %}selected{% endif %}>آخر 7 أيام</option>
+            <option value="month" {% if period == 'month' %}selected{% endif %}>آخر 30 يوم</option>
+            <option value="custom" {% if period == 'custom' %}selected{% endif %}>فترة مخصصة</option>
+        </select>
+        
+        <input type="date" name="start_date" value="{{ start_date }}" class="custom-date" style="display:{% if period == 'custom' %}block{% else %}none{% endif %};" placeholder="من تاريخ">
+        <input type="date" name="end_date" value="{{ end_date }}" class="custom-date" style="display:{% if period == 'custom' %}block{% else %}none{% endif %};" placeholder="إلى تاريخ">
 
-        <button type="submit">
-            بحث
-        </button>
-
+        <button type="submit">بحث و تصفية</button>
+        {% if search or category_id or color_id or size_id or status or period %}
+        <a href="?{% if request.GET %}{% endif %}" class="btn-secondary" style="padding: 9px 12px; font-size: 13.5px;"><i class="bi bi-x-circle"></i> مسح</a>
+        {% endif %}
     </form>
-
 </div>
 
 <div class="table-container">
-<table class="products-table">
-
-    <thead>
-
-        <tr>
-
-            
-
-            <th>اسم المنتج</th>
-
-            <th>الفئة</th>
-
-            <th>سعر الشراء</th><th>سعر البيع</th>
-
-            <th>الكمية</th>
-
-            <th>حالة المخزون</th>
-
-            <th>الإجراءات</th>
-
-        </tr>
-
-    </thead>
-
-    <tbody>
-
-        {% for product in page_obj %}
-
-        <tr>
-
-            
-
-            <td data-label="اسم المنتج">{{ product.name }}</td>
-
-            <td data-label="الفئة">{{ product.category }}</td>
-
-            <td data-label="سعر الشراء">{{ product.cost_price }} {{ system_settings.currency }}</td>
-<td data-label="سعر البيع">{{ product.selling_price }} {{ system_settings.currency }}</td>
-
-            <td data-label="الكمية">{{ product.quantity }}</td>
-
-            <td data-label="حالة المخزون">
-
-                {% if product.stock_status == "available" %}
-
-                    <span class="badge badge-success">
-                        متاح
-                    </span>
-
-                {% elif product.stock_status == "low" %}
-
-                    <span class="badge badge-warning">
-                        منخفض
-                    </span>
-
+    <table class="products-table">
+        <thead>
+            <tr>
+                <th>الكود</th>
+                <th>اسم المنتج</th>
+                <th>التصنيف</th>
+                <th>سعر الشراء</th>
+                <th>سعر البيع</th>
+                {% if period_data %}
+                <th>الرصيد الافتتاحي</th>
+                <th>الوارد</th>
+                <th>المنصرف</th>
+                <th>الرصيد الختامي</th>
                 {% else %}
-
-                    <span class="badge badge-danger">
-                        نفد من المخزون
-                    </span>
-
+                <th>الكمية</th>
+                <th>الحالة</th>
+                <th title="الرصيد قبل آخر حركة">الأساسي</th>
+                <th title="كمية آخر حركة مضافة أو منصرفة">المضاف</th>
+                <th title="الرصيد بعد آخر حركة">الإجمالي</th>
                 {% endif %}
-
-            </td>
-
-            <td data-label="الإجراءات">
-
-                <a
-                    href="{% url 'product_detail' product.id %}"
-                    class="action-btn"
-                    title="عرض">
-
-                    <i class="bi bi-eye"></i>
-
-                </a>
-
-                <a
-                    href="{% url 'edit_product' product.id %}"
-                    class="action-btn"
-                    title="تعديل">
-
-                    <i class="bi bi-pencil-square"></i>
-
-                </a>
-
-                <a
-                    href="{% url 'delete_product' product.id %}"
-                    class="action-btn"
-                    title="حذف">
-
-                    <i class="bi bi-trash3"></i>
-
-                </a>
-
-            </td>
-
-        </tr>
-
-        {% empty %}
-
-        <tr>
-
-            <td colspan="8">
-
-                <h3>
-                    لا يوجد منتجات بعد
-                </h3>
-
-                <br>
-
-                <a
-                    href="{% url 'add_product' %}"
-                    class="btn-save">
-
-                    إضافة أول منتج
-
-                </a>
-
-            </td>
-
-        </tr>
-
-        {% endfor %}
-
-    </tbody>
-
-</table>
+                <th>إجراءات</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in page_obj %}
+            <tr>
+                <td>#{{ p.id }} {% if p.barcode %}<br><small style="color:#64748b;">{{ p.barcode }}</small>{% endif %}</td>
+                <td><strong>{{ p.name }}</strong></td>
+                <td>
+                    <span class="badge" style="background:#e0f2fe; color:#0369a1; padding: 4px 8px; border-radius: 4px;">{{ p.category.name|default:"-" }}</span>
+                    <span class="badge" style="background:#f1f5f9; color:#475569; padding: 4px 8px; border-radius: 4px;">{{ p.color.name|default:"-" }}</span>
+                    <span class="badge" style="background:#f1f5f9; color:#475569; padding: 4px 8px; border-radius: 4px;">{{ p.size.name|default:"-" }}</span>
+                </td>
+                <td>{{ p.cost_price }}</td>
+                <td>{{ p.selling_price }}</td>
+                
+                {% if period_data %}
+                    {% with data=period_data|dict_get:p.id %}
+                    <td style="color:#64748b; font-weight:600;">{{ data.opening }}</td>
+                    <td style="color:#10b981; font-weight:600;">+{{ data.added }}</td>
+                    <td style="color:#ef4444; font-weight:600;">-{{ data.issued }}</td>
+                    <td style="color:#0ea5e9; font-weight:bold; font-size: 1.1em;">{{ data.closing }}</td>
+                    {% endwith %}
+                {% else %}
+                    <td><strong class="{% if p.quantity == 0 %}out-of-stock{% endif %}">{{ p.quantity }}</strong></td>
+                    <td>
+                        {% if p.stock_status == 'available' %}
+                            <span class="status-badge available" style="background: #e3f5eb; color: #248a3d; padding: 4px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: bold;"><i class="fas fa-check-circle me-1"></i> متوفر</span>
+                        {% elif p.stock_status == 'low' %}
+                            <span class="status-badge low-stock" style="background: #fff8e5; color: #b25000; padding: 4px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: bold;"><i class="fas fa-exclamation-triangle me-1"></i> منخفض</span>
+                        {% else %}
+                            <span class="status-badge out-of-stock" style="background: #ffe5e5; color: #ff3b30; padding: 4px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: bold;"><i class="fas fa-times-circle me-1"></i> نفد</span>
+                        {% endif %}
+                    </td>
+                    {% with qlog=quantity_log_map|dict_get:p.id %}
+                    <td style="color:#64748b; font-size:0.85rem; text-align:center;">
+                        {% if qlog %}{{ qlog.old_quantity|default:"-" }}{% else %}<span style="color:#cbd5e1">—</span>{% endif %}
+                    </td>
+                    <td style="text-align:center; font-weight:bold;">
+                        {% if qlog %}
+                            {% if qlog.diff_quantity == "-" %}
+                                <span style="color:#cbd5e1">—</span>
+                            {% elif "+" in qlog.diff_quantity %}
+                                <span style="color:#10b981;">{{ qlog.diff_quantity }}</span>
+                            {% else %}
+                                <span style="color:#ef4444;">{{ qlog.diff_quantity }}</span>
+                            {% endif %}
+                        {% else %}<span style="color:#cbd5e1">—</span>{% endif %}
+                    </td>
+                    <td style="color:#0ea5e9; font-weight:bold; font-size:0.95rem; text-align:center;">
+                        {% if qlog %}{{ qlog.new_quantity|default:"-" }}{% else %}<span style="color:#cbd5e1">—</span>{% endif %}
+                    </td>
+                    {% endwith %}
+                {% endif %}
+                
+                <td>
+                    {% if perms.inventory.change_product %}
+<a href="{% if is_leadership %}{% url 'leadership_item_edit' p.pk %}{% else %}{% url 'edit_product' p.pk %}{% endif %}" class="action-btn edit-btn" title="تعديل">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+{% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="7" style="text-align: center; padding: 40px; color: #94a3b8;">
+                    <i class="bi bi-box-seam" style="font-size: 3rem; display: block; margin-bottom: 15px;"></i>
+                    لم يتم العثور على أي منتجات
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 
+{% if page_obj.has_other_pages %}
 <div class="pagination">
-
     {% if page_obj.has_previous %}
-
-        <a href="?page={{ page_obj.previous_page_number }}&search={{ search }}&status={{ status }}">
-            السابق
-        </a>
-
+        <a href="?page={{ page_obj.previous_page_number }}{% if search %}&search={{ search }}{% endif %}">السابق</a>
     {% endif %}
-
-    <span>
-
-        صفحة
-
-        {{ page_obj.number }}
-
-        من
-
-        {{ page_obj.paginator.num_pages }}
-
-    </span>
-
+    
+    <span class="current">{{ page_obj.number }}</span>
+    
     {% if page_obj.has_next %}
-
-        <a href="?page={{ page_obj.next_page_number }}&search={{ search }}&status={{ status }}">
-            التالي
-        </a>
-
+        <a href="?page={{ page_obj.next_page_number }}{% if search %}&search={{ search }}{% endif %}">التالي</a>
     {% endif %}
-
 </div>
+{% endif %}
 
+<script>
+document.getElementById('period-select')?.addEventListener('change', function() {
+    var dates = document.querySelectorAll('.custom-date');
+    if(this.value === 'custom') {
+        dates.forEach(d => d.style.display = 'block');
+    } else {
+        dates.forEach(d => d.style.display = 'none');
+    }
+});
+</script>
 {% endblock %}

@@ -1,0 +1,65 @@
+{% extends "layout/base.html" %}
+{% block title %}حركات القائد المخزنية{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h3 class="mb-4">سجل حركات القائد المخزنية</h3>
+        <div class="card shadow-sm">
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-striped mb-0">
+                        <thead>
+                            <tr>
+                                <th>تاريخ</th>
+                                <th>الصنف</th>
+                                <th>الحركة</th>
+                                <th>الكمية</th>
+                                <th>المستودع</th>
+                                <th>الجهة</th>
+                                <th>ملاحظات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for t in page_obj %}
+                            <tr>
+                                <td>{{ t.created_at|date:"Y/m/d H:i" }}</td>
+                                <td>{{ t.product.name }}</td>
+                                <td>
+                                    {% if t.transaction_type == 'IN' %}
+                                        <span class="badge bg-success">استلام</span>
+                                    {% elif t.transaction_type == 'OUT' %}
+                                        <span class="badge bg-danger">صرف</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">جرد</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ t.quantity }}</td>
+                                <td>{{ t.warehouse.name }}</td>
+                                <td>{{ t.partner.name|default:"-" }}</td>
+                                <td>{{ t.notes|default:"-" }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr><td colspan="7" class="text-center">لا توجد حركات.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            {% if page_obj.has_other_pages %}
+            <div class="card-footer d-flex justify-content-center">
+                <ul class="pagination mb-0">
+                    {% if page_obj.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">السابق</a></li>
+                    {% endif %}
+                    <li class="page-item active"><span class="page-link">{{ page_obj.number }}</span></li>
+                    {% if page_obj.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">التالي</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

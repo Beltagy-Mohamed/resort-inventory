@@ -1,0 +1,47 @@
+{% extends "layout/base.html" %}
+{% block title %}استيراد مخزون من Excel{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">استيراد مخزون افتتاحي من Excel</h5>
+            </div>
+            <div class="card-body">
+                <div class="alert alert-info">
+                    <strong>ملاحظة:</strong>
+                    <ul>
+                        <li>يجب أن يحتوي الملف على الأعمدة بالترتيب التالي: (اسم المنتج، الكمية الافتتاحية، سعر التكلفة، سعر البيع، اسم الفئة، الباركود).</li>
+                        <li>سيتم تجاهل الصف الأول (عناوين الأعمدة).</li>
+                        <li>الحد الأقصى هو 2000 صف.</li>
+                    </ul>
+                </div>
+
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label class="form-label">اختر المستودع للرصيد الافتتاحي</label>
+                        <select name="warehouse" class="form-select" required>
+                            <option value="">-- اختر المستودع --</option>
+                            {% for w in warehouses %}
+                            <option value="{{ w.id }}">{{ w.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">ملف الـ Excel (.xlsx)</label>
+                        <input type="file" name="excel_file" class="form-control" accept=".xlsx" required>
+                    </div>
+
+                    <button type="submit" class="btn btn-success">
+                        <i class="fas fa-file-import"></i> بدء الاستيراد
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

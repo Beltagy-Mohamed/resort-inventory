@@ -1,0 +1,33 @@
+{% extends "layout/base.html" %}
+{% block title %}مستودعات القائد{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h3 class="mb-4">مستودعات القائد</h3>
+        <div class="card shadow-sm">
+            <div class="card-body p-0">
+                <table class="table table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th>الاسم</th>
+                            <th>الموقع</th>
+                            <th>المسؤول</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for w in warehouses %}
+                        <tr>
+                            <td>{{ w.name }}</td>
+                            <td>{{ w.location|default:"-" }}</td>
+                            <td>{{ w.manager|default:"-" }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="3" class="text-center">لا توجد مستودعات مخصصة للقائد حالياً.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

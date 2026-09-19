@@ -1,0 +1,93 @@
+{% extends "layout/base.html" %}
+{% load static %}
+{% block title %}لوحة تحكم القائد{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h2 class="fw-bold">نظرة عامة - قسم القائد</h2>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-3 mb-4">
+        <div class="card text-white bg-primary h-100">
+            <div class="card-body">
+                <h5 class="card-title">إجمالي الأصناف</h5>
+                <h2 class="display-5">{{ total_products }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card text-white bg-success h-100">
+            <div class="card-body">
+                <h5 class="card-title">إجمالي القطع المتوفرة</h5>
+                <h2 class="display-5">{{ total_stock }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card text-dark bg-warning h-100">
+            <div class="card-body">
+                <h5 class="card-title">أصناف منخفضة</h5>
+                <h2 class="display-5">{{ low_stock }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 mb-4">
+        <div class="card text-white bg-danger h-100">
+            <div class="card-body">
+                <h5 class="card-title">أصناف نفدت</h5>
+                <h2 class="display-5">{{ out_of_stock }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">أحدث حركات القائد</h5>
+                <a href="{% url 'leadership_transactions_list' %}" class="btn btn-sm btn-outline-secondary">عرض الكل</a>
+            </div>
+            <div class="card-body p-0">
+                <div class="table-responsive">
+                    <table class="table table-hover mb-0">
+                        <thead>
+                            <tr>
+                                <th>تاريخ</th>
+                                <th>نوع الحركة</th>
+                                <th>الصنف</th>
+                                <th>الكمية</th>
+                                <th>المستودع</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for trans in recent_transactions %}
+                            <tr>
+                                <td>{{ trans.created_at|date:"Y/m/d H:i" }}</td>
+                                <td>
+                                    {% if trans.transaction_type == 'IN' %}
+                                        <span class="badge bg-success">وارد</span>
+                                    {% elif trans.transaction_type == 'OUT' %}
+                                        <span class="badge bg-danger">منصرف</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">تسوية</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ trans.product.name }}</td>
+                                <td>{{ trans.quantity }}</td>
+                                <td>{{ trans.warehouse.name }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr><td colspan="5" class="text-center">لا توجد حركات مسجلة.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

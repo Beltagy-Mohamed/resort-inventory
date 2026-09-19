@@ -6,7 +6,9 @@ urlpatterns = [
     # ===========================
     # Leadership Section
     # ===========================
+    path('leadership/dashboard/', views.leadership_dashboard, name='leadership_dashboard'),
     path('leadership-items/', views.leadership_items_list, name='leadership_items_list'),
+path('leadership-transactions/', views.leadership_transactions_list, name='leadership_transactions_list'),
     path('leadership-items/add/', views.leadership_item_add, name='leadership_item_add'),
     path('leadership-items/<int:pk>/edit/', views.leadership_item_edit, name='leadership_item_edit'),
     path('leadership-items/<int:pk>/delete/', views.leadership_item_delete, name='leadership_item_delete'),
@@ -200,14 +202,21 @@ path(
     path("management/warehouses/", views.warehouses_list, name="warehouses_list"),
     path("management/warehouses/add/", views.add_warehouse, name="add_warehouse"),
     path("management/warehouses/<int:pk>/edit/", views.edit_warehouse, name="edit_warehouse"),
+    path("management/warehouses/<int:pk>/delete/", views.delete_warehouse, name="delete_warehouse"),
 
     path("management/partners/", views.partners_list, name="partners_list"),
     path("management/partners/add/", views.add_partner, name="add_partner"),
     path("management/partners/<int:pk>/edit/", views.edit_partner, name="edit_partner"),
+    path("management/partners/<int:pk>/delete/", views.delete_partner, name="delete_partner"),
 
     path(
-    "settings/",
-    views.system_settings,
-    name="system_settings",
-),
+        "settings/",
+        views.system_settings,
+        name="system_settings",
+    ),
+    path(
+        "settings/import-excel/",
+        views.import_stock_excel,
+        name="import_stock_excel",
+    ),
 ]

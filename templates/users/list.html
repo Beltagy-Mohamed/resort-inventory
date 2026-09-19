@@ -1,73 +1,81 @@
-{% extends 'layout/base.html' %}
+{% extends "layout/base.html" %}
 {% load static %}
+{% block title %}المستخدمون والصلاحيات{% endblock %}
 
 {% block extra_css %}
+<style>
+    .apple-card { background: #fff; border-radius: 20px; border: none; box-shadow: 0 4px 24px rgba(0,0,0,0.06); padding: 24px; margin-bottom: 24px; }
+    .apple-title { font-weight: 600; color: #1d1d1f; margin: 0; font-size: 1.75rem; letter-spacing: -0.5px; }
+    .apple-btn-primary { background-color: #0071e3; color: #fff; border-radius: 20px; padding: 8px 20px; font-weight: 500; text-decoration: none; display: inline-block; transition: background-color 0.2s; }
+    .apple-btn-primary:hover { background-color: #0077ed; color: #fff; }
+    .apple-table { width: 100%; border-collapse: separate; border-spacing: 0; }
+    .apple-table th { background-color: #fbfbfd; padding: 14px 16px; color: #86868b; font-weight: 600; text-align: right; font-size: 0.85rem; border-bottom: 1px solid #d2d2d7; }
+    .apple-table td { padding: 16px; border-bottom: 1px solid #f2f2f7; color: #1d1d1f; font-size: 0.95rem; }
+    .apple-btn-icon { background-color: #f5f5f7; color: #0071e3; border-radius: 50%; width: 36px; height: 36px; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.2s; }
+    .apple-btn-icon:hover { background-color: #0071e3; color: #fff; }
+    .status-active { color: #248a3d; background: #e3f5eb; padding: 4px 10px; border-radius: 12px; font-size: 0.8rem; }
+    .status-inactive { color: #ff3b30; background: #ffe5e5; padding: 4px 10px; border-radius: 12px; font-size: 0.8rem; }
+    .group-badge { background: #f2f2f7; color: #1d1d1f; padding: 4px 10px; border-radius: 12px; font-size: 0.8rem; margin-right: 4px; display: inline-block; margin-bottom: 4px; }
+</style>
 <link rel="stylesheet" href="{% static 'css/products.css' %}">
 {% endblock %}
 
-{% block title %}المستخدمون والصلاحيات{% endblock %}
-
 {% block content %}
-<div class="page-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
-    <h1 style="margin: 0;">المستخدمون والصلاحيات</h1>
-    <a href="{% url 'add_user' %}" class="btn-save" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
-        <i class="bi bi-person-plus"></i> إضافة موظف
+<div class="page-header" style="margin-bottom: 30px; margin-top: 10px;">
+    <h1 style="margin: 0; font-size: 1.75rem; font-weight: 600;">
+        <i class="bi bi-people"></i> المستخدمون والصلاحيات
+    </h1>
+    <a href="{% url 'add_user' %}" class="btn-primary" style="padding: 10px 20px; font-weight: bold; border-radius: 8px; text-decoration: none;">
+        <i class="bi bi-person-plus"></i> إضافة مستخدم
     </a>
 </div>
 
-<div class="table-container">
-    <table class="products-table">
-        <thead>
-            <tr>
-                <th>اسم المستخدم</th>
-                <th>الاسم الكامل</th>
-                <th>حالة الحساب</th>
-                <th>مدير نظام؟</th>
-                <th style="text-align: center;">الإجراءات</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for u in users %}
-            <tr>
-                <td data-label="اسم المستخدم">
-                    <strong>{{ u.username }}</strong>
-                </td>
-                <td data-label="الاسم الكامل">
-                    {{ u.first_name }} {{ u.last_name }}
-                </td>
-                <td data-label="حالة الحساب">
-                    {% if u.is_active %}
-                        <span class="badge badge-success">نشط</span>
-                    {% else %}
-                        <span class="badge badge-danger">موقوف</span>
-                    {% endif %}
-                </td>
-                <td data-label="مدير نظام؟">
-                    {% if u.is_superuser %}
-                        <i class="bi bi-check-circle-fill" style="color: #059669;"></i> نعم
-                    {% else %}
-                        <i class="bi bi-x-circle" style="color: #6b7280;"></i> لا
-                    {% endif %}
-                </td>
-                <td data-label="الإجراءات" style="text-align: center;">
-                    <a href="{% url 'edit_user' u.id %}" class="action-btn" title="تعديل">
-                        <i class="bi bi-pencil-square"></i> تعديل
-                    </a>
-                    {% if not u.is_superuser %}
-                    <a href="{% url 'delete_user' u.id %}" class="action-btn" title="إيقاف/حذف" onclick="return confirm('هل أنت متأكد من إيقاف/حذف هذا الموظف؟')" style="color: #dc2626;">
-                        <i class="bi bi-trash3"></i> حذف
-                    </a>
-                    {% endif %}
-                </td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="5" style="text-align: center; padding: 40px; color: var(--ink-text-muted);">
-                    لا يوجد مستخدمين.
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<div class="apple-card p-0 overflow-hidden">
+    <div class="table-responsive">
+        <table class="apple-table">
+            <thead>
+                <tr>
+                    <th>اسم المستخدم</th>
+                    <th>الاسم بالكامل</th>
+                    <th>الصلاحيات</th>
+                    <th>الحالة</th>
+                    <th class="text-center">إجراءات</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for u in users %}
+                <tr>
+                    <td style="font-weight: 600;">{{ u.username }}</td>
+                    <td>{{ u.get_full_name|default:"-" }}</td>
+                    <td>
+                        {% if u.is_superuser %}
+                        <span class="group-badge text-white bg-primary">مدير النظام (Superuser)</span>
+                        {% else %}
+                            {% for g in u.groups.all %}
+                            <span class="group-badge">
+                                {% if g.name == 'Leader' %}القائد{% elif g.name == 'LeaderStaff' %}موظف القائد{% else %}{{ g.name }}{% endif %}
+                            </span>
+                            {% empty %}
+                            <span class="text-muted small">بدون صلاحيات محددة</span>
+                            {% endfor %}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if u.is_active %}
+                        <span class="status-active">نشط</span>
+                        {% else %}
+                        <span class="status-inactive">غير نشط</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-center">
+                        <a href="{% url 'edit_user' u.id %}" class="apple-btn-icon" title="تعديل"><i class="fas fa-edit"></i></a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5" class="text-center py-5 text-muted">لا يوجد مستخدمين.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 {% endblock %}

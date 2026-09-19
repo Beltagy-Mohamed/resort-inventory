@@ -5,7 +5,7 @@ from .models import Category, Color, Size, Product, InventoryTransaction, Activi
 
 from .middleware import get_current_user
 
-def log_activity(action, desc, product=None):
+def log_activity(action, desc, product=None, old_quantity=None, new_quantity=None):
     user = get_current_user()
     if user and not user.is_authenticated:
         user = None
@@ -13,7 +13,9 @@ def log_activity(action, desc, product=None):
         action=action,
         description=desc,
         product=product,
-        user=user
+        user=user,
+        old_quantity=old_quantity,
+        new_quantity=new_quantity
     )
 
 # --- Category ---
@@ -84,9 +86,9 @@ def product_deleted(sender, instance, **kwargs):
 def transaction_saved(sender, instance, created, **kwargs):
     action_type = instance.transaction_type # IN, OUT, ADJUST
     if created:
-        log_activity(action_type, f'حركة مخزنية جديدة ({action_type}): {instance.quantity} وحدة للمنتج {instance.product.name}', product=instance.product)
+        log_activity(action_type, f'حركة مخزنية جديدة ({action_type}): {instance.quantity} وحدة للمنتج {instance.product.name}', product=instance.product, old_quantity=getattr(instance, '_old_qty', None), new_quantity=getattr(instance, '_new_qty', None))
     else:
-        log_activity(action_type, f'تعديل حركة مخزنية ({action_type}): أصبحت {instance.quantity} وحدة للمنتج {instance.product.name}', product=instance.product)
+        log_activity(action_type, f'تعديل حركة مخزنية ({action_type}): أصبحت {instance.quantity} وحدة للمنتج {instance.product.name}', product=instance.product, old_quantity=getattr(instance, '_old_qty', None), new_quantity=getattr(instance, '_new_qty', None))
 
 @receiver(post_delete, sender=InventoryTransaction)
 def transaction_deleted(sender, instance, **kwargs):

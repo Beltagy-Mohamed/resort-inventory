@@ -16,6 +16,7 @@ class InventoryService:
             pk=inventory_transaction.product_id
         )
         qty = inventory_transaction.quantity
+        old_global_qty = product.quantity
         t_type = inventory_transaction.transaction_type
         warehouse = inventory_transaction.warehouse
         
@@ -23,7 +24,7 @@ class InventoryService:
             raise ValidationError("يجب تحديد المخزن لإتمام الحركة.")
 
         # Get or create stock record for this warehouse
-        stock, created = Stock.objects.select_for_update().get_or_create(
+        stock, created = Stock.all_objects.select_for_update().get_or_create(
             product=product,
             warehouse=warehouse,
             defaults={'quantity': 0}
@@ -44,12 +45,17 @@ class InventoryService:
         
         # Save the transaction
         inventory_transaction.product = product
+        # Update global product quantity early for logging
+        from django.db.models import Sum
+        total_qty = Stock.all_objects.filter(product=product).aggregate(total=Sum('quantity'))['total'] or 0
+        
+        inventory_transaction._old_qty = old_global_qty
+        inventory_transaction._new_qty = total_qty
+        
         inventory_transaction.save()
         
-        # Update global product quantity (Cache total quantity from all warehouses)
-        from django.db.models import Sum
-        total_qty = Stock.objects.filter(product=product).aggregate(total=Sum('quantity'))['total']
-        product.quantity = total_qty or 0
+        # Save global product quantity
+        product.quantity = total_qty
         product.save()
         
         return product

@@ -59,7 +59,6 @@ python manage.py migrate
 python manage.py collectstatic --noinput
 python manage.py setup_groups          # ينشئ Group باسم Admin و Staff
 python manage.py createsuperuser
-python manage.py generate_missing_codes   # لو عندك منتجات قديمة من غير باركود
 ```
 
 ## 6. Gunicorn كـ systemd service
@@ -87,7 +86,7 @@ sudo certbot --nginx -d yourdomain.com -d www.yourdomain.com
 ## 8. اختبار نهائي بعد النشر
 
 - افتح `https://yourdomain.com/accounts/login/` وسجّل دخول
-- جرّب: إضافة منتج، حركة IN/OUT، طباعة باركود/QR/ملصق، التقارير
+- جرّب: إضافة منتج، حركة IN/OUT، التقارير، والتصدير إلى Excel
 - تأكد إن الموقع بيتحول تلقائيًا لـ HTTPS
 - شغّل `python manage.py check --deploy` وتأكد مفيش تحذيرات حرجة
 

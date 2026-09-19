@@ -5,7 +5,13 @@ from django.core.exceptions import ValidationError
 from django.db.models.deletion import ProtectedError
 from django.urls import reverse
 
-from inventory.models import InventoryTransaction, Product, Warehouse
+from inventory.models import (
+    ActivityLog,
+    InventoryTransaction,
+    LeadershipAccessConfig,
+    Product,
+    Warehouse,
+)
 from inventory.services.inventory_service import InventoryService
 
 class DeploymentReadinessTest(TestCase):
@@ -64,3 +70,56 @@ class InventorySafetyTests(TestCase):
         self.user.user_permissions.add(permission)
         response = self.client.get(reverse("inventory_report"))
         self.assertEqual(response.status_code, 200)
+
+
+class LeadershipIsolationTests(TestCase):
+    def setUp(self):
+        self.leader = User.objects.create_user("leader", password="leader-password-123")
+        self.staff = User.objects.create_user("staff", password="staff-password-123")
+        self.auditor = User.objects.create_superuser("auditor", "audit@example.test", "audit-password-123")
+        self.warehouse = Warehouse.objects.create(name="مخزن القائد")
+        self.restricted = Product.all_objects.create(
+            name="صنف قائد سري",
+            is_leadership_restricted=True,
+            cost_price=100,
+            selling_price=150,
+        )
+        InventoryService.process(InventoryTransaction(
+            product=self.restricted,
+            warehouse=self.warehouse,
+            transaction_type="IN",
+            quantity=5,
+        ))
+        LeadershipAccessConfig.objects.create(
+            holder=self.leader,
+            granted_by_note="اختبار العزل",
+        )
+        self.staff.user_permissions.add(
+            Permission.objects.get(codename="view_product"),
+            Permission.objects.get(codename="view_inventorytransaction"),
+        )
+
+    def test_general_managers_exclude_restricted_product_data(self):
+        self.assertFalse(Product.objects.filter(pk=self.restricted.pk).exists())
+        self.assertFalse(InventoryTransaction.objects.filter(product=self.restricted).exists())
+        self.assertFalse(self.restricted.stocks.model.objects.filter(product=self.restricted).exists())
+        self.assertFalse(ActivityLog.objects.filter(product=self.restricted).exists())
+
+    def test_staff_cannot_see_restricted_data_or_leadership_routes(self):
+        self.client.login(username="staff", password="staff-password-123")
+        for route_name in ("products_list", "transactions_list", "inventory_report", "dashboard"):
+            response = self.client.get(reverse(route_name))
+            self.assertEqual(response.status_code, 200)
+            self.assertNotContains(response, "صنف قائد سري")
+        response = self.client.get(reverse("product_detail", args=[self.restricted.pk]))
+        self.assertEqual(response.status_code, 404)
+        response = self.client.get(reverse("leadership_items_list"))
+        self.assertEqual(response.status_code, 404)
+
+    def test_only_designated_leader_can_view_restricted_section(self):
+        self.client.login(username="auditor", password="audit-password-123")
+        self.assertEqual(self.client.get(reverse("leadership_items_list")).status_code, 404)
+        self.client.login(username="leader", password="leader-password-123")
+        response = self.client.get(reverse("leadership_items_list"))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "صنف قائد سري")
