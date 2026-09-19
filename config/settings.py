@@ -118,14 +118,10 @@ if DEBUG and not ALLOWED_HOSTS:
 
 
 
-CSRF_TRUSTED_ORIGINS = [
-
+CSRF_TRUSTED_ORIGINS = ['https://resort-inventory.vercel.app'] + [
     origin.strip()
-
     for origin in os.environ.get("DJANGO_CSRF_TRUSTED_ORIGINS", "").split(",")
-
     if origin.strip()
-
 ]
 
 
@@ -451,4 +447,6 @@ if os.environ.get('VERCEL'):
 # Session Security Settings
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 SESSION_COOKIE_AGE = 3600 # 1 hour
+
+
 
