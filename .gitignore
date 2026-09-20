@@ -10,12 +10,23 @@ __pycache__/
 .venv/
 venv/
 env/
+venv3/
 
 # Django
 db.sqlite3
 db.sqlite3-journal
 staticfiles/
 media/
+
+# Delivery / Offline Packages (Large Binaries)
+offline_packages/
+portable_python/
+portable_python_fast/
+
+# Documents
+*.xlsx
+*.pdf
+# !README_DELIVERY.md (example if you wanted to keep some)
 
 # Editors / OS
 .vscode/
