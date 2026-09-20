@@ -3199,6 +3199,7 @@ html[data-theme="dark"] .mobile-hamburger {
         position: fixed;
         top: 0;
         bottom: 0;
+        right: 0; /* Fallback for RTL */
         inset-inline-start: 0;
         z-index: 9999;
         height: 100vh;
@@ -3210,6 +3211,8 @@ html[data-theme="dark"] .mobile-hamburger {
     }
     
     html[dir="ltr"] .sidebar {
+        left: 0;
+        right: auto;
         transform: translateX(-100%);
     }
     
@@ -3497,4 +3500,6 @@ body {
 }
 
 .sidebar-menu::-webkit-scrollbar { display: none; }
+
+
 
