@@ -82,6 +82,8 @@ def transactions_list(request):
             "year_filter": int(year_filter) if year_filter.isdigit() else "",
             "months": [(1, "يناير"), (2, "فبراير"), (3, "مارس"), (4, "أبريل"), (5, "مايو"), (6, "يونيو"), (7, "يوليو"), (8, "أغسطس"), (9, "سبتمبر"), (10, "أكتوبر"), (11, "نوفمبر"), (12, "ديسمبر")],
             "years": range(2025, 2035),
+            "warehouses": __import__('inventory.models', fromlist=['Warehouse']).Warehouse.objects.all(),
+            "warehouse_filter": warehouse_filter,
         }
 
     )

@@ -41,9 +41,9 @@
             </select>
         </div>
         <div class="col-md-4">
-            <button type="submit" class="btn btn-primary rounded-pill px-4 shadow-sm"><i class="fas fa-filter me-2"></i> تصفية</button>
+            <button type="submit" class="btn btn-primary rounded-pill px-4 shadow-sm"><i class="bi bi-funnel me-2"></i> تصفية</button>
             {% if selected_location %}
-            <a href="{% url 'warehouses_list' %}" class="btn btn-light rounded-pill px-4 shadow-sm ms-2"><i class="fas fa-times me-2"></i> مسح</a>
+            <a href="{% url 'warehouses_list' %}" class="btn btn-light rounded-pill px-4 shadow-sm ms-2"><i class="bi bi-x-lg me-2"></i> مسح</a>
             {% endif %}
         </div>
     </form>
@@ -69,17 +69,17 @@
                     <td>{{ w.manager|default:"-" }}</td>
                     <td>
                         {% if w.is_leader_only %}
-                        <span class="badge-leader"><i class="fas fa-lock text-warning"></i> نعم</span>
+                        <span class="badge-leader"><i class="bi bi-lock-fill text-warning"></i> نعم</span>
                         {% else %}
                         <span class="text-muted">لا</span>
                         {% endif %}
                     </td>
                     <td class="text-center">
-                        <a href="{% url 'edit_warehouse' w.id %}" class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm" style="transition: all 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'"><i class="fas fa-edit me-1"></i> تعديل</a>
+                        <a href="{% url 'edit_warehouse' w.id %}" class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm" style="transition: all 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'"><i class="bi bi-pencil me-1"></i> تعديل</a>
                         {% if perms.inventory.delete_warehouse %}
                         <form method="post" action="{% url 'delete_warehouse' w.id %}" style="display:inline;">
                             {% csrf_token %}
-                            <button type="submit" class="btn btn-danger btn-sm rounded-pill px-3 shadow-sm ms-1" style="transition: all 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" onclick="return confirm('هل أنت متأكد من حذف هذا المخزن؟ لا يمكن التراجع عن هذه العملية.');"><i class="fas fa-trash me-1"></i> حذف</button>
+                            <button type="submit" class="btn btn-danger btn-sm rounded-pill px-3 shadow-sm ms-1" style="transition: all 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" onclick="return confirm('هل أنت متأكد من حذف هذا المخزن؟ لا يمكن التراجع عن هذه العملية.');"><i class="bi bi-trash me-1"></i> حذف</button>
                         </form>
                         {% endif %}
                     </td>

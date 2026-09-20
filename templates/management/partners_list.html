@@ -58,18 +58,18 @@
                     
                     <td>
                         {% if p.is_leader_only %}
-                        <span class="badge-leader"><i class="fas fa-lock text-warning"></i> خاص للقائد</span>
+                        <span class="badge-leader"><i class="bi bi-lock-fill text-warning"></i> خاص للقائد</span>
                         {% else %}
                         <span class="text-muted">عام</span>
                         {% endif %}
                     </td>
                     <td class="text-center">
-                        <a href="{% url 'edit_partner' p.id %}" class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm" style="transition: all 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'"><i class="fas fa-edit me-1"></i> تعديل</a>
+                        <a href="{% url 'edit_partner' p.id %}" class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm" style="transition: all 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'"><i class="bi bi-pencil me-1"></i> تعديل</a>
                         {% if perms.inventory.delete_partner %}
                         <form method="post" action="{% url 'delete_partner' p.id %}" style="display:inline;">
                             {% csrf_token %}
                             <button type="submit" class="btn btn-danger btn-sm rounded-pill px-3 shadow-sm ms-1" style="transition: all 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" onclick="return confirm('هل أنت متأكد من حذف هذه الجهة؟
-تحذير: سيتم منع الحذف إذا كانت هناك حركات مالية مسجلة لهذه الجهة.');"><i class="fas fa-trash me-1"></i> حذف</button>
+تحذير: سيتم منع الحذف إذا كانت هناك حركات مالية مسجلة لهذه الجهة.');"><i class="bi bi-trash me-1"></i> حذف</button>
                         </form>
                         {% endif %}
                     </td>

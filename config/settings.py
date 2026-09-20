@@ -445,8 +445,8 @@ if os.environ.get('VERCEL'):
     ALLOWED_HOSTS.append('.vercel.app')
 
 # Session Security Settings
-SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-SESSION_COOKIE_AGE = 3600 # 1 hour
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+SESSION_COOKIE_AGE = 1209600 # 1 hour
 
 
 
@@ -460,4 +460,5 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
+
 

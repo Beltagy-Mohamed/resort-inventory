@@ -133,7 +133,7 @@
                         {% elif p.stock_status == 'low' %}
                             <span class="status-badge low-stock" style="background: #fff8e5; color: #b25000; padding: 4px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: bold;"><i class="fas fa-exclamation-triangle me-1"></i> منخفض</span>
                         {% else %}
-                            <span class="status-badge out-of-stock" style="background: #ffe5e5; color: #ff3b30; padding: 4px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: bold;"><i class="fas fa-times-circle me-1"></i> نفد</span>
+                            <span class="status-badge out-of-stock" style="background: #ffe5e5; color: #ff3b30; padding: 4px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: bold;"><i class="bi bi-x-lg-circle me-1"></i> نفد</span>
                         {% endif %}
                     </td>
                     {% with qlog=quantity_log_map|dict_get:p.id %}
