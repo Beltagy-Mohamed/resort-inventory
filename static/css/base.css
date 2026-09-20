@@ -3193,31 +3193,34 @@ html[data-theme="dark"] .mobile-hamburger {
         margin-inline-start: auto;
     }
     
-    /* Reveal Sidebar off-canvas */
+        /* Reveal Sidebar off-canvas (BULLETPROOF) */
     .sidebar {
         display: block !important;
         position: fixed;
         top: 0;
         bottom: 0;
-        right: 0; /* Fallback for RTL */
-        inset-inline-start: 0;
+        right: -320px !important;
         z-index: 9999;
         height: 100vh;
         margin: 0 !important;
         border-radius: 0 !important;
-        transform: translateX(100%);
-        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        transition: right 0.3s ease, left 0.3s ease;
         width: 280px !important;
+        transform: none !important;
     }
     
     html[dir="ltr"] .sidebar {
-        left: 0;
-        right: auto;
-        transform: translateX(-100%);
+        left: -320px !important;
+        right: auto !important;
     }
     
     body.sidebar-open .sidebar {
-        transform: translateX(0) !important;
+        right: 0 !important;
+    }
+
+    html[dir="ltr"] body.sidebar-open .sidebar {
+        left: 0 !important;
+        right: auto !important;
     }
     
     body.sidebar-open .sidebar-overlay {
@@ -3500,6 +3503,8 @@ body {
 }
 
 .sidebar-menu::-webkit-scrollbar { display: none; }
+
+
 
 
 
