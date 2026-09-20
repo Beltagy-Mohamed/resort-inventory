@@ -255,6 +255,7 @@ class CustomUserCreationForm(forms.ModelForm):
         fields = ('username', 'password', 'first_name', 'last_name'    )
 
 class CustomUserEditForm(forms.ModelForm):
+    new_password = forms.CharField(label='كلمة مرور جديدة (اتركها فارغة إذا لم ترد التغيير)', required=False, widget=forms.PasswordInput(attrs={'class': 'form-control'}))
     perm_inventory = forms.BooleanField(label='صلاحيات المخزون (منتجات/حركات)', required=False, widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}))
     perm_sales = forms.BooleanField(label='صلاحيات المبيعات (نقطة البيع)', required=False, widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}))
     perm_reports = forms.BooleanField(label='صلاحيات التقارير (عرض طباعة/تصدير)', required=False, widget=forms.CheckboxInput(attrs={'class': 'form-check-input'}))

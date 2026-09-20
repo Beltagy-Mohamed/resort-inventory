@@ -69,6 +69,7 @@
                     </td>
                     <td class="text-center">
                         <a href="{% url 'edit_user' u.id %}" class="apple-btn-icon" title="تعديل"><i class="bi bi-pencil"></i></a>
+                        <a href="{% url 'delete_user' u.id %}" class="apple-btn-icon text-danger" title="حذف" onclick="return confirm('هل أنت متأكد من تعطيل/حذف هذا المستخدم؟');"><i class="bi bi-trash"></i></a>
                     </td>
                 </tr>
                 {% empty %}

@@ -80,6 +80,9 @@ def add_user(request):
             user = form.save(commit=False)
             user.is_staff = False # They shouldn't access /admin
             user.is_superuser = form.cleaned_data.get('is_superadmin', False)
+            password = form.cleaned_data.get('password')
+            if password:
+                user.set_password(password)
             user.save()
             
             from django.contrib.auth.models import Group
@@ -116,6 +119,9 @@ def edit_user(request, pk):
                 form.cleaned_data['is_superadmin'] = True
                 
             user.is_superuser = form.cleaned_data.get('is_superadmin', False)
+            new_password = form.cleaned_data.get('new_password')
+            if new_password:
+                user.set_password(new_password)
             user.save()
             
             from django.contrib.auth.models import Group
