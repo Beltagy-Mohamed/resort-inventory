@@ -20,6 +20,51 @@
     <link rel="stylesheet" href="{% static 'css/base.css' %}?v=8">
 {% block extra_css %}
 {% endblock %}
+
+<style>
+@media (max-width: 900px) {
+    aside.sidebar {
+        display: block !important;
+        position: fixed !important;
+        top: 0 !important;
+        bottom: 0 !important;
+        right: -320px !important;
+        left: auto !important;
+        z-index: 999999 !important;
+        height: 100vh !important;
+        max-height: 100vh !important;
+        width: 280px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border-radius: 0 !important;
+        transition: right 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        transform: none !important;
+        overflow-y: auto !important;
+    }
+    body.sidebar-open aside.sidebar {
+        right: 0 !important;
+    }
+    html[dir="ltr"] aside.sidebar {
+        left: -320px !important;
+        right: auto !important;
+        transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    }
+    html[dir="ltr"] body.sidebar-open aside.sidebar {
+        left: 0 !important;
+    }
+    .sidebar-overlay {
+        z-index: 999998 !important;
+    }
+    body.sidebar-collapsed aside.sidebar {
+        width: 280px !important;
+    }
+    body.sidebar-collapsed aside.sidebar .sidebar-header h2,
+    body.sidebar-collapsed aside.sidebar .sidebar-menu h5,
+    body.sidebar-collapsed aside.sidebar .sidebar-menu span.label {
+        display: inline-block !important;
+    }
+}
+</style>
 </head>
 
 <body>
@@ -65,6 +110,7 @@
 </body>
 
 </html>
+
 
 
 
