@@ -53,7 +53,7 @@ def activity_logs(request):
         {
             "logs": page_obj,
             "page_obj": page_obj,
-            "month_filter": month_filter,
+            "month_filter": int(month_filter) if month_filter.isdigit() else "",
             "year_filter": year_filter,
             "day_filter": day_filter,
             "product_name_filter": product_name_filter,

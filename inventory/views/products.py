@@ -1,4 +1,4 @@
-from django.contrib import messages
+﻿from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.paginator import Paginator
 from django.db.models.deletion import ProtectedError
@@ -63,11 +63,39 @@ def products_list(request):
                     'closing': opening + added - issued
                 }
 
+    if request.GET.get("export") == "xlsx":
+        import openpyxl
+        from django.http import HttpResponse
+        
+        wb = openpyxl.Workbook()
+        ws = wb.active
+        ws.title = "المنتجات"
+        
+        headers = ["الكود", "اسم الصنف", "الفئة", "اللون", "المقاس", "سعر التكلفة", "سعر البيع", "الكمية الحالية"]
+        ws.append(headers)
+        
+        for p in products:
+            ws.append([
+                p.barcode or "-",
+                p.name,
+                p.category.name if p.category else "-",
+                p.color.name if p.color else "-",
+                p.size.name if p.size else "-",
+                p.cost_price,
+                p.selling_price,
+                p.quantity
+            ])
+            
+        response = HttpResponse(content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        response["Content-Disposition"] = 'attachment; filename="products.xlsx"'
+        wb.save(response)
+        return response
+
     paginator = Paginator(products, 10)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
-    # Build a dict: product_id → last ActivityLog with quantity info
+    # Build a dict: product_id â†’ last ActivityLog with quantity info
     page_product_ids = [p.id for p in page_obj]
     last_logs = (
         ActivityLog.objects
@@ -143,13 +171,13 @@ def add_product(request):
                         transaction_type='IN',
                         quantity=product.quantity,
                         warehouse=selected_warehouse,
-                        notes='رصيد افتتاحي (عند إضافة المنتج)'
+                        notes='Ø±ØµÙŠØ¯ Ø§ÙØªØªØ§Ø­ÙŠ (Ø¹Ù†Ø¯ Ø¥Ø¶Ø§ÙØ© Ø§Ù„Ù…Ù†ØªØ¬)'
                     )
                     InventoryService.process(trans)
 
             messages.success(
             request,
-            "تم إضافة المنتج بنجاح."
+            "ØªÙ… Ø¥Ø¶Ø§ÙØ© Ø§Ù„Ù…Ù†ØªØ¬ Ø¨Ù†Ø¬Ø§Ø­."
             )
             return redirect("products_list")
 
@@ -191,7 +219,7 @@ def edit_product(request, pk):
 
             messages.success(
                 request,
-                "تم تعديل المنتج بنجاح."
+                "ØªÙ… ØªØ¹Ø¯ÙŠÙ„ Ø§Ù„Ù…Ù†ØªØ¬ Ø¨Ù†Ø¬Ø§Ø­."
             )
 
             return redirect("products_list")
@@ -222,10 +250,10 @@ def delete_product(request, pk):
         except ProtectedError:
             messages.error(
                 request,
-                "لا يمكن حذف منتج له حركات مخزنية. احتفظ به للأرشفة التاريخية.",
+                "Ù„Ø§ ÙŠÙ…ÙƒÙ† Ø­Ø°Ù Ù…Ù†ØªØ¬ Ù„Ù‡ Ø­Ø±ÙƒØ§Øª Ù…Ø®Ø²Ù†ÙŠØ©. Ø§Ø­ØªÙØ¸ Ø¨Ù‡ Ù„Ù„Ø£Ø±Ø´ÙØ© Ø§Ù„ØªØ§Ø±ÙŠØ®ÙŠØ©.",
             )
         else:
-            messages.success(request, "تم حذف المنتج بنجاح.")
+            messages.success(request, "ØªÙ… Ø­Ø°Ù Ø§Ù„Ù…Ù†ØªØ¬ Ø¨Ù†Ø¬Ø§Ø­.")
 
         return redirect("products_list")
 
@@ -246,9 +274,9 @@ def product_detail(request, pk):
     from django.db.models import Sum
     all_transactions = product.transactions.all()
     
-    basic_qty = all_transactions.filter(notes__contains='رصيد افتتاحي').aggregate(Sum('quantity'))['quantity__sum'] or 0
+    basic_qty = all_transactions.filter(notes__contains='Ø±ØµÙŠØ¯ Ø§ÙØªØªØ§Ø­ÙŠ').aggregate(Sum('quantity'))['quantity__sum'] or 0
     
-    added_qty = all_transactions.filter(transaction_type='IN').exclude(notes__contains='رصيد افتتاحي').aggregate(Sum('quantity'))['quantity__sum'] or 0
+    added_qty = all_transactions.filter(transaction_type='IN').exclude(notes__contains='Ø±ØµÙŠØ¯ Ø§ÙØªØªØ§Ø­ÙŠ').aggregate(Sum('quantity'))['quantity__sum'] or 0
     
     out_qty = all_transactions.filter(transaction_type='OUT').aggregate(Sum('quantity'))['quantity__sum'] or 0
 
@@ -282,3 +310,4 @@ def low_stock_products(request):
             "products": products
         }
     )    
+
