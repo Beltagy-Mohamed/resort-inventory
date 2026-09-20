@@ -85,10 +85,12 @@
             <strong>{{ product.size }}</strong>
         </div>
 
+        {% if user.is_superuser or is_leadership %}
         <div class="info-row">
             <span>سعر التكلفة</span>
             <strong>{{ product.cost_price }} {{ system_settings.currency }}</strong>
         </div>
+        {% endif %}
 
         <div class="info-row">
             <span>سعر البيع</span>

@@ -91,7 +91,7 @@
                 <th>الكود</th>
                 <th>اسم المنتج</th>
                 <th>التصنيف</th>
-                <th>سعر الشراء</th>
+                {% if user.is_superuser or is_leadership %}<th>سعر الشراء</th>{% endif %}
                 <th>سعر البيع</th>
                 {% if period_data %}
                 <th>الرصيد الافتتاحي</th>
@@ -118,7 +118,7 @@
                     <span class="badge" style="background:#f1f5f9; color:#475569; padding: 4px 8px; border-radius: 4px;">{{ p.color.name|default:"-" }}</span>
                     <span class="badge" style="background:#f1f5f9; color:#475569; padding: 4px 8px; border-radius: 4px;">{{ p.size.name|default:"-" }}</span>
                 </td>
-                <td>{{ p.cost_price }}</td>
+                {% if user.is_superuser or is_leadership %}<td>{{ p.cost_price }}</td>{% endif %}
                 <td>{{ p.selling_price }}</td>
                 
                 {% if period_data %}
