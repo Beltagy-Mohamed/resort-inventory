@@ -3177,7 +3177,7 @@ html[data-theme="dark"] .mobile-hamburger {
     bottom: 0;
     background: rgba(0,0,0,0.6);
     z-index: 9998;
-    backdrop-filter: blur(2px);
+    /* backdrop-filter: blur(2px); removed due to Android WebView rendering glitch */
 }
 
 @media (max-width: 900px) {
@@ -3503,6 +3503,7 @@ body {
 }
 
 .sidebar-menu::-webkit-scrollbar { display: none; }
+
 
 
 

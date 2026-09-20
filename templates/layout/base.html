@@ -17,7 +17,7 @@
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <title>{% block title %}إدارة المخازن{% endblock %}</title>
 
-    <link rel="stylesheet" href="{% static 'css/base.css' %}?v=8">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}?v=9">
 {% block extra_css %}
 {% endblock %}
 
@@ -31,13 +31,13 @@
         right: -320px !important;
         left: auto !important;
         z-index: 999999 !important;
-        height: 100vh !important;
-        max-height: 100vh !important;
+        height: 100% !important;
+        max-height: 100% !important;
         width: 280px !important;
         margin: 0 !important;
         padding: 0 !important;
         border-radius: 0 !important;
-        transition: right 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        transition: none !important;
         transform: none !important;
         overflow-y: auto !important;
     }
@@ -47,7 +47,7 @@
     html[dir="ltr"] aside.sidebar {
         left: -320px !important;
         right: auto !important;
-        transition: left 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        transition: none !important;
     }
     html[dir="ltr"] body.sidebar-open aside.sidebar {
         left: 0 !important;
@@ -105,11 +105,13 @@
     </div>
 {% block extra_js %}
 {% endblock %}
-<script src="{% static 'js/layout.js' %}?v=8"></script>
+<script src="{% static 'js/layout.js' %}?v=9"></script>
     <div class="sidebar-overlay" id="sidebar-overlay"></div>
 </body>
 
 </html>
+
+
 
 
 
