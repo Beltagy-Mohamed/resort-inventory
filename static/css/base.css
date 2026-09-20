@@ -3495,3 +3495,6 @@ body {
 [data-theme="dark"] .text-muted {
     color: var(--text-muted) !important;
 }
+
+.sidebar-menu::-webkit-scrollbar { display: none; }
+
