@@ -103,7 +103,7 @@ def import_stock_excel(request):
                 partner_obj = None
                 if partner_name:
                     from inventory.models import Partner
-                    partner_obj, _ = Partner.all_objects.get_or_create(name=partner_name, defaults={'type': 'supplier'})
+                    partner_obj, _ = Partner.all_objects.get_or_create(name=partner_name, defaults={'partner_type': 'SUPPLIER'})
 
                 
                 cat_obj = None
