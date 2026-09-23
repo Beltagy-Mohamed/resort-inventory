@@ -48,7 +48,7 @@ class ProductForm(StripWhitespaceMixin, forms.ModelForm):
         fields = [
             "name", "category", "color", "size",
             "cost_price", "selling_price", "quantity", 
-            "minimum_stock", "is_leadership_restricted", "description"
+            "target_quantity", "minimum_stock", "is_leadership_restricted", "description"
         ]
         labels = {
             "name": "اسم المنتج",

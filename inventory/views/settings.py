@@ -100,9 +100,8 @@ def import_stock_excel(request):
             for i, row in enumerate(rows):
                 barcode = str(row[0]).strip() if row[0] else None
                 name = str(row[1]).strip() if row[1] else (barcode or "بدون اسم")
-                cat_name = str(row[2]).strip() if len(row) > 2 and row[2] else None
-                
                 try:
+                    target_qty = int(row[2]) if len(row) > 2 and row[2] else 0
                     supplied = int(row[3]) if len(row) > 3 and row[3] else 0
                     remaining = int(row[4]) if len(row) > 4 and row[4] else 0
                 except (ValueError, TypeError):
@@ -111,13 +110,12 @@ def import_stock_excel(request):
                     
                 part_name = str(row[5]).strip() if len(row) > 5 and row[5] else None
                 
-                if cat_name: category_names.add(cat_name)
                 if part_name: partner_names.add(part_name)
                 
                 product_data.append({
                     'barcode': barcode,
                     'name': name,
-                    'category': cat_name,
+                    'target_quantity': target_qty,
                     'supplied': supplied,
                     'remaining': remaining,
                     'partner': part_name
@@ -127,13 +125,7 @@ def import_stock_excel(request):
             from inventory.models import Stock, Partner
             
             with transaction.atomic():
-                # --- 3. Bulk Create Categories & Partners ---
-                existing_cats = {c.name: c for c in Category.objects.filter(name__in=category_names)}
-                new_cats = [Category(name=c) for c in category_names if c not in existing_cats]
-                if new_cats:
-                    Category.objects.bulk_create(new_cats)
-                    existing_cats.update({c.name: c for c in Category.objects.filter(name__in=category_names)})
-                
+                # --- 3. Bulk Create Partners ---
                 existing_parts = {p.name: p for p in Partner.all_objects.filter(name__in=partner_names)}
                 new_parts = [Partner(name=p, partner_type='SUPPLIER') for p in partner_names if p not in existing_parts]
                 if new_parts:
@@ -154,12 +146,15 @@ def import_stock_excel(request):
                         new_p = Product(
                             name=d['name'],
                             barcode=d['barcode'],
-                            category=existing_cats.get(d['category']),
+                            target_quantity=d['target_quantity'],
                             quantity=0
                         )
                         new_products.append(new_p)
                         # Add temporarily to prevent duplicates in same file
                         existing_prods_by_name[d['name']] = new_p
+                    else:
+                        p.target_quantity = d['target_quantity']
+                        # We don't overwrite barcode here based on user request "الكود مربوط بالمنتج ميتغيرش نهائيا"
                 
                 if new_products:
                     Product.objects.bulk_create(new_products)
@@ -186,32 +181,17 @@ def import_stock_excel(request):
                             warehouse=warehouse, partner=part_obj, notes='استيراد مخزون (ما تم توريده)'
                         ))
                     
-                    if d['remaining'] < d['supplied']:
-                        transactions_to_create.append(InventoryTransaction(
-                            product=p, transaction_type='OUT', quantity=d['supplied'] - d['remaining'],
-                            warehouse=warehouse, notes='استيراد مخزون (تسوية المتبقي)'
-                        ))
-                    elif d['remaining'] > d['supplied']:
-                        transactions_to_create.append(InventoryTransaction(
-                            product=p, transaction_type='IN', quantity=d['remaining'] - d['supplied'],
-                            warehouse=warehouse, notes='استيراد مخزون (تسوية زيادة المتبقي)'
-                        ))
-                        
-                    # Calculate new stock for this warehouse
-                    # We just override the stock quantity with "remaining" since it's an initial load
                     stock = existing_stocks.get(p.id)
                     old_qty = 0
                     if stock:
                         old_qty = stock.quantity
-                        stock.quantity = d['remaining']
+                        stock.quantity += d['supplied']
                         stocks_to_update.append(stock)
                     else:
-                        new_stock = Stock(product=p, warehouse=warehouse, quantity=d['remaining'])
+                        new_stock = Stock(product=p, warehouse=warehouse, quantity=d['supplied'])
                         stocks_to_create.append(new_stock)
                         existing_stocks[p.id] = new_stock
-                        
-                    # Also update global product quantity
-                    p.quantity = (p.quantity or 0) + (d['remaining'] - old_qty)
+                    p.quantity = (p.quantity or 0) + d['supplied']
                 
                 # --- 6. Execute Bulk Operations ---
                 if transactions_to_create:

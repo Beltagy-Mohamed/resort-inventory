@@ -59,7 +59,7 @@
             {% endfor %}
         </select>
         
-        <select name="warehouse">
+        <select name="warehouse" onchange="this.form.submit()">
             <option value="">كل المخازن</option>
             {% for w in warehouses %}
             <option value="{{ w.id }}" {% if warehouse_id == w.id|stringformat:"s" %}selected{% endif %}>{{ w.name }}</option>
@@ -93,29 +93,17 @@
 
 <div class="table-container">
     <table class="products-table">
-        <thead>
-            <tr>
-                <th>الكود</th>
-                <th>اسم المنتج</th>
-                <th>التصنيف</th>
-                {% if user.is_superuser or is_leadership %}<th>سعر الشراء</th>{% endif %}
-                <th>سعر البيع</th>
-                {% if period_data %}
-                <th>الرصيد الافتتاحي</th>
-                <th>الوارد</th>
-                <th>المنصرف</th>
-                <th>الرصيد الختامي</th>
-                {% else %}
-                <th>ما تم توريده</th>
-                <th>المتبقي (الكمية)</th>
-                <th>الحالة</th>
-                <th title="الرصيد قبل آخر حركة">الأساسي</th>
-                <th title="كمية آخر حركة مضافة أو منصرفة">المضاف</th>
-                <th title="الرصيد بعد آخر حركة">الإجمالي</th>
-                {% endif %}
-                <th>إجراءات</th>
-            </tr>
-        </thead>
+    <thead>
+        <tr>
+            <th>الكود</th>
+            <th>اسم الصنف</th>
+            <th>التنميط</th>
+            <th>ما تم توريده</th>
+            <th>المتبقي الحالة</th>
+            <th>اسم الشركة</th>
+            <th>الإجراءات</th>
+        </tr>
+    </thead>
         <tbody>
             {% for p in page_obj %}
             <tr>

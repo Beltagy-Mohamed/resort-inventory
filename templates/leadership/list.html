@@ -32,7 +32,7 @@
             value="{{ search }}">
 
         
-        <select name="warehouse">
+        <select name="warehouse" onchange="this.form.submit()">
             <option value="">كل المخازن</option>
             {% for w in warehouses %}
             <option value="{{ w.id }}" {% if warehouse_id == w.id|stringformat:"s" %}selected{% endif %}>{{ w.name }}</option>
@@ -74,28 +74,16 @@
 
 <div class="table-container">
 <table class="products-table">
-
     <thead>
-
         <tr>
-
-            
-
-            <th>اسم المنتج</th>
-
-            <th>الفئة</th>
-
-            <th>سعر الشراء</th><th>سعر البيع</th>
-
+            <th>الكود</th>
+            <th>اسم الصنف</th>
+            <th>التنميط</th>
             <th>ما تم توريده</th>
-                <th>المتبقي (الكمية)</th>
-
-            <th>حالة المخزون</th>
-
+            <th>المتبقي الحالة</th>
+            <th>اسم الشركة</th>
             <th>الإجراءات</th>
-
         </tr>
-
     </thead>
 
     <tbody>

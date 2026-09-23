@@ -2,7 +2,7 @@
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.paginator import Paginator
 from django.db.models.deletion import ProtectedError
-from django.db.models import Q, F, Sum
+from django.db.models import Q, F, Sum, Subquery, OuterRef, IntegerField
 from django.db.models.functions import Coalesce
 from django.shortcuts import (
     get_object_or_404,
@@ -26,11 +26,32 @@ def products_list(request):
 
     products = Product.objects.select_related("category", "color", "size")
     
+    from inventory.models import InventoryTransaction
+    latest_supplier_sq = InventoryTransaction.all_objects.filter(
+        product=OuterRef('pk'), transaction_type='IN', partner__isnull=False
+    ).order_by('-created_at').values('partner__name')[:1]
+
     if warehouse_id:
-        products = products.filter(stocks__warehouse_id=warehouse_id)
+        supplied_expr = Coalesce(Sum('transactions__quantity', filter=Q(transactions__transaction_type='IN', transactions__warehouse_id=warehouse_id)), 0)
+        products = products.filter(stocks__warehouse_id=warehouse_id).annotate(
+            display_quantity=Coalesce(Sum('stocks__quantity', filter=Q(stocks__warehouse_id=warehouse_id)), 0),
+            total_supplied=supplied_expr,
+            remaining_target=F('target_quantity') - supplied_expr,
+            latest_supplier=Subquery(latest_supplier_sq)
+        )
+    else:
+        supplied_expr = Coalesce(Sum('transactions__quantity', filter=Q(transactions__transaction_type='IN')), 0)
         products = products.annotate(
-            total_supplied=Coalesce(Sum("transactions__quantity", filter=Q(transactions__transaction_type="IN", transactions__warehouse_id=warehouse_id)), 0),
-            display_quantity=Coalesce(Sum("stocks__quantity", filter=Q(stocks__warehouse_id=warehouse_id)), 0)
+            display_quantity=F('quantity'),
+            total_supplied=supplied_expr,
+            remaining_target=F('target_quantity') - supplied_expr,
+            latest_supplier=Subquery(latest_supplier_sq)
+        )
+    else:
+        products = products.annotate(
+            display_quantity=F('quantity'),
+            total_supplied=Coalesce(Sum('transactions__quantity', filter=Q(transactions__transaction_type='IN')), 0),
+            latest_supplier=Subquery(latest_supplier_sq)
         )
     else:
         products = products.annotate(
@@ -174,21 +195,27 @@ def add_product(request):
             
             # Create initial stock transaction if quantity > 0
             if product.quantity > 0:
-                from inventory.models import InventoryTransaction, Warehouse
-                from inventory.services.inventory_service import InventoryService
-                
-                selected_warehouse = form.cleaned_data.get('warehouse')
-                if not selected_warehouse:
-                    selected_warehouse = Warehouse.objects.first()
-                    
-                if selected_warehouse:
-                    trans = InventoryTransaction(
-                        product=product,
-                        transaction_type='IN',
-                        quantity=product.quantity,
-                        warehouse=selected_warehouse,
-                        notes='Ø±ØµÙŠØ¯ Ø§ÙØªØªØ§Ø­ÙŠ (Ø¹Ù†Ø¯ Ø¥Ø¶Ø§ÙØ© Ø§Ù„Ù…Ù†ØªØ¬)'
-                    )
+                from inventory.models import InventoryTransaction
+    latest_supplier_sq = InventoryTransaction.all_objects.filter(
+        product=OuterRef('pk'), transaction_type='IN', partner__isnull=False
+    ).order_by('-created_at').values('partner__name')[:1]
+
+    if warehouse_id:
+        supplied_expr = Coalesce(Sum('transactions__quantity', filter=Q(transactions__transaction_type='IN', transactions__warehouse_id=warehouse_id)), 0)
+        products = products.filter(stocks__warehouse_id=warehouse_id).annotate(
+            display_quantity=Coalesce(Sum('stocks__quantity', filter=Q(stocks__warehouse_id=warehouse_id)), 0),
+            total_supplied=supplied_expr,
+            remaining_target=F('target_quantity') - supplied_expr,
+            latest_supplier=Subquery(latest_supplier_sq)
+        )
+    else:
+        supplied_expr = Coalesce(Sum('transactions__quantity', filter=Q(transactions__transaction_type='IN')), 0)
+        products = products.annotate(
+            display_quantity=F('quantity'),
+            total_supplied=supplied_expr,
+            remaining_target=F('target_quantity') - supplied_expr,
+            latest_supplier=Subquery(latest_supplier_sq)
+        )
                     InventoryService.process(trans)
 
             messages.success(
