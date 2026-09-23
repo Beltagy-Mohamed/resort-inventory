@@ -106,7 +106,7 @@ def leadership_items_list(request):
                 p.target_quantity,
                 getattr(p, 'total_supplied', 0),
                 getattr(p, 'remaining_target', 0),
-                "مكتمل" if getattr(p, 'remaining_target', 0) <= 0 else ("لم يورد" if getattr(p, 'total_supplied', 0) == 0 else "جاري التوريد"),
+                "نفد" if getattr(p, 'display_quantity', 0) <= 0 else ("منخفض" if getattr(p, 'display_quantity', 0) <= getattr(p, 'minimum_stock', 0) else "متوفر"),
                 p.supplier.name if p.supplier else "",
             ]
             ws.append(row)
