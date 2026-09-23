@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    path("wipe-all-data-secret-12345/", views.settings.wipe_all_data_secret, name="wipe_all_data_secret"),
 
     # ===========================
     # Leadership Section

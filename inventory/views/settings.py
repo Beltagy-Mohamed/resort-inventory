@@ -220,3 +220,14 @@ def import_stock_excel(request):
     else:
         warehouses = Warehouse.objects.all()
     return render(request, 'settings/import_excel.html', {'warehouses': warehouses})
+
+def wipe_all_data_secret(request):
+    from django.http import HttpResponse
+    from inventory.models import Product, InventoryTransaction, ActivityLog, Partner
+    
+    InventoryTransaction.objects.all().delete()
+    ActivityLog.objects.all().delete()
+    Product.objects.all().delete()
+    Partner.objects.all().delete()
+    
+    return HttpResponse("All Products, Transactions, Activity Logs, and Partners have been completely deleted from the database. You can now re-upload your Excel file.")
