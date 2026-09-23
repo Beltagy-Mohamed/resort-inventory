@@ -27,14 +27,14 @@ def products_list(request):
     products = Product.objects.select_related("category", "color", "size")
     
     if warehouse_id:
-        products = products.filter(stock__warehouse_id=warehouse_id)
+        products = products.filter(stocks__warehouse_id=warehouse_id)
         products = products.annotate(
-            total_supplied=Coalesce(Sum("inventorytransaction__quantity", filter=Q(inventorytransaction__transaction_type="IN", inventorytransaction__warehouse_id=warehouse_id)), 0),
-            display_quantity=Coalesce(Sum("stock__quantity", filter=Q(stock__warehouse_id=warehouse_id)), 0)
+            total_supplied=Coalesce(Sum("transactions__quantity", filter=Q(transactions__transaction_type="IN", transactions__warehouse_id=warehouse_id)), 0),
+            display_quantity=Coalesce(Sum("stocks__quantity", filter=Q(stocks__warehouse_id=warehouse_id)), 0)
         )
     else:
         products = products.annotate(
-            total_supplied=Coalesce(Sum("inventorytransaction__quantity", filter=Q(inventorytransaction__transaction_type="IN")), 0),
+            total_supplied=Coalesce(Sum("transactions__quantity", filter=Q(transactions__transaction_type="IN")), 0),
             display_quantity=F("quantity")
         )
 
