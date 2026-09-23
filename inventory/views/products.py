@@ -47,17 +47,6 @@ def products_list(request):
             remaining_target=F('target_quantity') - supplied_expr,
             latest_supplier=Subquery(latest_supplier_sq)
         )
-    else:
-        products = products.annotate(
-            display_quantity=F('quantity'),
-            total_supplied=Coalesce(Sum('transactions__quantity', filter=Q(transactions__transaction_type='IN')), 0),
-            latest_supplier=Subquery(latest_supplier_sq)
-        )
-    else:
-        products = products.annotate(
-            total_supplied=Coalesce(Sum("transactions__quantity", filter=Q(transactions__transaction_type="IN")), 0),
-            display_quantity=F("quantity")
-        )
 
     if search:
         products = products.filter(Q(name__icontains=search) | Q(barcode__icontains=search))
@@ -107,20 +96,26 @@ def products_list(request):
         ws = wb.active
         ws.title = "المنتجات"
         
-        headers = ["الكود", "اسم الصنف", "التصنيف", "اللون", "المقاس", "سعر التكلفة", "سعر البيع", "ما تم توريده", "المتبقي (الكمية)"]
+        headers = [
+            "الكود",
+            "اسم الصنف",
+            "التنميط",
+            "ما تم توريده",
+            "المتبقي",
+            "الحالة",
+            "اسم الشركة",
+        ]
         ws.append(headers)
         
         for p in products:
             ws.append([
-                p.barcode or "-",
+                p.barcode or "",
                 p.name,
-                p.category.name if p.category else "-",
-                p.color.name if p.color else "-",
-                p.size.name if p.size else "-",
-                p.cost_price,
-                p.selling_price,
-                p.total_supplied,
-                p.quantity
+                p.target_quantity,
+                getattr(p, 'total_supplied', 0),
+                getattr(p, 'remaining_target', 0),
+                "مكتمل" if getattr(p, 'remaining_target', 0) <= 0 else ("لم يورد" if getattr(p, 'total_supplied', 0) == 0 else "جاري التوريد"),
+                getattr(p, 'latest_supplier', "") or "",
             ])
             
         response = HttpResponse(content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
@@ -196,27 +191,13 @@ def add_product(request):
             # Create initial stock transaction if quantity > 0
             if product.quantity > 0:
                 from inventory.models import InventoryTransaction
-    latest_supplier_sq = InventoryTransaction.all_objects.filter(
-        product=OuterRef('pk'), transaction_type='IN', partner__isnull=False
-    ).order_by('-created_at').values('partner__name')[:1]
-
-    if warehouse_id:
-        supplied_expr = Coalesce(Sum('transactions__quantity', filter=Q(transactions__transaction_type='IN', transactions__warehouse_id=warehouse_id)), 0)
-        products = products.filter(stocks__warehouse_id=warehouse_id).annotate(
-            display_quantity=Coalesce(Sum('stocks__quantity', filter=Q(stocks__warehouse_id=warehouse_id)), 0),
-            total_supplied=supplied_expr,
-            remaining_target=F('target_quantity') - supplied_expr,
-            latest_supplier=Subquery(latest_supplier_sq)
-        )
-    else:
-        supplied_expr = Coalesce(Sum('transactions__quantity', filter=Q(transactions__transaction_type='IN')), 0)
-        products = products.annotate(
-            display_quantity=F('quantity'),
-            total_supplied=supplied_expr,
-            remaining_target=F('target_quantity') - supplied_expr,
-            latest_supplier=Subquery(latest_supplier_sq)
-        )
-                    InventoryService.process(trans)
+                trans = InventoryTransaction(
+                    product=product,
+                    transaction_type="IN",
+                    quantity=product.quantity,
+                    notes="رصيد افتتاحي"
+                )
+                InventoryService.process(trans)
 
             messages.success(
             request,

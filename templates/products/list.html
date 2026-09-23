@@ -18,16 +18,16 @@
     
     <div>
         {% if is_leadership %}
-            <a href="{% url 'leadership_items_export' %}" class="btn-secondary" style="margin-inline-end: 10px;">
+            <button type="submit" form="search-form" name="export" value="xlsx" class="btn-secondary" style="margin-inline-end: 10px;">
                 <i class="bi bi-file-earmark-excel"></i> تصدير Excel
-            </a>
+            </button>
             <a href="{% url 'leadership_item_add' %}" class="btn-primary">
                 <i class="bi bi-plus"></i> إضافة صنف
             </a>
         {% else %}
-            <a href="?search={{ search }}&category={{ category_id }}&color={{ color_id }}&size={{ size_id }}&status={{ status }}&export=xlsx" class="btn-secondary" style="margin-inline-end: 10px;">
+            <button type="submit" form="search-form" name="export" value="xlsx" class="btn-secondary" style="margin-inline-end: 10px;">
                 <i class="bi bi-file-earmark-excel"></i> تصدير Excel
-            </a>
+            </button>
             <a href="{% url 'add_product' %}" class="btn-primary">
                 <i class="bi bi-plus"></i> إضافة صنف
             </a>
@@ -36,7 +36,7 @@
 </div>
 
 <div class="search-bar">
-    <form method="get">
+    <form method="get" id="search-form">
         <input type="text" name="search" placeholder="البحث عن منتج بالاسم أو الكود..." value="{{ search }}">
         
         {% if not is_leadership %}
@@ -99,7 +99,8 @@
             <th>اسم الصنف</th>
             <th>التنميط</th>
             <th>ما تم توريده</th>
-            <th>المتبقي الحالة</th>
+            <th>المتبقي</th>
+            <th>الحالة</th>
             <th>اسم الشركة</th>
             <th>الإجراءات</th>
         </tr>

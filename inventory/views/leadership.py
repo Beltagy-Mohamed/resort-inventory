@@ -60,6 +60,43 @@ def leadership_items_list(request):
                     'closing': closing
                 }
 
+
+    if request.GET.get("export") == "xlsx":
+        import openpyxl
+        from django.http import HttpResponse
+        
+        wb = openpyxl.Workbook()
+        ws = wb.active
+        ws.title = "المقرات والقيادات"
+        
+        headers = [
+            "الكود",
+            "اسم الصنف",
+            "التنميط",
+            "ما تم توريده",
+            "المتبقي",
+            "الحالة",
+            "اسم الشركة",
+        ]
+        ws.append(headers)
+        
+        for p in products:
+            row = [
+                p.barcode or "",
+                p.name,
+                p.target_quantity,
+                getattr(p, 'total_supplied', 0),
+                getattr(p, 'remaining_target', 0),
+                "مكتمل" if getattr(p, 'remaining_target', 0) <= 0 else ("لم يورد" if getattr(p, 'total_supplied', 0) == 0 else "جاري التوريد"),
+                getattr(p, 'latest_supplier', "") or "",
+            ]
+            ws.append(row)
+            
+        response = HttpResponse(content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        response["Content-Disposition"] = 'attachment; filename="leadership_items.xlsx"'
+        wb.save(response)
+        return response
+
     paginator = Paginator(products, 12)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
