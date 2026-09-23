@@ -73,18 +73,7 @@
         </select>
         {% endif %}
         
-        <!-- Period filter for everyone -->
-        <select name="period" id="period-select">
-            <option value="">الرصيد الحالي فقط</option>
-            <option value="week" {% if period == 'week' %}selected{% endif %}>آخر 7 أيام</option>
-            <option value="month" {% if period == 'month' %}selected{% endif %}>آخر 30 يوم</option>
-            <option value="custom" {% if period == 'custom' %}selected{% endif %}>فترة مخصصة</option>
-        </select>
-        
-        <input type="date" name="start_date" value="{{ start_date }}" class="custom-date" style="display:{% if period == 'custom' %}block{% else %}none{% endif %};" placeholder="من تاريخ">
-        <input type="date" name="end_date" value="{{ end_date }}" class="custom-date" style="display:{% if period == 'custom' %}block{% else %}none{% endif %};" placeholder="إلى تاريخ">
-
-        <button type="submit">بحث و تصفية</button>
+        <button type="submit" class="btn-primary" style="margin-top:10px;">بحث و تصفية</button>
         {% if search or category_id or color_id or size_id or status or period %}
         <a href="?{% if request.GET %}{% endif %}" class="btn-secondary" style="padding: 9px 12px; font-size: 13.5px;"><i class="bi bi-x-circle"></i> مسح</a>
         {% endif %}
@@ -106,75 +95,39 @@
         </tr>
     </thead>
         <tbody>
-            {% for p in page_obj %}
-            <tr>
-                <td>#{{ p.id }} {% if p.barcode %}<br><small style="color:#64748b;">{{ p.barcode }}</small>{% endif %}</td>
-                <td><strong>{{ p.name }}</strong></td>
-                <td>
-                    <span class="badge" style="background:#e0f2fe; color:#0369a1; padding: 4px 8px; border-radius: 4px;">{{ p.category.name|default:"-" }}</span>
-                    <span class="badge" style="background:#f1f5f9; color:#475569; padding: 4px 8px; border-radius: 4px;">{{ p.color.name|default:"-" }}</span>
-                    <span class="badge" style="background:#f1f5f9; color:#475569; padding: 4px 8px; border-radius: 4px;">{{ p.size.name|default:"-" }}</span>
-                </td>
-                {% if user.is_superuser or is_leadership %}<td>{{ p.cost_price }}</td>{% endif %}
-                <td>{{ p.selling_price }}</td>
-                
-                {% if period_data %}
-                    {% with data=period_data|dict_get:p.id %}
-                    <td style="color:#64748b; font-weight:600;">{{ data.opening }}</td>
-                    <td style="color:#10b981; font-weight:600;">+{{ data.added }}</td>
-                    <td style="color:#ef4444; font-weight:600;">-{{ data.issued }}</td>
-                    <td style="color:#0ea5e9; font-weight:bold; font-size: 1.1em;">{{ data.closing }}</td>
-                    {% endwith %}
+    {% for p in page_obj %}
+        <tr>
+            <td>{{ p.barcode|default:"-" }}</td>
+            <td><strong>{{ p.name }}</strong></td>
+            <td>{{ p.target_quantity }}</td>
+            <td>{{ p.total_supplied }}</td>
+            <td>{{ p.remaining_target }}</td>
+            <td>
+                {% if p.remaining_target <= 0 %}
+                    <span class="badge" style="background-color: #198754; color: white;">مكتمل</span>
+                {% elif p.total_supplied == 0 %}
+                    <span class="badge" style="background-color: #dc3545; color: white;">لم يورد</span>
                 {% else %}
-                    <td>{{ p.total_supplied }}</td>
-                    <td><strong class="{% if p.display_quantity == 0 %}out-of-stock{% endif %}">{{ p.display_quantity }}</strong></td>
-                    <td>
-                        {% if p.stock_status == 'available' %}
-                            <span class="status-badge available" style="background: #e3f5eb; color: #248a3d; padding: 4px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: bold;"><i class="fas fa-check-circle me-1"></i> متوفر</span>
-                        {% elif p.stock_status == 'low' %}
-                            <span class="status-badge low-stock" style="background: #fff8e5; color: #b25000; padding: 4px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: bold;"><i class="fas fa-exclamation-triangle me-1"></i> منخفض</span>
-                        {% else %}
-                            <span class="status-badge out-of-stock" style="background: #ffe5e5; color: #ff3b30; padding: 4px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: bold;"><i class="bi bi-x-lg-circle me-1"></i> نفد</span>
-                        {% endif %}
-                    </td>
-                    {% with qlog=quantity_log_map|dict_get:p.id %}
-                    <td style="color:#64748b; font-size:0.85rem; text-align:center;">
-                        {% if qlog %}{{ qlog.old_quantity|default:"-" }}{% else %}<span style="color:#cbd5e1">—</span>{% endif %}
-                    </td>
-                    <td style="text-align:center; font-weight:bold;">
-                        {% if qlog %}
-                            {% if qlog.diff_quantity == "-" %}
-                                <span style="color:#cbd5e1">—</span>
-                            {% elif "+" in qlog.diff_quantity %}
-                                <span style="color:#10b981;">{{ qlog.diff_quantity }}</span>
-                            {% else %}
-                                <span style="color:#ef4444;">{{ qlog.diff_quantity }}</span>
-                            {% endif %}
-                        {% else %}<span style="color:#cbd5e1">—</span>{% endif %}
-                    </td>
-                    <td style="color:#0ea5e9; font-weight:bold; font-size:0.95rem; text-align:center;">
-                        {% if qlog %}{{ qlog.new_quantity|default:"-" }}{% else %}<span style="color:#cbd5e1">—</span>{% endif %}
-                    </td>
-                    {% endwith %}
+                    <span class="badge" style="background-color: #ffc107; color: black;">جاري التوريد</span>
                 {% endif %}
-                
-                <td>
-                    {% if perms.inventory.change_product %}
-<a href="{% if is_leadership %}{% url 'leadership_item_edit' p.pk %}{% else %}{% url 'edit_product' p.pk %}{% endif %}" class="action-btn edit-btn" title="تعديل">
-                        <i class="bi bi-pencil"></i>
-                    </a>
-{% endif %}
-                </td>
-            </tr>
-            {% empty %}
-            <tr>
-                <td colspan="7" style="text-align: center; padding: 40px; color: #94a3b8;">
-                    <i class="bi bi-box-seam" style="font-size: 3rem; display: block; margin-bottom: 15px;"></i>
-                    لم يتم العثور على أي منتجات
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
+            </td>
+            <td>{{ p.supplier.name|default:"-" }}</td>
+            <td class="actions">
+                {% if is_leadership %}
+                    <a href="{% url 'leadership_item_detail' p.id %}" class="btn-icon btn-info" title="عرض التفاصيل"><i class="bi bi-eye"></i></a>
+                    <a href="{% url 'leadership_item_edit' p.id %}" class="btn-icon btn-primary" title="تعديل"><i class="bi bi-pencil"></i></a>
+                    <a href="{% url 'leadership_item_delete' p.id %}" class="btn-icon btn-danger" title="حذف"><i class="bi bi-trash"></i></a>
+                {% else %}
+                    <a href="{% url 'product_detail' p.id %}" class="btn-icon btn-info" title="عرض التفاصيل"><i class="bi bi-eye"></i></a>
+                    <a href="{% url 'edit_product' p.id %}" class="btn-icon btn-primary" title="تعديل"><i class="bi bi-pencil"></i></a>
+                    <a href="{% url 'delete_product' p.id %}" class="btn-icon btn-danger" title="حذف"><i class="bi bi-trash"></i></a>
+                {% endif %}
+            </td>
+        </tr>
+    {% empty %}
+        <tr><td colspan="8" style="text-align: center; padding: 20px;">لا توجد منتجات مطابقة للبحث.</td></tr>
+    {% endfor %}
+</tbody>
     </table>
 </div>
 

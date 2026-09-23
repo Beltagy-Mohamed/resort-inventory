@@ -175,6 +175,10 @@ def import_stock_excel(request):
                     p = existing_prods_by_barcode.get(d['barcode']) or existing_prods_by_name.get(d['name'])
                     part_obj = existing_parts.get(d['partner'])
                     
+                    if part_obj:
+                        p.supplier = part_obj
+                        p.save(update_fields=['supplier'])
+
                     if d['supplied'] > 0:
                         transactions_to_create.append(InventoryTransaction(
                             product=p, transaction_type='IN', quantity=d['supplied'],

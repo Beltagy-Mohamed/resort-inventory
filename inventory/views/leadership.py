@@ -27,8 +27,27 @@ def log_leadership_access(request, action, product=None):
 @leader_or_leaderstaff_required
 def leadership_items_list(request):
     log_leadership_access(request, "VIEW_LIST")
-    products = Product.all_objects.filter(is_leadership_restricted=True).annotate(total_supplied=Coalesce(Sum("transactions__quantity", filter=Q(transactions__transaction_type="IN")), 0)).order_by("-id")
+    products = Product.all_objects.select_related("supplier").filter(is_leadership_restricted=True).order_by("-id")
     search = request.GET.get("search", "")
+    warehouse_id = request.GET.get("warehouse")
+    
+    from django.db.models import Subquery, OuterRef
+
+    if warehouse_id:
+        supplied_expr = Coalesce(Sum('transactions__quantity', filter=Q(transactions__transaction_type='IN', transactions__warehouse_id=warehouse_id)), 0)
+        products = products.filter(stocks__warehouse_id=warehouse_id).annotate(
+            display_quantity=Coalesce(Sum('stocks__quantity', filter=Q(stocks__warehouse_id=warehouse_id)), 0),
+            total_supplied=supplied_expr,
+            remaining_target=F('target_quantity') - supplied_expr
+        )
+    else:
+        supplied_expr = Coalesce(Sum('transactions__quantity', filter=Q(transactions__transaction_type='IN')), 0)
+        products = products.annotate(
+            display_quantity=F('quantity'),
+            total_supplied=supplied_expr,
+            remaining_target=F('target_quantity') - supplied_expr
+        )
+
     if search:
         products = products.filter(name__icontains=search)
 
@@ -88,7 +107,7 @@ def leadership_items_list(request):
                 getattr(p, 'total_supplied', 0),
                 getattr(p, 'remaining_target', 0),
                 "مكتمل" if getattr(p, 'remaining_target', 0) <= 0 else ("لم يورد" if getattr(p, 'total_supplied', 0) == 0 else "جاري التوريد"),
-                getattr(p, 'latest_supplier', "") or "",
+                p.supplier.name if p.supplier else "",
             ]
             ws.append(row)
             
@@ -122,6 +141,8 @@ def leadership_items_list(request):
         "end_date": end_date,
         "period_data": period_data,
         "quantity_log_map": quantity_log_map,
+        "warehouses": Warehouse.objects.all(),
+        "warehouse_id": warehouse_id,
     })
 
 @leader_or_leaderstaff_required
@@ -198,7 +219,7 @@ def leadership_item_detail(request, pk):
 @leader_or_leaderstaff_required
 def leadership_dashboard(request):
     log_leadership_access(request, "VIEW_DASHBOARD")
-    products = Product.all_objects.filter(is_leadership_restricted=True)
+    products = Product.all_objects.select_related("supplier").filter(is_leadership_restricted=True)
     from django.db.models import Sum, F
     total_stock = products.aggregate(Sum('quantity'))['quantity__sum'] or 0
     low_stock = products.filter(quantity__lte=F('minimum_stock'), quantity__gt=0).count()
@@ -247,7 +268,7 @@ def leadership_transactions_list(request):
 @leader_or_leaderstaff_required
 def leadership_report_print(request):
     log_leadership_access(request, "PRINT_REPORT")
-    products = Product.all_objects.filter(is_leadership_restricted=True).order_by('category', 'name')
+    products = Product.all_objects.select_related("supplier").filter(is_leadership_restricted=True).order_by('category', 'name')
     
     try:
         from weasyprint import HTML
@@ -268,7 +289,7 @@ def leadership_items_export(request):
     import openpyxl
     from django.http import HttpResponse
     
-    products = Product.all_objects.filter(is_leadership_restricted=True)
+    products = Product.all_objects.select_related("supplier").filter(is_leadership_restricted=True)
     wb = openpyxl.Workbook()
     ws = wb.active
     ws.title = "Leadership Items"

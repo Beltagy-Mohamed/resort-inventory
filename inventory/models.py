@@ -128,6 +128,7 @@ class Product(models.Model):
     quantity      = models.PositiveIntegerField(default=0)
     minimum_stock = models.PositiveIntegerField(default=5)
     target_quantity = models.PositiveIntegerField(default=0)
+    supplier = models.ForeignKey("Partner", on_delete=models.SET_NULL, null=True, blank=True, verbose_name="الشركة الموردة", related_name="supplied_products")
     barcode     = models.CharField(max_length=50, blank=True, null=True, db_index=True)
     description = models.TextField(blank=True)
     created_at  = models.DateTimeField(auto_now_add=True)

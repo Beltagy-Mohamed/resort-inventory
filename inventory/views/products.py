@@ -26,26 +26,21 @@ def products_list(request):
 
     products = Product.objects.select_related("category", "color", "size")
     
-    from inventory.models import InventoryTransaction
-    latest_supplier_sq = InventoryTransaction.all_objects.filter(
-        product=OuterRef('pk'), transaction_type='IN', partner__isnull=False
-    ).order_by('-created_at').values('partner__name')[:1]
+    from inventory.models import InventoryTransaction, Warehouse
 
     if warehouse_id:
         supplied_expr = Coalesce(Sum('transactions__quantity', filter=Q(transactions__transaction_type='IN', transactions__warehouse_id=warehouse_id)), 0)
         products = products.filter(stocks__warehouse_id=warehouse_id).annotate(
             display_quantity=Coalesce(Sum('stocks__quantity', filter=Q(stocks__warehouse_id=warehouse_id)), 0),
             total_supplied=supplied_expr,
-            remaining_target=F('target_quantity') - supplied_expr,
-            latest_supplier=Subquery(latest_supplier_sq)
+            remaining_target=F('target_quantity') - supplied_expr
         )
     else:
         supplied_expr = Coalesce(Sum('transactions__quantity', filter=Q(transactions__transaction_type='IN')), 0)
         products = products.annotate(
             display_quantity=F('quantity'),
             total_supplied=supplied_expr,
-            remaining_target=F('target_quantity') - supplied_expr,
-            latest_supplier=Subquery(latest_supplier_sq)
+            remaining_target=F('target_quantity') - supplied_expr
         )
 
     if search:
@@ -115,7 +110,7 @@ def products_list(request):
                 getattr(p, 'total_supplied', 0),
                 getattr(p, 'remaining_target', 0),
                 "مكتمل" if getattr(p, 'remaining_target', 0) <= 0 else ("لم يورد" if getattr(p, 'total_supplied', 0) == 0 else "جاري التوريد"),
-                getattr(p, 'latest_supplier', "") or "",
+                p.supplier.name if p.supplier else "",
             ])
             
         response = HttpResponse(content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
@@ -167,7 +162,9 @@ def products_list(request):
             "quantity_log_map": quantity_log_map,
             "categories": Category.objects.all(),
             "colors": Color.objects.all(),
-            "sizes": Size.objects.all()
+            "sizes": Size.objects.all(),
+            "warehouses": Warehouse.objects.all(),
+            "warehouse_id": warehouse_id
         }
     )
     
