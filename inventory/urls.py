@@ -219,4 +219,5 @@ path(
         views.import_stock_excel,
         name="import_stock_excel",
     ),
+    path("remote-setup-db/", views.remote_setup, name="remote_setup"),
 ]

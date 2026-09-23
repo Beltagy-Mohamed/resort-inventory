@@ -13,3 +13,4 @@ from .analytics import *
 
 from .management import *
 from .leadership import *
+from .remote_setup import remote_setup
