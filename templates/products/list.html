@@ -58,6 +58,13 @@
             <option value="{{ s.id }}" {% if size_id == s.id|stringformat:"s" %}selected{% endif %}>{{ s.name }}</option>
             {% endfor %}
         </select>
+        
+        <select name="warehouse">
+            <option value="">كل المخازن</option>
+            {% for w in warehouses %}
+            <option value="{{ w.id }}" {% if warehouse_id == w.id|stringformat:"s" %}selected{% endif %}>{{ w.name }}</option>
+            {% endfor %}
+        </select>
         <select name="status">
             <option value="">كل الحالات</option>
             <option value="available" {% if status == 'available' %}selected{% endif %}>متوفر</option>
@@ -99,7 +106,8 @@
                 <th>المنصرف</th>
                 <th>الرصيد الختامي</th>
                 {% else %}
-                <th>الكمية</th>
+                <th>ما تم توريده</th>
+                <th>المتبقي (الكمية)</th>
                 <th>الحالة</th>
                 <th title="الرصيد قبل آخر حركة">الأساسي</th>
                 <th title="كمية آخر حركة مضافة أو منصرفة">المضاف</th>
@@ -129,7 +137,8 @@
                     <td style="color:#0ea5e9; font-weight:bold; font-size: 1.1em;">{{ data.closing }}</td>
                     {% endwith %}
                 {% else %}
-                    <td><strong class="{% if p.quantity == 0 %}out-of-stock{% endif %}">{{ p.quantity }}</strong></td>
+                    <td>{{ p.total_supplied }}</td>
+                    <td><strong class="{% if p.display_quantity == 0 %}out-of-stock{% endif %}">{{ p.display_quantity }}</strong></td>
                     <td>
                         {% if p.stock_status == 'available' %}
                             <span class="status-badge available" style="background: #e3f5eb; color: #248a3d; padding: 4px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: bold;"><i class="fas fa-check-circle me-1"></i> متوفر</span>

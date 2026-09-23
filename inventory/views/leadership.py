@@ -1,3 +1,5 @@
+from django.db.models import Q, F, Sum
+from django.db.models.functions import Coalesce
 import logging
 from django.contrib import messages
 from django.core.paginator import Paginator
@@ -25,7 +27,7 @@ def log_leadership_access(request, action, product=None):
 @leader_or_leaderstaff_required
 def leadership_items_list(request):
     log_leadership_access(request, "VIEW_LIST")
-    products = Product.all_objects.filter(is_leadership_restricted=True).order_by("-id")
+    products = Product.all_objects.filter(is_leadership_restricted=True).annotate(total_supplied=Coalesce(Sum("inventorytransaction__quantity", filter=Q(inventorytransaction__transaction_type="IN")), 0)).order_by("-id")
     search = request.GET.get("search", "")
     if search:
         products = products.filter(name__icontains=search)

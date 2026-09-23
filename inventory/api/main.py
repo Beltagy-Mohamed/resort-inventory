@@ -16,9 +16,9 @@ from .sync        import router as sync_router
 from .leadership  import router as leadership_router
 
 api = NinjaAPI(
-    title       = "Resort Inventory API",
+    title       = "Ordinance API",
     version     = "1.0",
-    description = "Mobile API for Resort Inventory Management System",
+    description = "Mobile API for Ordinance Management System",
     docs_url    = "/docs",   # Swagger UI at /api/v1/docs
 )
 

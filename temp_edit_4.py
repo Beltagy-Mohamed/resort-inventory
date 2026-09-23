@@ -1,57 +1,10 @@
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
-from django.shortcuts import redirect, render
+import re
 
-from ..forms import SystemSettingsForm
-from ..models import SystemSettings
+path = r'E:\خاص مشروع\client_delivery\inventory\views\settings.py'
+with open(path, 'r', encoding='utf-8') as f:
+    c = f.read()
 
-
-@user_passes_test(lambda u: u.is_superuser)
-def system_settings(request):
-
-    settings_obj = SystemSettings.load()
-
-    if request.method == "POST":
-
-        form = SystemSettingsForm(
-            request.POST,
-            instance=settings_obj
-        )
-
-        if form.is_valid():
-
-            form.save()
-
-            messages.success(
-                request,
-                "تم حفظ الإعدادات بنجاح."
-            )
-
-            return redirect("system_settings")
-
-    else:
-
-        form = SystemSettingsForm(instance=settings_obj)
-
-    return render(
-        request,
-        "settings/edit.html",
-        {
-            "form": form
-        }
-    )
-
-import openpyxl
-from django.contrib import messages
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import user_passes_test
-from inventory.models import Product, Warehouse, InventoryTransaction, Category
-from inventory.services.inventory_service import InventoryService
-
-def superuser_required(user):
-    return user.is_superuser
-
-@user_passes_test(superuser_required, login_url='/')
+new_view = '''@user_passes_test(superuser_required, login_url='/')
 def import_stock_excel(request):
     """(B11) Excel import view for Superuser."""
     if request.method == 'POST':
@@ -91,20 +44,12 @@ def import_stock_excel(request):
                 name = str(row[1]).strip() if row[1] else (barcode or "بدون اسم")
                 category_name = str(row[2]).strip() if len(row) > 2 and row[2] else None
                 
-
                 try:
                     supplied = int(row[3]) if len(row) > 3 and row[3] else 0
                     remaining = int(row[4]) if len(row) > 4 and row[4] else 0
                 except (ValueError, TypeError):
                     messages.error(request, f'خطأ في السطر رقم {rows_processed + 2} (المنتج: {name}): تأكد من أن الكميات مكتوبة كأرقام فقط.')
                     return redirect('import_stock_excel')
-                
-                partner_name = str(row[5]).strip() if len(row) > 5 and row[5] else None
-                partner_obj = None
-                if partner_name:
-                    from inventory.models import Partner
-                    partner_obj, _ = Partner.all_objects.get_or_create(name=partner_name, defaults={'type': 'supplier'})
-
                 
                 cat_obj = None
                 if category_name:
@@ -137,7 +82,6 @@ def import_stock_excel(request):
                         transaction_type='IN',
                         quantity=supplied,
                         warehouse=warehouse,
-                        partner=partner_obj,
                         notes='استيراد مخزون (ما تم توريده)'
                     )
                     InventoryService.process(trans_in)
@@ -176,4 +120,10 @@ def import_stock_excel(request):
         warehouses = Warehouse.all_objects.all()
     else:
         warehouses = Warehouse.objects.all()
-    return render(request, 'settings/import_excel.html', {'warehouses': warehouses})
+    return render(request, 'settings/import_excel.html', {'warehouses': warehouses})'''
+
+c = re.sub(r'@user_passes_test\(superuser_required, login_url=\'/\'\)\ndef import_stock_excel\(request\):.*?return render\(request, \'settings/import_excel\.html\', \{\'warehouses\': warehouses\}\)', new_view, c, flags=re.DOTALL)
+
+with open(path, 'w', encoding='utf-8') as f:
+    f.write(c)
+print("Updated settings.py")

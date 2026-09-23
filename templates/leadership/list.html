@@ -31,6 +31,13 @@
             placeholder="البحث عن منتج بالاسم..."
             value="{{ search }}">
 
+        
+        <select name="warehouse">
+            <option value="">كل المخازن</option>
+            {% for w in warehouses %}
+            <option value="{{ w.id }}" {% if warehouse_id == w.id|stringformat:"s" %}selected{% endif %}>{{ w.name }}</option>
+            {% endfor %}
+        </select>
         <select name="status">
 
             <option value="">
@@ -80,7 +87,8 @@
 
             <th>سعر الشراء</th><th>سعر البيع</th>
 
-            <th>الكمية</th>
+            <th>ما تم توريده</th>
+                <th>المتبقي (الكمية)</th>
 
             <th>حالة المخزون</th>
 

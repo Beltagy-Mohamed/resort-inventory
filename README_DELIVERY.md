@@ -1,6 +1,6 @@
-# Resort Inventory System
+# Ordinance System
 
-نظام Django لإدارة المخازن والأصناف والحركات والتقارير والصلاحيات.
+نظام Django لOrdinance والأصناف والحركات والتقارير والصلاحيات.
 
 ## النسخة الحالية
 

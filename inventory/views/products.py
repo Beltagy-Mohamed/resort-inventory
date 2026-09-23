@@ -21,8 +21,21 @@ def products_list(request):
     period = request.GET.get("period", "")
     start_date = request.GET.get("start_date", "")
     end_date = request.GET.get("end_date", "")
+    warehouse_id = request.GET.get("warehouse", "")
 
     products = Product.objects.select_related("category", "color", "size")
+    
+    if warehouse_id:
+        products = products.filter(stock__warehouse_id=warehouse_id)
+        products = products.annotate(
+            total_supplied=Coalesce(Sum("inventorytransaction__quantity", filter=Q(inventorytransaction__transaction_type="IN", inventorytransaction__warehouse_id=warehouse_id)), 0),
+            display_quantity=Coalesce(Sum("stock__quantity", filter=Q(stock__warehouse_id=warehouse_id)), 0)
+        )
+    else:
+        products = products.annotate(
+            total_supplied=Coalesce(Sum("inventorytransaction__quantity", filter=Q(inventorytransaction__transaction_type="IN")), 0),
+            display_quantity=F("quantity")
+        )
 
     if search:
         products = products.filter(Q(name__icontains=search) | Q(barcode__icontains=search))
@@ -35,13 +48,13 @@ def products_list(request):
         products = products.filter(size_id=size_id)
 
     if status == "available":
-        products = products.filter(quantity__gt=F("minimum_stock"))
+        products = products.filter(display_quantity__gt=F("minimum_stock"))
     elif status == "low":
-        products = products.filter(quantity__gt=0, quantity__lte=F("minimum_stock"))
+        products = products.filter(display_quantity__gt=0, display_quantity__lte=F("minimum_stock"))
     elif status == "out":
-        products = products.filter(quantity=0)
+        products = products.filter(display_quantity=0)
 
-    products = products.order_by("-id")
+    products = products.order_by("-id").distinct()
     
     period_data = None
     if period:
@@ -49,12 +62,13 @@ def products_list(request):
         if start_dt and end_dt:
             period_data = {}
             for p in products:
-                past_in = InventoryTransaction.objects.filter(product=p, transaction_type='IN', created_at__lt=start_dt).aggregate(s=Sum('quantity'))['s'] or 0
-                past_out = InventoryTransaction.objects.filter(product=p, transaction_type='OUT', created_at__lt=start_dt).aggregate(s=Sum('quantity'))['s'] or 0
+                wh_q = Q(warehouse_id=warehouse_id) if warehouse_id else Q()
+                past_in = InventoryTransaction.objects.filter(wh_q, product=p, transaction_type='IN', created_at__lt=start_dt).aggregate(s=Sum('quantity'))['s'] or 0
+                past_out = InventoryTransaction.objects.filter(wh_q, product=p, transaction_type='OUT', created_at__lt=start_dt).aggregate(s=Sum('quantity'))['s'] or 0
                 opening = past_in - past_out
                 
-                added = InventoryTransaction.objects.filter(product=p, transaction_type='IN', created_at__range=(start_dt, end_dt)).aggregate(s=Sum('quantity'))['s'] or 0
-                issued = InventoryTransaction.objects.filter(product=p, transaction_type='OUT', created_at__range=(start_dt, end_dt)).aggregate(s=Sum('quantity'))['s'] or 0
+                added = InventoryTransaction.objects.filter(wh_q, product=p, transaction_type='IN', created_at__range=(start_dt, end_dt)).aggregate(s=Sum('quantity'))['s'] or 0
+                issued = InventoryTransaction.objects.filter(wh_q, product=p, transaction_type='OUT', created_at__range=(start_dt, end_dt)).aggregate(s=Sum('quantity'))['s'] or 0
                 
                 period_data[p.id] = {
                     'opening': opening,
@@ -71,7 +85,7 @@ def products_list(request):
         ws = wb.active
         ws.title = "المنتجات"
         
-        headers = ["الكود", "اسم الصنف", "الفئة", "اللون", "المقاس", "سعر التكلفة", "سعر البيع", "الكمية الحالية"]
+        headers = ["الكود", "اسم الصنف", "التصنيف", "اللون", "المقاس", "سعر التكلفة", "سعر البيع", "ما تم توريده", "المتبقي (الكمية)"]
         ws.append(headers)
         
         for p in products:
@@ -83,6 +97,7 @@ def products_list(request):
                 p.size.name if p.size else "-",
                 p.cost_price,
                 p.selling_price,
+                p.total_supplied,
                 p.quantity
             ])
             
