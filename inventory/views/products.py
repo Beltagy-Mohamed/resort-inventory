@@ -2,7 +2,8 @@
 from django.contrib.auth.decorators import login_required, permission_required
 from django.core.paginator import Paginator
 from django.db.models.deletion import ProtectedError
-from django.db.models import Q, F
+from django.db.models import Q, F, Sum
+from django.db.models.functions import Coalesce
 from django.shortcuts import (
     get_object_or_404,
     redirect,
