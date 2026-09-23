@@ -1,57 +1,10 @@
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required, user_passes_test, permission_required
-from django.shortcuts import redirect, render
+import re
 
-from ..forms import SystemSettingsForm
-from ..models import SystemSettings
+path = r'E:\خاص مشروع\client_delivery\inventory\views\settings.py'
+with open(path, 'r', encoding='utf-8') as f:
+    c = f.read()
 
-
-@user_passes_test(lambda u: u.is_superuser)
-def system_settings(request):
-
-    settings_obj = SystemSettings.load()
-
-    if request.method == "POST":
-
-        form = SystemSettingsForm(
-            request.POST,
-            instance=settings_obj
-        )
-
-        if form.is_valid():
-
-            form.save()
-
-            messages.success(
-                request,
-                "تم حفظ الإعدادات بنجاح."
-            )
-
-            return redirect("system_settings")
-
-    else:
-
-        form = SystemSettingsForm(instance=settings_obj)
-
-    return render(
-        request,
-        "settings/edit.html",
-        {
-            "form": form
-        }
-    )
-
-import openpyxl
-from django.contrib import messages
-from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import user_passes_test
-from inventory.models import Product, Warehouse, InventoryTransaction, Category
-from inventory.services.inventory_service import InventoryService
-
-def superuser_required(user):
-    return user.is_superuser
-
-@user_passes_test(superuser_required, login_url='/')
+optimized_view = '''@user_passes_test(superuser_required, login_url='/')
 def import_stock_excel(request):
     """(B11) Excel import view for Superuser - Highly Optimized for Vercel 10s Timeout."""
     if request.method == 'POST':
@@ -171,7 +124,7 @@ def import_stock_excel(request):
                 transactions_to_create = []
                 # Fetch existing stock to update memory
                 product_ids = [p.id for p in existing_prods_by_name.values()]
-                existing_stocks = {s.product_id: s for s in Stock.all_objects.filter(warehouse=warehouse, product_id__in=product_ids)}
+                existing_stocks = {s.product_id: s for s in Stock.objects.filter(warehouse=warehouse, product_id__in=product_ids)}
                 
                 stocks_to_update = []
                 stocks_to_create = []
@@ -200,29 +153,27 @@ def import_stock_excel(request):
                     # Calculate new stock for this warehouse
                     # We just override the stock quantity with "remaining" since it's an initial load
                     stock = existing_stocks.get(p.id)
-                    old_qty = 0
                     if stock:
-                        old_qty = stock.quantity
                         stock.quantity = d['remaining']
                         stocks_to_update.append(stock)
                     else:
                         new_stock = Stock(product=p, warehouse=warehouse, quantity=d['remaining'])
                         stocks_to_create.append(new_stock)
-                        existing_stocks[p.id] = new_stock
+                        existing_stocks[p.id] = new_stock # Prevents duplicates if same product appears twice
                         
                     # Also update global product quantity
-                    p.quantity = (p.quantity or 0) + (d['remaining'] - old_qty)
+                    p.quantity = d['remaining']
                 
                 # --- 6. Execute Bulk Operations ---
                 if transactions_to_create:
-                    InventoryTransaction.all_objects.bulk_create(transactions_to_create)
+                    InventoryTransaction.objects.bulk_create(transactions_to_create)
                 
                 if stocks_to_create:
-                    Stock.all_objects.bulk_create(stocks_to_create)
+                    Stock.objects.bulk_create(stocks_to_create)
                 if stocks_to_update:
-                    Stock.all_objects.bulk_update(stocks_to_update, ['quantity'])
+                    Stock.objects.bulk_update(stocks_to_update, ['quantity'])
                     
-                Product.all_objects.bulk_update(list(existing_prods_by_name.values()), ['quantity'])
+                Product.objects.bulk_update(list(existing_prods_by_name.values()), ['quantity'])
 
             messages.success(request, f'تم استيراد ومعالجة {len(product_data)} منتج بنجاح وبسرعة فائقة.')
         except Exception as e:
@@ -235,4 +186,11 @@ def import_stock_excel(request):
         warehouses = Warehouse.all_objects.all()
     else:
         warehouses = Warehouse.objects.all()
-    return render(request, 'settings/import_excel.html', {'warehouses': warehouses})
+    return render(request, 'settings/import_excel.html', {'warehouses': warehouses})'''
+
+c = re.sub(r'@user_passes_test\(superuser_required, login_url=\'/\'\)\ndef import_stock_excel\(request\):.*?return render\(request, \'settings/import_excel\.html\', \{\'warehouses\': warehouses\}\)', optimized_view, c, flags=re.DOTALL)
+
+with open(path, 'w', encoding='utf-8') as f:
+    f.write(c)
+
+print("Optimized import_stock_excel written")
