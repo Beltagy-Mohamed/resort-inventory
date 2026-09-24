@@ -118,7 +118,7 @@ if DEBUG and not ALLOWED_HOSTS:
 
 
 
-CSRF_TRUSTED_ORIGINS = ['https://resort-inventory.vercel.app'] + [
+CSRF_TRUSTED_ORIGINS = ['https://resort-inventory.vercel.app', 'https://*.vercel.app'] + [
     origin.strip()
     for origin in os.environ.get("DJANGO_CSRF_TRUSTED_ORIGINS", "").split(",")
     if origin.strip()
