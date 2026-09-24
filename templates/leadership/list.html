@@ -105,15 +105,15 @@
                 {% endif %}
             </td>
             <td>{{ p.supplier.name|default:"-" }}</td>
-            <td class="actions">
+            <td class="actions" style="display: flex; gap: 8px; justify-content: center; align-items: center; padding: 10px;">
                 {% if is_leadership %}
-                    <a href="{% url 'leadership_item_detail' p.id %}" class="btn-icon btn-info" title="عرض التفاصيل"><i class="bi bi-eye"></i></a>
-                    <a href="{% url 'leadership_item_edit' p.id %}" class="btn-icon btn-primary" title="تعديل"><i class="bi bi-pencil"></i></a>
-                    <a href="{% url 'leadership_item_delete' p.id %}" class="btn-icon btn-danger" title="حذف"><i class="bi bi-trash"></i></a>
+                    <a href="{% url 'leadership_item_detail' p.id %}" class="action-btn view-btn" title="عرض التفاصيل"><i class="bi bi-eye"></i></a>
+                    <a href="{% url 'leadership_item_edit' p.id %}" class="action-btn edit-btn" title="تعديل"><i class="bi bi-pencil"></i></a>
+                    <a href="{% url 'leadership_item_delete' p.id %}" class="action-btn delete-btn" title="حذف"><i class="bi bi-trash"></i></a>
                 {% else %}
-                    <a href="{% url 'product_detail' p.id %}" class="btn-icon btn-info" title="عرض التفاصيل"><i class="bi bi-eye"></i></a>
-                    <a href="{% url 'edit_product' p.id %}" class="btn-icon btn-primary" title="تعديل"><i class="bi bi-pencil"></i></a>
-                    <a href="{% url 'delete_product' p.id %}" class="btn-icon btn-danger" title="حذف"><i class="bi bi-trash"></i></a>
+                    <a href="{% url 'product_detail' p.id %}" class="action-btn view-btn" title="عرض التفاصيل"><i class="bi bi-eye"></i></a>
+                    <a href="{% url 'edit_product' p.id %}" class="action-btn edit-btn" title="تعديل"><i class="bi bi-pencil"></i></a>
+                    <a href="{% url 'delete_product' p.id %}" class="action-btn delete-btn" title="حذف"><i class="bi bi-trash"></i></a>
                 {% endif %}
             </td>
         </tr>
