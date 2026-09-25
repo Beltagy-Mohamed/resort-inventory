@@ -98,7 +98,10 @@ def import_stock_excel(request):
             product_data = []
             
             for i, row in enumerate(rows):
-                barcode = str(row[0]).strip() if row[0] else None
+                val = row[0]
+                if isinstance(val, float) and val.is_integer():
+                    val = int(val)
+                barcode = str(val).strip() if val is not None else None
                 name = str(row[1]).strip() if row[1] else (barcode or "بدون اسم")
                 try:
                     target_qty = int(row[2]) if len(row) > 2 and row[2] else 0
@@ -108,7 +111,7 @@ def import_stock_excel(request):
                     messages.error(request, f'خطأ في السطر رقم {i + 2} (المنتج: {name}): تأكد من أن الكميات مكتوبة كأرقام.')
                     return redirect('import_stock_excel')
                     
-                part_name = str(row[5]).strip() if len(row) > 5 and row[5] else None
+                part_name = str(row[7]).strip() if len(row) > 7 and row[7] else None
                 
                 if part_name: partner_names.add(part_name)
                 
