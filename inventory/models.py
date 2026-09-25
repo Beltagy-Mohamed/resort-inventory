@@ -138,7 +138,7 @@ class Product(models.Model):
     def availability_percentage(self):
         curr_qty = getattr(self, 'display_quantity', self.quantity)
         if self.target_quantity and self.target_quantity > 0:
-            return min(100, int((curr_qty / self.target_quantity) * 100))
+            return int((curr_qty / self.target_quantity) * 100)
         return 0
 
     @property
