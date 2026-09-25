@@ -5,7 +5,20 @@
 <html lang="{{ LANGUAGE_CODE }}" dir="{% if LANGUAGE_CODE == 'ar' %}rtl{% else %}ltr{% endif %}">
 <head>
     <link rel="icon" type="image/jpeg" href="{% static 'images/logo.jpg' %}">
-    <link rel="apple-touch-icon" href="{% static 'images/logo.jpg' %}">
+        <link rel="manifest" href="{% static 'pwa/manifest.json' %}">
+    <meta name="theme-color" content="#0F172A">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="إدارة المهمات">
+
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'pwa/icons/icon-180.png' %}">
+    <link rel="apple-touch-icon" sizes="167x167" href="{% static 'pwa/icons/icon-167.png' %}">
+    <link rel="apple-touch-icon" sizes="152x152" href="{% static 'pwa/icons/icon-152.png' %}">
+
+    <link rel="apple-touch-startup-image" href="{% static 'pwa/splash/splash-1170x2532.png' %}" media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3)">
+    <link rel="apple-touch-startup-image" href="{% static 'pwa/splash/splash-1284x2778.png' %}" media="(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3)">
+    <link rel="apple-touch-startup-image" href="{% static 'pwa/splash/splash-1125x2436.png' %}" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)">
+    <link rel="apple-touch-startup-image" href="{% static 'pwa/splash/splash-828x1792.png' %}" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2)">
 
     <meta charset="UTF-8">
 
@@ -70,6 +83,33 @@
 </head>
 
 <body>
+
+  <div id="ios-pwa-banner" style="display: none; position: fixed; bottom: 0; left: 0; right: 0; background: #fff; padding: 15px; box-shadow: 0 -2px 10px rgba(0,0,0,0.1); z-index: 9999; text-align: center; border-top-left-radius: 12px; border-top-right-radius: 12px; font-family: 'IBM Plex Sans Arabic', sans-serif;">
+      <button onclick="document.getElementById('ios-pwa-banner').style.display='none'" style="position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 20px; color: #888; cursor: pointer;">&times;</button>
+      <h3 style="margin: 0 0 10px 0; font-size: 16px; color: #333;">أضف التطبيق للشاشة الرئيسية 📱</h3>
+      <p style="margin: 0 0 15px 0; font-size: 14px; color: #666; line-height: 1.5;">
+          لتجربة أسرع وأفضل، اضغط على زر المشاركة <i class="bi bi-box-arrow-up"></i> بالأسفل،<br>ثم اختر <strong>"إضافة إلى الشاشة الرئيسية" (Add to Home Screen)</strong> <i class="bi bi-plus-square"></i>.
+      </p>
+  </div>
+  <script>
+      // Show only on iOS Safari, and if NOT already in standalone mode
+      const isIos = () => {
+        const userAgent = window.navigator.userAgent.toLowerCase();
+        return /iphone|ipad|ipod/.test( userAgent );
+      }
+      const isStandalone = () => ('standalone' in window.navigator) && (window.navigator.standalone);
+      
+      if (isIos() && !isStandalone()) {
+          // Check if we haven't shown it recently (e.g. session storage)
+          if (!sessionStorage.getItem('iosBannerDismissed')) {
+              document.getElementById('ios-pwa-banner').style.display = 'block';
+              document.getElementById('ios-pwa-banner').querySelector('button').addEventListener('click', function() {
+                  sessionStorage.setItem('iosBannerDismissed', 'true');
+              });
+          }
+      }
+  </script>
+
 <script>
     if (localStorage.getItem("sidebar-collapsed") === "1") {
         document.body.classList.add("sidebar-collapsed");
