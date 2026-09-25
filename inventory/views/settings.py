@@ -135,72 +135,69 @@ def import_stock_excel(request):
                     Partner.all_objects.bulk_create(new_parts)
                     existing_parts.update({p.name: p for p in Partner.all_objects.filter(name__in=partner_names)})
                 
-                # --- 4. Bulk Create Products ---
-                all_product_names = [d['name'] for d in product_data]
-                all_product_barcodes = [d['barcode'] for d in product_data if d['barcode']]
-                
-                existing_prods_by_name = {p.name: p for p in Product.all_objects.filter(name__in=all_product_names)}
-                existing_prods_by_barcode = {p.barcode: p for p in Product.all_objects.filter(barcode__in=all_product_barcodes)}
-                
-                new_products = []
-                for d in product_data:
-                    p = existing_prods_by_barcode.get(d['barcode']) or existing_prods_by_name.get(d['name'])
-                    if not p:
-                        new_p = Product(
-                            name=d['name'],
-                            barcode=d['barcode'],
-                            target_quantity=d['target_quantity'],
-                            quantity=0
-                        )
-                        new_products.append(new_p)
-                        # Add temporarily to prevent duplicates in same file
-                        existing_prods_by_name[d['name']] = new_p
-                    else:
-                        p.target_quantity = d['target_quantity']
-                        # We don't overwrite barcode here based on user request "الكود مربوط بالمنتج ميتغيرش نهائيا"
-                
-                if new_products:
-                    Product.objects.bulk_create(new_products)
-                    # Refresh to get IDs
-                    existing_prods_by_name = {p.name: p for p in Product.all_objects.filter(name__in=all_product_names)}
-                    existing_prods_by_barcode = {p.barcode: p for p in Product.all_objects.filter(barcode__in=all_product_barcodes)}
-                
-                # --- 5. Prepare Transactions and Stocks ---
-                transactions_to_create = []
-                # Fetch existing stock to update memory
-                product_ids = [p.id for p in existing_prods_by_name.values()]
-                existing_stocks = {s.product_id: s for s in Stock.all_objects.filter(warehouse=warehouse, product_id__in=product_ids)}
-                
-                stocks_to_update = []
-                stocks_to_create = []
-                
-                for d in product_data:
-                    p = existing_prods_by_barcode.get(d['barcode']) or existing_prods_by_name.get(d['name'])
-                    part_obj = existing_parts.get(d['partner'])
-                    
-                    if part_obj:
-                        p.supplier = part_obj
-                        p.save(update_fields=['supplier'])
-
-                    if d['supplied'] > 0:
-                        transactions_to_create.append(InventoryTransaction(
-                            product=p, transaction_type='IN', quantity=d['supplied'],
-                            warehouse=warehouse, partner=part_obj, notes='استيراد مخزون (ما تم توريده)'
-                        ))
-                    
-                    stock = existing_stocks.get(p.id)
-                    old_qty = 0
-                    if stock:
-                        old_qty = stock.quantity
-                        stock.quantity += d['supplied']
-                        stocks_to_update.append(stock)
-                    else:
-                        new_stock = Stock(product=p, warehouse=warehouse, quantity=d['supplied'])
-                        stocks_to_create.append(new_stock)
-                        existing_stocks[p.id] = new_stock
-                    p.quantity = (p.quantity or 0) + d['supplied']
-                
-                # --- 6. Execute Bulk Operations ---
+                                  # --- 4. Bulk Create Products ---
+                  all_product_names = [d['name'] for d in product_data]
+                  
+                  existing_prods_list = Product.all_objects.select_related('supplier').filter(name__in=all_product_names)
+                  existing_prods_by_key = {(p.name, p.supplier.name if p.supplier else None): p for p in existing_prods_list}
+                  
+                  new_products = []
+                  for d in product_data:
+                      part_name = d['partner']
+                      key = (d['name'], part_name)
+                      p = existing_prods_by_key.get(key)
+                      
+                      if not p:
+                          new_p = Product(
+                              name=d['name'],
+                              barcode=d['barcode'],
+                              target_quantity=d['target_quantity'],
+                              quantity=0,
+                              supplier=existing_parts.get(part_name)
+                          )
+                          new_products.append(new_p)
+                          existing_prods_by_key[key] = new_p
+                      else:
+                          p.target_quantity = d['target_quantity']
+                  
+                  if new_products:
+                      Product.objects.bulk_create(new_products)
+                      # Refresh to get IDs
+                      existing_prods_list = Product.all_objects.select_related('supplier').filter(name__in=all_product_names)
+                      existing_prods_by_key = {(p.name, p.supplier.name if p.supplier else None): p for p in existing_prods_list}
+                  
+                  # --- 5. Prepare Transactions and Stocks ---
+                  transactions_to_create = []
+                  product_ids = [p.id for p in existing_prods_by_key.values() if p.id]
+                  existing_stocks = {s.product_id: s for s in Stock.all_objects.filter(warehouse=warehouse, product_id__in=product_ids)}
+                  
+                  stocks_to_update = []
+                  stocks_to_create = []
+                  
+                  for d in product_data:
+                      key = (d['name'], d['partner'])
+                      p = existing_prods_by_key.get(key)
+                      part_obj = existing_parts.get(d['partner'])
+                      
+                      if d['supplied'] > 0:
+                          transactions_to_create.append(InventoryTransaction(
+                              product=p, transaction_type='IN', quantity=d['supplied'],
+                              warehouse=warehouse, partner=part_obj, notes='وارد أولي (من ملف الإكسيل)'
+                          ))
+                      
+                      stock = existing_stocks.get(p.id)
+                      if stock:
+                          stock.quantity += d['supplied']
+                          if stock not in stocks_to_update:
+                              stocks_to_update.append(stock)
+                      else:
+                          new_stock = Stock(product=p, warehouse=warehouse, quantity=d['supplied'])
+                          stocks_to_create.append(new_stock)
+                          existing_stocks[p.id] = new_stock
+                      
+                      p.quantity = (p.quantity or 0) + d['supplied']
+                  
+                  # --- 6. Execute Bulk Operations ---
                 if transactions_to_create:
                     InventoryTransaction.all_objects.bulk_create(transactions_to_create)
                 
@@ -209,7 +206,7 @@ def import_stock_excel(request):
                 if stocks_to_update:
                     Stock.all_objects.bulk_update(stocks_to_update, ['quantity'])
                     
-                Product.all_objects.bulk_update(list(existing_prods_by_name.values()), ['quantity'])
+                Product.all_objects.bulk_update(list(existing_prods_by_key.values()), ['quantity'])
 
             messages.success(request, f'تم استيراد ومعالجة {len(product_data)} منتج بنجاح وبسرعة فائقة.')
         except Exception as e:
