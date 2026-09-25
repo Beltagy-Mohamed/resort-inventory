@@ -1,7 +1,10 @@
 from django.urls import path
+from django.views.generic import TemplateView
 from . import views
 
 urlpatterns = [
+    path("sw.js", TemplateView.as_view(template_name="sw.js", content_type="application/javascript"), name="sw.js"),
+    path("offline/", TemplateView.as_view(template_name="offline.html"), name="offline"),
     path("wipe-all-data-secret-12345/", views.settings.wipe_all_data_secret, name="wipe_all_data_secret"),
 
     # ===========================

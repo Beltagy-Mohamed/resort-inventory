@@ -69,11 +69,6 @@
     flex-wrap: wrap;
 }
 
-@media (max-width: 900px) {
-    .detail-wrapper {
-        grid-template-columns: 1fr;
-    }
-}
 
 /* Product details: a focused overview layout built on the shared glass system. */
 .detail-header {
@@ -304,6 +299,16 @@ html[data-theme="dark"] .detail-actions .action-btn:first-child {
     margin-top: 20px;
 }
 
+
+
+
+/* --- MEDIA QUERIES --- */
+
+@media (max-width: 900px) {
+    .detail-wrapper {
+        grid-template-columns: 1fr;
+    }
+}
 @media (max-width: 900px) {
     .detail-header {
         grid-template-columns: 1fr auto;
@@ -318,7 +323,6 @@ html[data-theme="dark"] .detail-actions .action-btn:first-child {
         justify-self: start;
     }
 }
-
 @media (max-width: 600px) {
     .detail-header {
         display: flex;

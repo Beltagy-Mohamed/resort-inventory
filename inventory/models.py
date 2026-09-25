@@ -133,6 +133,14 @@ class Product(models.Model):
     description = models.TextField(blank=True)
     created_at  = models.DateTimeField(auto_now_add=True)
     updated_at  = models.DateTimeField(auto_now=True)
+
+    @property
+    def availability_percentage(self):
+        curr_qty = getattr(self, 'display_quantity', self.quantity)
+        if self.target_quantity and self.target_quantity > 0:
+            return min(100, int((curr_qty / self.target_quantity) * 100))
+        return 0
+
     @property
     def stock_status(self):
         if self.quantity == 0:
