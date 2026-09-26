@@ -196,12 +196,12 @@ html[data-theme="dark"] .room-item:hover { background: rgba(255,255,255,0.04); }
     justify-content: center;
 }
 .modal-overlay.open { display: flex; }
-.modal-sheet {
+.modal-sheet { box-sizing: border-box;
     background: var(--paper, #fff);
     border-radius: 20px 20px 0 0;
-    padding: 12px 0 env(safe-area-inset-bottom, 16px);
+    padding: 12px 0 max(40px, env(safe-area-inset-bottom));
     width: 100%; max-width: 600px;
-    max-height: 75vh;
+    max-height: 80%;
     overflow-y: auto;
     animation: slideUp .25s ease;
     color: var(--text);
@@ -221,8 +221,8 @@ html[data-theme="dark"] .room-item:hover { background: rgba(255,255,255,0.04); }
     border-bottom: 1px solid var(--border-soft, #eee);
     margin-bottom: 8px;
 }
-.user-pick-list { list-style: none; padding: 0 8px; margin: 0; }
-.user-pick-item {
+.user-pick-list { box-sizing: border-box; width: 100%; list-style: none; padding: 0 8px; margin: 0; }
+.user-pick-item { box-sizing: border-box; width: 100%;
     display: flex; align-items: center; gap: 14px;
     padding: 12px 14px; border-radius: 12px;
     cursor: pointer;
@@ -400,7 +400,7 @@ function openNewChat() {
         .then(data => {
             const list = document.getElementById('userPickList');
             if (!data.users.length) {
-                list.replaceChildren(); list.insertAdjacentHTML('beforeend', '');
+                list.replaceChildren(); list.insertAdjacentHTML('beforeend', '<li style="text-align:center;color:#888;padding:20px;">لا يوجد مستخدمين أو أنهم في مجموعة.</li>');
                 return;
             }
             list.replaceChildren(); list.insertAdjacentHTML('beforeend', data.users.map(u => `
