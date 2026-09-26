@@ -433,7 +433,7 @@ function appendMessage(m) {
 
     const checkHtml = isMine ? `
         <i class="bi ${m.is_read ? 'bi-check2-all' : 'bi-check2'}"
-           style="font-size:.85rem;color:${m.is_read ? '#4FC3F7' : '#999'};"></i>` : ''; border-radius:4px; margin-bottom:4px; display:block; cursor:pointer;">` : ''; align-items:center; gap:8px; background:rgba(0,0,0,0.1); padding:8px; border-radius:6px; margin-bottom:4px; color:inherit; text-decoration:none;"><i class="bi bi-file-earmark-arrow-down-fill" style="font-size:1.5rem;"></i> <span style="word-break:break-all; font-size:.85rem;">${escapeHtml(m.file_name || 'ملف')}</span></a>` : '';
+           style="font-size:.85rem;color:${m.is_read ? '#4FC3F7' : '#999'};"></i>` : '';
 
     wrap.innerHTML = `
         ${avatarHtml}
