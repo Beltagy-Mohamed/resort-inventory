@@ -52,7 +52,7 @@ main { display: block !important; padding: 0 !important; margin: 0 !important; h
     font-size: 1rem; font-weight: 800; color: #fff;
     flex-shrink: 0;
 }
-.chat-room-title { flex: 1; min-width: 0; }
+.chat-room-title { flex: 1; min-width: 0; min-width: 0; }
 .chat-room-title .name {
     font-weight: 700; font-size: .98rem;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
@@ -63,7 +63,7 @@ main { display: block !important; padding: 0 !important; margin: 0 !important; h
 
 /* ---- Messages background ---- */
 .messages-area {
-    flex: 1;
+    flex: 1; min-width: 0;
     overflow-y: auto;
     overflow-x: hidden;
     padding: 12px 10px 8px;
@@ -185,15 +185,15 @@ html[data-theme="dark"] .msg-row.mine .msg-time { color: rgba(0,0,0,0.6); }
 .chat-input-wrap {
     display: flex;
     align-items: flex-end;
-    gap: 8px;
-    padding: 8px 10px;
+    gap: 4px;
+    padding: 8px 4px;
     padding-bottom: max(8px, env(safe-area-inset-bottom));
     background: var(--paper, #f0f0f0);
     flex-shrink: 0;
 }
 
 .chat-textarea {
-    flex: 1;
+    flex: 1; min-width: 0;
     border: none;
     border-radius: 24px;
     padding: 10px 16px;
@@ -210,7 +210,7 @@ html[data-theme="dark"] .msg-row.mine .msg-time { color: rgba(0,0,0,0.6); }
     -webkit-overflow-scrolling: touch;
 }
 
-.send-btn {
+.send-btn { flex-shrink: 0;
     width: 46px; height: 46px; flex-shrink: 0;
     border-radius: 50%;
     background: var(--resort-teal-deep, #294043);
@@ -402,7 +402,7 @@ async function requestNotif(interactive = false) {
         document.getElementById('enableNotifBtn').style.display = 'none';
     } else if (Notification.permission !== 'denied') {
         if (interactive) {
-            const p = await Notification.requestPermission();
+            if(window.playNotifSound) window.playNotifSound(); const p = await Notification.requestPermission();
             notifPermission = p === 'granted';
             if (notifPermission) document.getElementById('enableNotifBtn').style.display = 'none';
         } else {
@@ -420,7 +420,7 @@ function showNotif(senderName, content) { if(window.playNotifSound) window.playN
     });
 }
 
-// ===== Append message =====
+window.downloadDataUri = function(e, uri, name) { e.preventDefault(); const a = document.createElement("a"); a.href = uri; a.download = name; document.body.appendChild(a); a.click(); document.body.removeChild(a); }; // ===== Append message =====
 function appendMessage(m) {
     const area = document.getElementById('messagesArea');
     const empty = area.querySelector('.chat-empty');
@@ -431,7 +431,7 @@ function appendMessage(m) {
     lastSenderId = m.sender_id;
 
     const wrap = document.createElement('div');
-    wrap.className = `msg-row ${isMine ? 'mine' : 'theirs'}${isNewSender ? ' first-in-group' : ''}`;
+    wrap.className = `msg-row ${isMine ? 'mine' : 'theirs'}${isNewSender ? ' first-in-group' : '}`; wrap.setAttribute("data-ts", m.created_at_full);
     wrap.id = `msg-${m.id}`;
 
     const avatarHtml = !isMine ? `
@@ -447,8 +447,8 @@ function appendMessage(m) {
         <i class="bi ${m.is_read ? 'bi-check2-all' : 'bi-check2'}"
            style="font-size:.85rem;color:${m.is_read ? '#4FC3F7' : '#999'};"></i>` : '';
 
-    const imgHtml = m.image_url ? `<img src="${m.image_url}" style="max-width:100%; border-radius:4px; margin-bottom:4px; display:block;">` : '';
-    const fileHtml = m.file_url ? `<a href="${m.file_url}" target="_blank" style="display:flex; align-items:center; gap:8px; background:rgba(0,0,0,0.1); padding:8px; border-radius:6px; margin-bottom:4px; color:inherit; text-decoration:none;"><i class="bi bi-file-earmark-arrow-down-fill" style="font-size:1.5rem;"></i> <span style="word-break:break-all; font-size:.85rem;">${escapeHtml(m.file_name || 'ملف')}</span></a>` : '';
+    const imgHtml = m.image_url ? `<img src="${m.image_url}" onclick="downloadDataUri(event, '${m.image_url}', 'image.png')" style="max-width:100%; border-radius:4px; margin-bottom:4px; display:block; cursor:pointer;">` : '';
+    const fileHtml = m.file_url ? `<a href="#" onclick="downloadDataUri(event, '${m.file_url}', '${escapeHtml(m.file_name || 'file')}')" style="display:flex; align-items:center; gap:8px; background:rgba(0,0,0,0.1); padding:8px; border-radius:6px; margin-bottom:4px; color:inherit; text-decoration:none;"><i class="bi bi-file-earmark-arrow-down-fill" style="font-size:1.5rem;"></i> <span style="word-break:break-all; font-size:.85rem;">${escapeHtml(m.file_name || 'ملف')}</span></a>` : '';
 
     wrap.innerHTML = `
         ${avatarHtml}
@@ -494,6 +494,32 @@ async function pollMessages() {
             }
             lastTimestamp = m.created_at_full;
         });
+
+        if (data.other_read_up_to) {
+            document.querySelectorAll('.msg-row.mine:not(.read)').forEach(row => {
+                const ts = row.getAttribute('data-ts');
+                if (ts && ts <= data.other_read_up_to) {
+                    row.classList.add('read');
+                    const checks = row.querySelector('.bi-check2');
+                    if (checks) {
+                        checks.classList.remove('bi-check2');
+                        checks.classList.add('bi-check2-all');
+                        checks.style.color = '#4FC3F7';
+                    }
+                }
+            });
+        }
+        
+        if (data.other_is_online !== undefined) {
+            const sub = document.querySelector('.chat-room-title .sub');
+            if (sub && sub.innerText.indexOf('قناة') === -1) {
+                if (data.other_is_online) {
+                    sub.innerHTML = '<span style="color: #4CAF50;">● متصل الآن</span>';
+                } else {
+                    sub.innerHTML = '<span style="color: #bbb;">غير متصل</span>';
+                }
+            }
+        }
     } catch(e) {}
 }
 function startPolling() {
@@ -503,7 +529,7 @@ function startPolling() {
 startPolling();
 
 // ===== Send =====
-async function sendMessage() {
+async function sendMessage() { try { const dummyCtx = new (window.AudioContext || window.webkitAudioContext)(); dummyCtx.resume(); }catch(e){} 
     const input = document.getElementById('chatInput');
     const content = input.value.trim();
     if (!content && !selectedImageFile && !selectedFile) return;

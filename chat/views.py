@@ -211,20 +211,33 @@ def api_messages(request, room_id):
         qs = qs.order_by('-created_at')[:50]
         qs = list(reversed(qs))
 
-    # Update read status and last_seen
+    # Always update our read status unconditionally when polling
     if request.user.is_authenticated:
-        profile, _ = _get_or_create_profile(request.user)
-        profile.last_seen = timezone.now()
-        profile.save()
-
-    if qs:
         MessageReadStatus.objects.update_or_create(
             user=request.user, room=room,
             defaults={'last_read_at': timezone.now()}
         )
+        profile, _ = _get_or_create_profile(request.user)
+        profile.last_seen = timezone.now()
+        profile.save(update_fields=['last_seen'])
+
+    other_read_up_to = None
+    other_is_online = False
+    if room.room_type == 'PRIVATE':
+        other_users = room.participants.exclude(pk=request.user.pk)
+        if other_users.exists():
+            other_user = other_users.first()
+            status = MessageReadStatus.objects.filter(user=other_user, room=room).first()
+            if status:
+                other_read_up_to = status.last_read_at.isoformat()
+            
+            other_profile, _ = _get_or_create_profile(other_user)
+            other_is_online = other_profile.is_online()
 
     return JsonResponse({
-        'messages': [m.to_dict(request.user) for m in qs]
+        'messages': [m.to_dict(request.user) for m in qs],
+        'other_read_up_to': other_read_up_to,
+        'other_is_online': other_is_online
     })
 
 
