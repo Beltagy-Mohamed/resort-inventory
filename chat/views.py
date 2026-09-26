@@ -157,23 +157,16 @@ def api_messages(request, room_id):
 
     if request.method == 'POST':
         content = ''
-        image_b64 = None
-        file_b64 = None
-        file_name = ''
-        
         try:
             data = json.loads(request.body)
             content = data.get('content', '').strip()
-            image_b64 = data.get('image_b64')
-            file_b64 = data.get('file_b64')
-            file_name = data.get('file_name', '')
         except (json.JSONDecodeError, KeyError):
             pass
 
-        if not content and not image_b64 and not file_b64:
+        if not content:
             return JsonResponse({'error': 'Empty message'}, status=400)
 
-        msg = Message.objects.create(room=room, sender=request.user, content=content, image=image_b64, file=file_b64, file_name=file_name)
+        msg = Message.objects.create(room=room, sender=request.user, content=content)
 
         # Update read status for sender
         MessageReadStatus.objects.update_or_create(

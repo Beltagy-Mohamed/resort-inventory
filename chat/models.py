@@ -118,9 +118,6 @@ class Message(models.Model):
     room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='messages')
     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_messages')
     content = models.TextField(blank=True)
-    image = models.TextField(blank=True, null=True) # Stored as base64 data URI
-    file = models.TextField(blank=True, null=True) # Stored as base64 data URI
-    file_name = models.CharField(max_length=255, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
