@@ -125,6 +125,14 @@ def room_view(request, room_id):
             except:
                 pass
 
+    # Get other user's last seen for display
+    other_last_seen = None
+    if other_user:
+        try:
+            other_last_seen = other_user.profile.last_seen
+        except Exception:
+            pass
+
     context = {
         'room': room,
         'room_name': room_name,
@@ -132,6 +140,7 @@ def room_view(request, room_id):
         'profile': profile,
         'other_user': other_user,
         'is_online': is_online,
+        'other_last_seen': other_last_seen,
         'last_timestamp': messages_list[-1].created_at.isoformat() if messages_list else '',
     }
     return render(request, 'chat/room.html', context)

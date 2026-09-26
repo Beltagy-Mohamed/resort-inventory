@@ -259,9 +259,11 @@ html[data-theme="dark"] .msg-row.mine .msg-time { color: rgba(0,0,0,0.6); }
         <div class="chat-room-title">
             <div class="name">{{ room_name }}</div>
             <div class="sub">
-                {% if room.room_type == 'GROUP' %}Ù‚Ù†Ø§Ø© Ù…Ø´ØªØ±ÙƒØ© Ù„Ø¬Ù…ÙŠØ¹ Ø§Ù„Ø£Ø¹Ø¶Ø§Ø¡
-                {% elif is_online %}<span style="color:#DCF8C6;">Ù…ØªØµÙ„ Ø§Ù„Ø¢Ù†</span>
-                {% else %}Ø¢Ø®Ø± Ø¸Ù‡ÙˆØ± ØºÙŠØ± Ù…Ø¹Ø±ÙˆÙ{% endif %}
+                {% if room.room_type == 'GROUP' %}قناة مشتركة لجميع الأعضاء
+                {% elif is_online %}<span style="color:#DCF8C6;">متصل الآن</span>
+                {% elif other_last_seen %}<span style="color:#bbb;">آخر ظهور: {{ other_last_seen|timesince }} مضت</span>
+                {% else %}<span style="color:#bbb;">لم يتصل بعد</span>
+                {% endif %}
             </div>
         </div>
         <button id="enableNotifBtn" style="display:none; background:none; border:none; color:var(--resort-gold); font-size:1.2rem; cursor:pointer;" onclick="requestNotif(true)" title="ØªÙØ¹ÙŠÙ„ Ø§Ù„Ø¥Ø´Ø¹Ø§Ø±Ø§Øª">
@@ -478,10 +480,13 @@ async function pollMessages() {
         
         if (data.other_is_online !== undefined) {
             const sub = document.querySelector('.chat-room-title .sub');
-            if (sub && sub.innerText.indexOf('Ù‚Ù†Ø§Ø©') === -1) {
+            if (sub && !sub.innerText.includes('قناة')) {
                 if (data.other_is_online) {
-                    sub.innerHTML = '<span style="color: #4CAF50;">â— Ù…ØªØµÙ„ Ø§Ù„Ø¢Ù†</span>';
+                    sub.innerHTML = '<span style="color: #4CAF50;">متصل الآن</span>';
                 } else {
+                    sub.innerHTML = '<span style="color: #bbb;">غير متصل</span>';
+                }
+            } else {
                     sub.innerHTML = '<span style="color: #bbb;">ØºÙŠØ± Ù…ØªØµÙ„</span>';
                 }
             }
