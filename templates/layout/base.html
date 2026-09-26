@@ -162,19 +162,21 @@
     }
 </script>
 <script>
-// Poll unread chat count for sidebar badge
+// Poll unread chat count for sidebar and navbar badges
 (function() {
     function updateBadge() {
         fetch('/chat/api/unread/')
             .then(r => r.json())
             .then(data => {
                 const badge = document.getElementById('sidebar-chat-badge');
-                if (!badge) return;
+                const navBadge = document.getElementById('nav-chat-badge');
+                
                 if (data.unread > 0) {
-                    badge.textContent = data.unread;
-                    badge.style.display = 'inline';
+                    if (badge) { badge.textContent = data.unread; badge.style.display = 'inline'; }
+                    if (navBadge) { navBadge.textContent = data.unread; navBadge.style.display = 'inline-block'; }
                 } else {
-                    badge.style.display = 'none';
+                    if (badge) badge.style.display = 'none';
+                    if (navBadge) navBadge.style.display = 'none';
                 }
             })
             .catch(() => {});
