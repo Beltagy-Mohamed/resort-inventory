@@ -1,0 +1,15 @@
+{% extends "layout/base.html" %}
+
+{% block title %}حذف صنف قائد{% endblock %}
+
+{% block content %}
+<div class="delete-card">
+    <h1>تأكيد حذف صنف قائد</h1>
+    <p>هل تريد حذف «{{ product.name }}»؟ لا يمكن حذف صنف له حركات مخزنية.</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn-danger">تأكيد الحذف</button>
+        <a href="{% url 'leadership_item_detail' product.id %}" class="btn-secondary">إلغاء</a>
+    </form>
+</div>
+{% endblock %}

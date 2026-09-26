@@ -161,6 +161,28 @@
         });
     }
 </script>
+<script>
+// Poll unread chat count for sidebar badge
+(function() {
+    function updateBadge() {
+        fetch('/chat/api/unread/')
+            .then(r => r.json())
+            .then(data => {
+                const badge = document.getElementById('sidebar-chat-badge');
+                if (!badge) return;
+                if (data.unread > 0) {
+                    badge.textContent = data.unread;
+                    badge.style.display = 'inline';
+                } else {
+                    badge.style.display = 'none';
+                }
+            })
+            .catch(() => {});
+    }
+    updateBadge();
+    setInterval(updateBadge, 10000);
+})();
+</script>
 </body>
 
 </html>

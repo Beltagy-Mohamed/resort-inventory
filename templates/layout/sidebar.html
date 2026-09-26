@@ -147,6 +147,13 @@
         </a>
         {% endif %}
 
+        <h5>التواصل</h5>
+        <a href="{% url 'chat_home' %}" class="{% if 'chat' in request.resolver_match.url_name %}active{% endif %}" style="position:relative;">
+            <i class="bi bi-chat-dots"></i>
+            <span class="label">الدردشة</span>
+            <span id="sidebar-chat-badge" style="display:none; background:#E74C3C; color:#fff; border-radius:999px; font-size:.65rem; font-weight:700; padding:1px 6px; position:absolute; top:8px; left:8px;"></span>
+        </a>
+
     </nav>
 
 </aside>

@@ -157,6 +157,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
 
     'inventory',
+    'chat',
 
 ]
 

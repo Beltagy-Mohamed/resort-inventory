@@ -41,7 +41,8 @@ urlpatterns = [
         auth_views.LogoutView.as_view(),
         name="logout",
     ),
-        path("", include("inventory.urls")),
+    path("", include("inventory.urls")),
+    path("chat/", include("chat.urls")),
     path("api/v1/", api.urls),
 ]
 

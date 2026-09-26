@@ -1,0 +1,234 @@
+{% extends 'layout/base.html' %}
+{% load static %}
+
+{% block title %}الدردشة{% endblock %}
+
+{% block extra_css %}
+<style>
+.chat-home-wrap {
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 20px 10px;
+}
+.chat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+}
+.chat-header h2 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin: 0;
+}
+.btn-new-chat {
+    background: #3498DB;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    font-size: 1.4rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(52,152,219,0.35);
+    transition: background .2s;
+}
+.btn-new-chat:hover { background: #2980B9; }
+.room-list { list-style: none; padding: 0; margin: 0; }
+.room-item {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 16px;
+    border-radius: 14px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    background: var(--card-bg, #fff);
+    box-shadow: 0 1px 6px rgba(0,0,0,0.07);
+    transition: background .15s, box-shadow .15s;
+    position: relative;
+}
+.room-item:hover { background: var(--hover-bg, #f0f4f8); box-shadow: 0 3px 12px rgba(0,0,0,0.1); }
+.avatar-circle {
+    width: 50px; height: 50px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem; font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+    position: relative;
+}
+.room-info { flex: 1; min-width: 0; }
+.room-info .room-name {
+    font-weight: 600;
+    font-size: .98rem;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.room-info .last-msg {
+    font-size: .82rem;
+    color: #888;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    margin-top: 3px;
+}
+.unread-badge {
+    background: #E74C3C;
+    color: #fff;
+    border-radius: 999px;
+    font-size: .72rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    min-width: 22px;
+    text-align: center;
+}
+.my-name-bar {
+    background: var(--card-bg, #fff);
+    border-radius: 14px;
+    padding: 14px 18px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.07);
+}
+.my-name-bar .name-label { font-size: .84rem; color: #888; }
+.my-name-bar .name-value { font-weight: 700; font-size: 1rem; }
+.modal-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 9999;
+    align-items: center; justify-content: center;
+}
+.modal-overlay.open { display: flex; }
+.modal-box {
+    background: var(--card-bg, #fff);
+    border-radius: 18px;
+    padding: 24px;
+    width: 94%; max-width: 420px;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    position: relative;
+}
+.modal-box h3 { margin: 0 0 18px 0; font-size: 1.1rem; }
+.modal-close {
+    position: absolute; top: 16px; left: 16px;
+    background: none; border: none; font-size: 1.4rem; cursor: pointer; color: #888;
+}
+.user-pick-list { list-style: none; padding: 0; margin: 0; }
+.user-pick-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 14px; border-radius: 12px;
+    cursor: pointer;
+    transition: background .15s;
+}
+.user-pick-item:hover { background: var(--hover-bg, #f0f4f8); }
+.user-pick-avatar {
+    width: 40px; height: 40px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; color: #fff; font-size: 1rem;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="chat-home-wrap">
+
+    <div class="my-name-bar">
+        <div class="avatar-circle" style="background: {{ profile.avatar_color }}; width:40px;height:40px;font-size:.95rem;">
+            {{ profile.display_name|first }}
+        </div>
+        <div>
+            <div class="name-label">اسمك في الدردشة</div>
+            <div class="name-value">{{ profile.display_name }}</div>
+        </div>
+        <a href="{% url 'chat_set_name' %}" class="ms-auto" style="font-size:.82rem; color:#3498DB;">تغيير</a>
+    </div>
+
+    <div class="chat-header">
+        <h2><i class="bi bi-chat-dots"></i> الدردشة</h2>
+        <button class="btn-new-chat" title="محادثة جديدة" onclick="openNewChat()">
+            <i class="bi bi-pencil-square"></i>
+        </button>
+    </div>
+
+    <ul class="room-list">
+        {% for rd in rooms_data %}
+        <li>
+            <a href="{% url 'chat_room' rd.room.pk %}" class="room-item">
+                <div class="avatar-circle" style="background: {{ rd.avatar_color }};">
+                    {% if rd.is_group %}📢{% else %}{{ rd.avatar_char }}{% endif %}
+                </div>
+                <div class="room-info">
+                    <div class="room-name">{{ rd.display_name }}</div>
+                    <div class="last-msg">
+                        {% if rd.last_message %}
+                            {{ rd.last_message.content|truncatechars:40 }}
+                        {% else %}
+                            لا توجد رسائل بعد
+                        {% endif %}
+                    </div>
+                </div>
+                {% if rd.unread > 0 %}
+                <span class="unread-badge">{{ rd.unread }}</span>
+                {% endif %}
+            </a>
+        </li>
+        {% empty %}
+        <li style="text-align:center; color:#888; padding: 40px 0;">
+            لا توجد محادثات بعد
+        </li>
+        {% endfor %}
+    </ul>
+
+</div>
+
+<!-- New Chat Modal -->
+<div class="modal-overlay" id="newChatModal">
+    <div class="modal-box">
+        <button class="modal-close" onclick="closeNewChat()">×</button>
+        <h3><i class="bi bi-person-plus"></i> محادثة جديدة</h3>
+        <ul class="user-pick-list" id="userPickList">
+            <li style="text-align:center; color:#888;">جاري التحميل...</li>
+        </ul>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function openNewChat() {
+    document.getElementById('newChatModal').classList.add('open');
+    fetch("{% url 'chat_api_users' %}")
+        .then(r => r.json())
+        .then(data => {
+            const list = document.getElementById('userPickList');
+            if (!data.users.length) {
+                list.innerHTML = '<li style="text-align:center;color:#888;">لا يوجد مستخدمون آخرون</li>';
+                return;
+            }
+            list.innerHTML = data.users.map(u => `
+                <li class="user-pick-item" onclick="startChat(${u.id})">
+                    <div class="user-pick-avatar" style="background:${u.avatar_color}">${u.display_name[0]}</div>
+                    <span style="font-weight:600">${u.display_name}</span>
+                </li>
+            `).join('');
+        });
+}
+function closeNewChat() {
+    document.getElementById('newChatModal').classList.remove('open');
+}
+function startChat(userId) {
+    window.location.href = `/chat/start/${userId}/`;
+}
+document.getElementById('newChatModal').addEventListener('click', function(e) {
+    if (e.target === this) closeNewChat();
+});
+</script>
+{% endblock %}
