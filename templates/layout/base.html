@@ -185,6 +185,399 @@
     setInterval(updateBadge, 10000);
 })();
 </script>
+{% if user.is_authenticated %}
+<!-- ======= FLOATING CHAT WIDGET ======= -->
+<style>
+#fcw-btn {
+    position: fixed;
+    bottom: 24px;
+    left: 24px; /* RTL: left side */
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: var(--resort-teal-deep, #294043);
+    color: var(--resort-gold, #c19a6b);
+    border: none;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    font-size: 1.5rem;
+    cursor: pointer;
+    z-index: 99990;
+    display: flex; align-items: center; justify-content: center;
+    transition: transform .2s, box-shadow .2s;
+}
+#fcw-btn:hover { transform: scale(1.08); box-shadow: 0 6px 28px rgba(0,0,0,0.3); }
+#fcw-badge {
+    position: absolute;
+    top: -4px; right: -4px;
+    background: #E74C3C;
+    color: #fff;
+    border-radius: 50%;
+    font-size: .7rem;
+    font-weight: 700;
+    width: 20px; height: 20px;
+    display: none;
+    align-items: center; justify-content: center;
+    border: 2px solid #fff;
+}
+#fcw-panel {
+    position: fixed;
+    bottom: 90px;
+    left: 24px;
+    width: 360px;
+    height: 520px;
+    background: var(--paper, #fff);
+    border-radius: 20px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.22);
+    z-index: 99991;
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    font-family: 'IBM Plex Sans Arabic', sans-serif;
+    border: 1px solid var(--border-soft, rgba(0,0,0,0.08));
+}
+@media (max-width: 480px) {
+    #fcw-panel { left: 8px; right: 8px; width: auto; bottom: 80px; height: 70vh; }
+    #fcw-btn { bottom: 16px; left: 16px; }
+}
+#fcw-panel.open { display: flex; }
+.fcw-header {
+    background: var(--resort-teal-deep, #294043);
+    color: #fff;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+.fcw-header-title { flex: 1; font-weight: 700; font-size: .98rem; }
+.fcw-header-sub { font-size: .72rem; opacity: .75; }
+.fcw-actions { display: flex; gap: 8px; }
+.fcw-icon-btn {
+    background: rgba(255,255,255,0.15);
+    border: none; color: #fff;
+    border-radius: 8px;
+    width: 32px; height: 32px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: .9rem;
+    text-decoration: none;
+}
+.fcw-icon-btn:hover { background: rgba(255,255,255,0.28); }
+/* Rooms list */
+#fcw-rooms { flex: 1; overflow-y: auto; }
+.fcw-room-item {
+    display: flex; align-items: center; gap: 12px;
+    padding: 12px 16px;
+    cursor: pointer;
+    border-bottom: 1px solid var(--border-soft, rgba(0,0,0,0.05));
+    transition: background .1s;
+    -webkit-tap-highlight-color: transparent;
+}
+.fcw-room-item:hover { background: var(--accent-soft, rgba(193,154,107,.08)); }
+.fcw-avatar {
+    width: 44px; height: 44px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 800; font-size: 1rem; color: #fff;
+    flex-shrink: 0;
+}
+.fcw-room-name { font-weight: 700; font-size: .9rem; color: var(--text); }
+.fcw-room-last { font-size: .78rem; color: var(--text-faint); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px; }
+.fcw-unread { background: var(--resort-gold, #c19a6b); color: #fff; border-radius: 20px; font-size: .7rem; font-weight: 700; padding: 2px 8px; margin-right: auto; flex-shrink: 0; }
+/* Messages view */
+#fcw-messages-view { display: none; flex-direction: column; flex: 1; overflow: hidden; }
+#fcw-messages-view.active { display: flex; }
+#fcw-rooms-view { display: flex; flex-direction: column; flex: 1; overflow: hidden; }
+#fcw-rooms-view.hidden { display: none; }
+#fcw-msgs-area {
+    flex: 1;
+    overflow-y: auto;
+    padding: 10px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    background: var(--page-bg, #f5f7fa);
+}
+.fcw-msg { display: flex; flex-direction: column; max-width: 82%; margin-bottom: 2px; }
+.fcw-msg.mine { align-self: flex-start; align-items: flex-start; }
+.fcw-msg.theirs { align-self: flex-end; align-items: flex-end; }
+.fcw-bubble {
+    padding: 7px 11px;
+    border-radius: 12px;
+    font-size: .88rem;
+    line-height: 1.45;
+    word-break: break-word;
+}
+.fcw-msg.mine .fcw-bubble { background: var(--surface, #fff); color: var(--text); border-top-right-radius: 3px; }
+.fcw-msg.theirs .fcw-bubble { background: var(--resort-gold, #c19a6b); color: #fff; border-top-left-radius: 3px; }
+.fcw-msg-time { font-size: .62rem; color: var(--text-muted); margin-top: 2px; padding: 0 3px; }
+.fcw-msg-name { font-size: .68rem; font-weight: 700; margin-bottom: 2px; padding: 0 3px; }
+#fcw-input-wrap {
+    display: flex; align-items: flex-end; gap: 8px;
+    padding: 8px 12px;
+    border-top: 1px solid var(--border-soft);
+    background: var(--paper, #fff);
+    flex-shrink: 0;
+}
+#fcw-input {
+    flex: 1;
+    border: 1.5px solid var(--border, #ddd);
+    border-radius: 20px;
+    padding: 8px 14px;
+    font-size: .9rem;
+    font-family: 'IBM Plex Sans Arabic', sans-serif;
+    outline: none;
+    background: var(--surface, #f9f9f9);
+    color: var(--text);
+    resize: none;
+    min-height: 36px;
+    max-height: 100px;
+}
+#fcw-send-btn {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--resort-teal-deep, #294043);
+    color: var(--resort-gold, #c19a6b);
+    border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+.fcw-empty { text-align: center; padding: 40px 16px; color: var(--text-muted); }
+.fcw-empty i { font-size: 2.5rem; display: block; margin-bottom: 10px; opacity: .4; }
+</style>
+
+<!-- Floating Button -->
+<button id="fcw-btn" onclick="fcwToggle()" aria-label="الدردشة">
+    <i class="bi bi-chat-dots-fill" id="fcw-btn-icon"></i>
+    <span id="fcw-badge" style="position:absolute;top:-4px;right:-4px;background:#E74C3C;color:#fff;border-radius:50%;font-size:.7rem;font-weight:700;width:20px;height:20px;display:none;align-items:center;justify-content:center;border:2px solid var(--paper,#fff);"></span>
+</button>
+
+<!-- Floating Panel -->
+<div id="fcw-panel">
+    <!-- Header -->
+    <div class="fcw-header" id="fcw-header">
+        <div>
+            <div class="fcw-header-title" id="fcw-header-title">💬 الدردشة</div>
+            <div class="fcw-header-sub" id="fcw-header-sub">اختر محادثة</div>
+        </div>
+        <div class="fcw-actions">
+            <a href="/chat/" class="fcw-icon-btn" title="فتح الشات كاملاً" target="_self"><i class="bi bi-arrows-fullscreen"></i></a>
+            <button class="fcw-icon-btn" onclick="fcwToggle()" title="إغلاق"><i class="bi bi-x-lg"></i></button>
+        </div>
+    </div>
+
+    <!-- Rooms View -->
+    <div id="fcw-rooms-view">
+        <div id="fcw-rooms">
+            <div class="fcw-empty"><i class="bi bi-arrow-repeat"></i>جاري التحميل...</div>
+        </div>
+    </div>
+
+    <!-- Messages View -->
+    <div id="fcw-messages-view">
+        <div id="fcw-msgs-area"></div>
+        <div id="fcw-input-wrap">
+            <textarea id="fcw-input" placeholder="اكتب رسالة..." rows="1" dir="auto"
+                onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();fcwSend();}"></textarea>
+            <button id="fcw-send-btn" onclick="fcwSend()"><i class="bi bi-send-fill"></i></button>
+        </div>
+    </div>
+</div>
+
+<script>
+(function(){
+    let panelOpen = false;
+    let currentRoomId = null;
+    let lastTs = '';
+    let pollTimer = null;
+    let notifOk = false;
+    let fcwCsrf = '';
+
+    function getCsrf() {
+        const m = document.cookie.match(/csrftoken=([^;]+)/);
+        return m ? m[1] : '';
+    }
+
+    window.fcwToggle = function() {
+        panelOpen = !panelOpen;
+        const panel = document.getElementById('fcw-panel');
+        const icon = document.getElementById('fcw-btn-icon');
+        if (panelOpen) {
+            panel.classList.add('open');
+            icon.className = 'bi bi-x-lg';
+            fcwLoadRooms();
+            requestNotifPerm();
+        } else {
+            panel.classList.remove('open');
+            icon.className = 'bi bi-chat-dots-fill';
+            fcwBackToRooms();
+            stopPoll();
+        }
+    };
+
+    function requestNotifPerm() {
+        if ('Notification' in window && Notification.permission !== 'denied') {
+            Notification.requestPermission().then(p => { notifOk = p === 'granted'; });
+        } else if (Notification.permission === 'granted') { notifOk = true; }
+    }
+
+    function fcwLoadRooms() {
+        fetch('/chat/api/rooms/')
+            .then(r => r.json())
+            .then(data => renderRooms(data.rooms || []))
+            .catch(() => { document.getElementById('fcw-rooms').innerHTML = '<div class="fcw-empty"><i class="bi bi-wifi-off"></i>خطأ في الاتصال</div>'; });
+    }
+
+    function renderRooms(rooms) {
+        const container = document.getElementById('fcw-rooms');
+        if (!rooms.length) {
+            container.innerHTML = '<div class="fcw-empty"><i class="bi bi-chat-square-dots"></i>لا توجد محادثات بعد</div>';
+            return;
+        }
+        container.innerHTML = rooms.map(r => {
+            const initial = r.is_group ? '📢' : (r.name || '?')[0].toUpperCase();
+            const unreadHtml = r.unread > 0 ? `<span class="fcw-unread">${r.unread}</span>` : '';
+            return `<div class="fcw-room-item" onclick="fcwOpenRoom(${r.id}, '${escH(r.name)}', '${r.avatar_color}', ${r.is_group})">
+                <div class="fcw-avatar" style="background:${r.avatar_color}">${initial}</div>
+                <div style="flex:1;min-width:0;">
+                    <div class="fcw-room-name">${escH(r.name)}</div>
+                    <div class="fcw-room-last">${escH(r.last_msg || 'ابدأ المحادثة')}</div>
+                </div>
+                ${unreadHtml}
+            </div>`;
+        }).join('');
+    }
+
+    window.fcwOpenRoom = function(roomId, name, color, isGroup) {
+        currentRoomId = roomId;
+        lastTs = '';
+        document.getElementById('fcw-rooms-view').classList.add('hidden');
+        document.getElementById('fcw-messages-view').classList.add('active');
+        document.getElementById('fcw-header-title').textContent = name;
+        document.getElementById('fcw-header-sub').textContent = isGroup ? 'قناة جماعية' : 'محادثة خاصة';
+        document.getElementById('fcw-msgs-area').innerHTML = '';
+        document.getElementById('fcw-header').style.cursor = 'pointer';
+        document.getElementById('fcw-header').onclick = () => { if(isGroup) return; fcwBackToRooms(); };
+        // Add back button
+        const acts = document.querySelector('#fcw-panel .fcw-actions');
+        if (!document.getElementById('fcw-back-btn')) {
+            const backBtn = document.createElement('button');
+            backBtn.id = 'fcw-back-btn';
+            backBtn.className = 'fcw-icon-btn';
+            backBtn.title = 'رجوع';
+            backBtn.innerHTML = '<i class="bi bi-arrow-right"></i>';
+            backBtn.onclick = fcwBackToRooms;
+            acts.prepend(backBtn);
+        }
+        document.getElementById('fcw-input').focus();
+        loadMessages(true);
+        startPoll();
+    };
+
+    function fcwBackToRooms() {
+        currentRoomId = null;
+        stopPoll();
+        document.getElementById('fcw-rooms-view').classList.remove('hidden');
+        document.getElementById('fcw-messages-view').classList.remove('active');
+        document.getElementById('fcw-header-title').textContent = '💬 الدردشة';
+        document.getElementById('fcw-header-sub').textContent = 'اختر محادثة';
+        document.getElementById('fcw-header').onclick = null;
+        const bb = document.getElementById('fcw-back-btn');
+        if (bb) bb.remove();
+        fcwLoadRooms();
+    }
+
+    async function loadMessages(initial = false) {
+        if (!currentRoomId) return;
+        const url = `/chat/api/room/${currentRoomId}/messages/` + (lastTs ? `?after=${encodeURIComponent(lastTs)}` : '');
+        try {
+            const r = await fetch(url);
+            const data = await r.json();
+            const msgs = data.messages || [];
+            const area = document.getElementById('fcw-msgs-area');
+            if (!area) return;
+            msgs.forEach(m => {
+                if (document.getElementById(`fcw-m-${m.id}`)) return;
+                area.appendChild(buildMsg(m));
+                if (!m.is_mine && !initial && notifOk && document.hidden) {
+                    new Notification(`💬 ${m.sender_name}`, { body: m.content, icon: '/static/pwa/icons/icon-192.png' });
+                }
+                lastTs = m.created_at_full;
+            });
+            if (msgs.length || initial) area.scrollTop = area.scrollHeight;
+        } catch(e) {}
+    }
+
+    function buildMsg(m) {
+        const wrap = document.createElement('div');
+        wrap.className = `fcw-msg ${m.is_mine ? 'theirs' : 'mine'}`;
+        wrap.id = `fcw-m-${m.id}`;
+        wrap.innerHTML = `
+            ${(!m.is_mine) ? `<div class="fcw-msg-name" style="color:${m.avatar_color}">${escH(m.sender_name)}</div>` : ''}
+            <div class="fcw-bubble">${escH(m.content)}</div>
+            <div class="fcw-msg-time">${m.created_at}${m.is_mine ? (m.is_read ? ' ✓✓' : ' ✓') : ''}</div>
+        `;
+        return wrap;
+    }
+
+    window.fcwSend = async function() {
+        const input = document.getElementById('fcw-input');
+        const content = input.value.trim();
+        if (!content || !currentRoomId) return;
+        input.value = '';
+        try {
+            const r = await fetch(`/chat/api/room/${currentRoomId}/messages/`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCsrf() },
+                body: JSON.stringify({ content })
+            });
+            if (r.ok) {
+                const data = await r.json();
+                const area = document.getElementById('fcw-msgs-area');
+                if (area && !document.getElementById(`fcw-m-${data.message.id}`)) {
+                    area.appendChild(buildMsg(data.message));
+                    area.scrollTop = area.scrollHeight;
+                }
+                lastTs = data.message.created_at_full;
+            }
+        } catch(e) {}
+    };
+
+    function startPoll() {
+        stopPoll();
+        pollTimer = setInterval(() => loadMessages(), 2000);
+    }
+    function stopPoll() {
+        if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
+    }
+
+    function escH(s) {
+        if (!s) return '';
+        return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    // Badge update — replaces old script
+    function updateBadges() {
+        fetch('/chat/api/unread/')
+            .then(r => r.json())
+            .then(data => {
+                ['sidebar-chat-badge','nav-chat-badge'].forEach(id => {
+                    const el = document.getElementById(id);
+                    if (!el) return;
+                    if (data.unread > 0) { el.textContent = data.unread; el.style.display = 'inline-block'; }
+                    else { el.style.display = 'none'; }
+                });
+                const fb = document.getElementById('fcw-badge');
+                if (fb) {
+                    if (data.unread > 0) { fb.textContent = data.unread; fb.style.display = 'flex'; }
+                    else { fb.style.display = 'none'; }
+                }
+            }).catch(()=>{});
+    }
+    updateBadges();
+    setInterval(updateBadges, 8000);
+})();
+</script>
+{% endif %}
 </body>
 
 </html>

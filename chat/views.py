@@ -253,3 +253,55 @@ def set_display_name(request):
             profile.save()
             return redirect('chat_home')
     return render(request, 'chat/set_name.html', {'profile': profile})
+
+@login_required
+def api_rooms_list(request):
+    """Returns rooms for the floating widget"""
+    group_room = Room.get_group_room()
+    group_room.participants.add(request.user)
+    
+    private_rooms = Room.objects.filter(
+        room_type='PRIVATE', participants=request.user
+    ).prefetch_related('participants', 'participants__profile')
+    
+    rooms_data = []
+    # Group room
+    last_msg = group_room.get_last_message()
+    rooms_data.append({
+        'id': group_room.pk,
+        'name': 'قناة مشتركة للجميع',
+        'last_msg': last_msg.content if last_msg else '',
+        'unread': group_room.unread_count_for(request.user),
+        'avatar_color': '#3498DB',
+        'is_group': True,
+        'timestamp': last_msg.created_at if last_msg else timezone.datetime.min.replace(tzinfo=timezone.utc)
+    })
+    
+    for room in private_rooms:
+        other = room.get_other_user(request.user)
+        if not other: continue
+        try:
+            display_name = other.profile.display_name
+            avatar_color = other.profile.avatar_color
+        except UserProfile.DoesNotExist:
+            display_name = other.username
+            avatar_color = '#95a5a6'
+            
+        last_msg = room.get_last_message()
+        rooms_data.append({
+            'id': room.pk,
+            'name': display_name,
+            'last_msg': last_msg.content if last_msg else '',
+            'unread': room.unread_count_for(request.user),
+            'avatar_color': avatar_color,
+            'is_group': False,
+            'timestamp': last_msg.created_at if last_msg else timezone.datetime.min.replace(tzinfo=timezone.utc)
+        })
+        
+    private_part = [r for r in rooms_data if not r['is_group']]
+    private_part.sort(key=lambda x: x['timestamp'], reverse=True)
+    
+    final_list = [rooms_data[0]] + private_part
+    for r in final_list: del r['timestamp']
+    
+    return JsonResponse({'rooms': final_list})
