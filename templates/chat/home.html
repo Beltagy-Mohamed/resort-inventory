@@ -5,78 +5,134 @@
 
 {% block extra_css %}
 <style>
-.chat-home-wrap {
-    max-width: 680px;
+/* ======= CHAT HOME - MOBILE FIRST ======= */
+.chat-page {
+    max-width: 700px;
     margin: 0 auto;
-    padding: 20px 10px;
+    padding: 0;
+    font-family: 'IBM Plex Sans Arabic', sans-serif;
 }
-.chat-header {
+
+/* ---- Top Bar ---- */
+.chat-topbar {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 24px;
+    padding: 16px 18px 12px;
+    position: sticky;
+    top: 0;
+    background: var(--sidebar-bg, #0f172a);
+    z-index: 10;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
 }
-.chat-header h2 {
-    font-size: 1.4rem;
+.chat-topbar h1 {
+    font-size: 1.3rem;
     font-weight: 700;
     margin: 0;
-}
-.btn-new-chat {
-    background: #3498DB;
     color: #fff;
+}
+.chat-topbar .topbar-actions { display: flex; gap: 10px; align-items: center; }
+.topbar-btn {
+    background: rgba(255,255,255,0.12);
     border: none;
+    color: #fff;
     border-radius: 50%;
-    width: 44px;
-    height: 44px;
-    font-size: 1.4rem;
+    width: 40px; height: 40px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 8px rgba(52,152,219,0.35);
     transition: background .2s;
 }
-.btn-new-chat:hover { background: #2980B9; }
-.room-list { list-style: none; padding: 0; margin: 0; }
+.topbar-btn:hover { background: rgba(255,255,255,0.22); }
+.topbar-btn.primary { background: #3498DB; }
+.topbar-btn.primary:hover { background: #2980B9; }
+
+/* ---- My profile strip ---- */
+.my-profile-strip {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 18px;
+    background: rgba(52,152,219,0.1);
+    border-bottom: 1px solid rgba(52,152,219,0.2);
+}
+.my-avatar {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: 700; font-size: .95rem; color: #fff;
+    flex-shrink: 0;
+}
+.my-profile-strip .my-name { font-weight: 600; font-size: .9rem; color: var(--text-color, #1a1a2e); }
+.my-profile-strip .my-sub { font-size: .75rem; color: #888; }
+.my-profile-strip .edit-name-btn {
+    margin-right: auto;
+    background: none; border: 1px solid #3498DB;
+    color: #3498DB; border-radius: 20px;
+    padding: 4px 14px; font-size: .78rem; cursor: pointer;
+    transition: all .2s;
+}
+.my-profile-strip .edit-name-btn:hover { background: #3498DB; color: #fff; }
+
+/* ---- Room List ---- */
+.room-list { list-style: none; padding: 8px 0; margin: 0; }
 .room-item {
     display: flex;
     align-items: center;
     gap: 14px;
-    padding: 14px 16px;
-    border-radius: 14px;
-    margin-bottom: 8px;
-    cursor: pointer;
+    padding: 14px 18px;
     text-decoration: none;
     color: inherit;
-    background: var(--card-bg, #fff);
-    box-shadow: 0 1px 6px rgba(0,0,0,0.07);
-    transition: background .15s, box-shadow .15s;
+    border-bottom: 1px solid var(--border-color, rgba(0,0,0,0.06));
+    transition: background .15s;
     position: relative;
+    -webkit-tap-highlight-color: transparent;
 }
-.room-item:hover { background: var(--hover-bg, #f0f4f8); box-shadow: 0 3px 12px rgba(0,0,0,0.1); }
-.avatar-circle {
-    width: 50px; height: 50px;
+.room-item:active { background: rgba(52,152,219,0.08); }
+html[data-theme="dark"] .room-item:hover { background: rgba(255,255,255,0.04); }
+.room-item:hover { background: rgba(52,152,219,0.05); }
+
+.room-avatar {
+    width: 52px; height: 52px;
     border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    font-size: 1.3rem; font-weight: 700;
+    font-size: 1.25rem; font-weight: 800;
     color: #fff;
     flex-shrink: 0;
     position: relative;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+.room-avatar .online-dot {
+    position: absolute;
+    bottom: 2px; left: 2px;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: #2ECC71;
+    border: 2px solid var(--card-bg, #fff);
 }
 .room-info { flex: 1; min-width: 0; }
-.room-info .room-name {
-    font-weight: 600;
-    font-size: .98rem;
+.room-name {
+    font-weight: 700;
+    font-size: .97rem;
+    color: var(--text-color, #1a1a2e);
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    margin-bottom: 4px;
 }
-.room-info .last-msg {
+.room-last-msg {
     font-size: .82rem;
-    color: #888;
+    color: #8a8a9a;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    margin-top: 3px;
 }
+.room-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+    flex-shrink: 0;
+}
+.room-time { font-size: .72rem; color: #aaa; }
 .unread-badge {
-    background: #E74C3C;
+    background: #25D366;
     color: #fff;
     border-radius: 999px;
     font-size: .72rem;
@@ -84,118 +140,224 @@
     padding: 2px 8px;
     min-width: 22px;
     text-align: center;
+    box-shadow: 0 2px 4px rgba(37,211,102,0.35);
 }
-.my-name-bar {
-    background: var(--card-bg, #fff);
-    border-radius: 14px;
-    padding: 14px 18px;
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    box-shadow: 0 1px 6px rgba(0,0,0,0.07);
+
+/* Group room special style */
+.room-item.group-room .room-avatar {
+    background: linear-gradient(135deg, #3498DB, #2980B9) !important;
 }
-.my-name-bar .name-label { font-size: .84rem; color: #888; }
-.my-name-bar .name-value { font-weight: 700; font-size: 1rem; }
+.group-label {
+    font-size: .68rem;
+    background: rgba(52,152,219,0.15);
+    color: #3498DB;
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-weight: 600;
+    display: inline-block;
+    margin-top: 2px;
+}
+
+/* ---- Empty state ---- */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #aaa;
+}
+.empty-state i { font-size: 3.5rem; display: block; margin-bottom: 16px; opacity: .4; }
+
+/* ---- Modal ---- */
 .modal-overlay {
     display: none;
     position: fixed; inset: 0;
-    background: rgba(0,0,0,0.45);
-    z-index: 9999;
-    align-items: center; justify-content: center;
+    background: rgba(0,0,0,0.55);
+    z-index: 99999;
+    align-items: flex-end;
+    justify-content: center;
 }
 .modal-overlay.open { display: flex; }
-.modal-box {
+.modal-sheet {
     background: var(--card-bg, #fff);
-    border-radius: 18px;
-    padding: 24px;
-    width: 94%; max-width: 420px;
-    max-height: 80vh;
+    border-radius: 20px 20px 0 0;
+    padding: 12px 0 env(safe-area-inset-bottom, 16px);
+    width: 100%; max-width: 600px;
+    max-height: 75vh;
     overflow-y: auto;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
-    position: relative;
+    animation: slideUp .25s ease;
 }
-.modal-box h3 { margin: 0 0 18px 0; font-size: 1.1rem; }
-.modal-close {
-    position: absolute; top: 16px; left: 16px;
-    background: none; border: none; font-size: 1.4rem; cursor: pointer; color: #888;
+@keyframes slideUp {
+    from { transform: translateY(100%); }
+    to   { transform: translateY(0); }
 }
-.user-pick-list { list-style: none; padding: 0; margin: 0; }
+.modal-handle {
+    width: 40px; height: 4px;
+    background: #ccc; border-radius: 2px;
+    margin: 0 auto 16px;
+}
+.modal-title {
+    font-weight: 700; font-size: 1rem;
+    padding: 0 20px 12px;
+    border-bottom: 1px solid var(--border-color, #eee);
+    margin-bottom: 8px;
+}
+.user-pick-list { list-style: none; padding: 0 8px; margin: 0; }
 .user-pick-item {
-    display: flex; align-items: center; gap: 12px;
+    display: flex; align-items: center; gap: 14px;
     padding: 12px 14px; border-radius: 12px;
     cursor: pointer;
-    transition: background .15s;
+    -webkit-tap-highlight-color: transparent;
 }
-.user-pick-item:hover { background: var(--hover-bg, #f0f4f8); }
+.user-pick-item:active { background: rgba(52,152,219,0.08); }
 .user-pick-avatar {
-    width: 40px; height: 40px; border-radius: 50%;
+    width: 44px; height: 44px; border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
-    font-weight: 700; color: #fff; font-size: 1rem;
+    font-weight: 800; color: #fff; font-size: 1.1rem;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+}
+
+/* ---- Rename modal ---- */
+.rename-modal-box {
+    background: var(--card-bg, #fff);
+    border-radius: 20px;
+    padding: 28px 24px;
+    width: 92%; max-width: 380px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+}
+.rename-input {
+    width: 100%;
+    border: 1.5px solid #ddd;
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-size: 1rem;
+    font-family: 'IBM Plex Sans Arabic', sans-serif;
+    outline: none;
+    background: var(--input-bg, #f9f9f9);
+    color: var(--text-color, #1a1a2e);
+    margin: 16px 0;
+    box-sizing: border-box;
+    text-align: center;
+}
+.rename-input:focus { border-color: #3498DB; }
+.rename-save-btn {
+    width: 100%; padding: 13px;
+    background: #3498DB; color: #fff;
+    border: none; border-radius: 12px;
+    font-size: 1rem; font-weight: 700;
+    cursor: pointer;
+    font-family: 'IBM Plex Sans Arabic', sans-serif;
 }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="chat-home-wrap">
+<div class="chat-page">
 
-    <div class="my-name-bar">
-        <div class="avatar-circle" style="background: {{ profile.avatar_color }}; width:40px;height:40px;font-size:.95rem;">
-            {{ profile.display_name|first }}
+    <!-- Top Bar -->
+    <div class="chat-topbar">
+        <h1><i class="bi bi-chat-dots-fill" style="color:#3498DB;"></i> الدردشة</h1>
+        <div class="topbar-actions">
+            <button class="topbar-btn" onclick="openRenameModal()" title="تغيير اسمك">
+                <i class="bi bi-person-badge"></i>
+            </button>
+            <button class="topbar-btn primary" onclick="openNewChat()" title="محادثة جديدة">
+                <i class="bi bi-pencil-square"></i>
+            </button>
         </div>
-        <div>
-            <div class="name-label">اسمك في الدردشة</div>
-            <div class="name-value">{{ profile.display_name }}</div>
-        </div>
-        <a href="{% url 'chat_set_name' %}" class="ms-auto" style="font-size:.82rem; color:#3498DB;">تغيير</a>
     </div>
 
-    <div class="chat-header">
-        <h2><i class="bi bi-chat-dots"></i> الدردشة</h2>
-        <button class="btn-new-chat" title="محادثة جديدة" onclick="openNewChat()">
-            <i class="bi bi-pencil-square"></i>
+    <!-- My Profile Strip -->
+    <div class="my-profile-strip">
+        <div class="my-avatar" style="background: {{ profile.avatar_color }};">
+            {{ profile.display_name|first|upper }}
+        </div>
+        <div>
+            <div class="my-name">{{ profile.display_name }}</div>
+            <div class="my-sub">اسمك في الدردشة</div>
+        </div>
+        <button class="edit-name-btn" onclick="openRenameModal()">
+            <i class="bi bi-pencil"></i> تغيير
         </button>
     </div>
 
+    <!-- Room List -->
     <ul class="room-list">
         {% for rd in rooms_data %}
         <li>
-            <a href="{% url 'chat_room' rd.room.pk %}" class="room-item">
-                <div class="avatar-circle" style="background: {{ rd.avatar_color }};">
-                    {% if rd.is_group %}📢{% else %}{{ rd.avatar_char }}{% endif %}
+            <a href="{% url 'chat_room' rd.room.pk %}"
+               class="room-item {% if rd.is_group %}group-room{% endif %}">
+                <div class="room-avatar" style="background: {{ rd.avatar_color }};">
+                    {% if rd.is_group %}
+                    <i class="bi bi-megaphone-fill" style="font-size:1.3rem;"></i>
+                    {% else %}
+                    {{ rd.avatar_char|upper }}
+                    {% endif %}
                 </div>
                 <div class="room-info">
                     <div class="room-name">{{ rd.display_name }}</div>
-                    <div class="last-msg">
+                    {% if rd.is_group %}<span class="group-label">قناة مشتركة</span>{% endif %}
+                    <div class="room-last-msg">
                         {% if rd.last_message %}
-                            {{ rd.last_message.content|truncatechars:40 }}
+                            {{ rd.last_message.content|truncatechars:45 }}
                         {% else %}
-                            لا توجد رسائل بعد
+                            <em>لا توجد رسائل بعد — ابدأ المحادثة!</em>
                         {% endif %}
                     </div>
                 </div>
-                {% if rd.unread > 0 %}
-                <span class="unread-badge">{{ rd.unread }}</span>
-                {% endif %}
+                <div class="room-meta">
+                    {% if rd.last_message %}
+                    <span class="room-time">{{ rd.last_message.created_at|time:"H:i" }}</span>
+                    {% endif %}
+                    {% if rd.unread > 0 %}
+                    <span class="unread-badge">{{ rd.unread }}</span>
+                    {% endif %}
+                </div>
             </a>
         </li>
         {% empty %}
-        <li style="text-align:center; color:#888; padding: 40px 0;">
-            لا توجد محادثات بعد
+        <li class="empty-state">
+            <i class="bi bi-chat-square-dots"></i>
+            لا توجد محادثات بعد<br>
+            <small>اضغط ✏️ لبدء محادثة جديدة</small>
         </li>
         {% endfor %}
     </ul>
 
 </div>
 
-<!-- New Chat Modal -->
+<!-- New Chat Bottom Sheet -->
 <div class="modal-overlay" id="newChatModal">
-    <div class="modal-box">
-        <button class="modal-close" onclick="closeNewChat()">×</button>
-        <h3><i class="bi bi-person-plus"></i> محادثة جديدة</h3>
+    <div class="modal-sheet">
+        <div class="modal-handle"></div>
+        <div class="modal-title">
+            <i class="bi bi-person-plus" style="color:#3498DB;"></i> اختر شخصاً للمحادثة
+        </div>
         <ul class="user-pick-list" id="userPickList">
-            <li style="text-align:center; color:#888;">جاري التحميل...</li>
+            <li style="text-align:center; color:#888; padding:20px;">
+                <i class="bi bi-arrow-repeat" style="font-size:1.5rem;"></i><br>جاري التحميل...
+            </li>
         </ul>
+    </div>
+</div>
+
+<!-- Rename Modal -->
+<div class="modal-overlay" id="renameModal" style="align-items:center;">
+    <div class="rename-modal-box">
+        <h3 style="margin:0; font-size:1.1rem;">
+            <i class="bi bi-person-badge" style="color:#3498DB;"></i> تغيير اسمك في الدردشة
+        </h3>
+        <form method="post" action="{% url 'chat_set_name' %}" id="renameForm">
+            {% csrf_token %}
+            <input type="text" name="display_name" class="rename-input"
+                   placeholder="اكتب اسمك الجديد..."
+                   value="{{ profile.display_name }}"
+                   maxlength="60" required dir="auto">
+            <button type="submit" class="rename-save-btn">
+                <i class="bi bi-check-circle"></i> حفظ الاسم
+            </button>
+        </form>
+        <button onclick="closeRenameModal()" style="width:100%; margin-top:10px; padding:10px; background:none; border:1px solid #ddd; border-radius:12px; cursor:pointer; font-family:'IBM Plex Sans Arabic',sans-serif; color:#888;">
+            إلغاء
+        </button>
     </div>
 </div>
 
@@ -210,13 +372,17 @@ function openNewChat() {
         .then(data => {
             const list = document.getElementById('userPickList');
             if (!data.users.length) {
-                list.innerHTML = '<li style="text-align:center;color:#888;">لا يوجد مستخدمون آخرون</li>';
+                list.innerHTML = '<li style="text-align:center;color:#888;padding:20px;">لا يوجد مستخدمون آخرون في النظام</li>';
                 return;
             }
             list.innerHTML = data.users.map(u => `
                 <li class="user-pick-item" onclick="startChat(${u.id})">
-                    <div class="user-pick-avatar" style="background:${u.avatar_color}">${u.display_name[0]}</div>
-                    <span style="font-weight:600">${u.display_name}</span>
+                    <div class="user-pick-avatar" style="background:${u.avatar_color}">${u.display_name[0].toUpperCase()}</div>
+                    <div>
+                        <div style="font-weight:700;font-size:.95rem;">${u.display_name}</div>
+                        <div style="font-size:.78rem;color:#888;">اضغط للمحادثة</div>
+                    </div>
+                    <i class="bi bi-arrow-left" style="margin-right:auto;color:#aaa;"></i>
                 </li>
             `).join('');
         });
@@ -227,8 +393,19 @@ function closeNewChat() {
 function startChat(userId) {
     window.location.href = `/chat/start/${userId}/`;
 }
+function openRenameModal() {
+    document.getElementById('renameModal').classList.add('open');
+    document.querySelector('#renameModal .rename-input').focus();
+}
+function closeRenameModal() {
+    document.getElementById('renameModal').classList.remove('open');
+}
+// Close modals on backdrop tap
 document.getElementById('newChatModal').addEventListener('click', function(e) {
     if (e.target === this) closeNewChat();
+});
+document.getElementById('renameModal').addEventListener('click', function(e) {
+    if (e.target === this) closeRenameModal();
 });
 </script>
 {% endblock %}
