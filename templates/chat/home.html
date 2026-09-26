@@ -7,8 +7,8 @@
 <style>
 /* Hide standard layout */
 aside.sidebar, .mobile-nav, nav.navbar, header.navbar { display: none !important; }
-.container { padding: 0 !important; margin: 0 !important; max-width: 100% !important; height: 100vh; overflow: hidden; }
-main { padding: 0 !important; margin: 0 !important; height: 100vh; overflow-y: auto; background: var(--page-bg, #f5f7fa); }
+.container { padding: 0 !important; margin: 0 !important; max-width: 100% !important; height: auto !important; min-height: 100vh; overflow: visible !important; }
+main { padding: 0 !important; margin: 0 !important; min-height: 100vh; overflow: visible !important; background: var(--page-bg, #f5f7fa); }
 
 /* ======= CHAT HOME - MOBILE FIRST ======= */
 .chat-page {
