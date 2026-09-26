@@ -7,25 +7,18 @@
 <style>
 /* Hide standard layout elements */
 aside.sidebar, .mobile-nav, nav.navbar, header.navbar { display: none !important; }
-.container { padding: 0 !important; margin: 0 !important; max-width: 100% !important; height: 100dvh; overflow: hidden !important; }
-main { padding: 0 !important; margin: 0 !important; height: 100dvh; overflow: hidden !important; display: flex !important; flex-direction: column !important; }
-
-/* ======= CHAT ROOM - FULL SCREEN MOBILE ======= */
-
-/* Make the main container flex so chat fills screen */
-body { overflow: hidden; }
-main { padding: 0 !important; flex: 1; overflow: hidden; }
-.container { height: 100dvh; overflow: hidden; display: flex; flex-direction: column; }
+body { overflow: hidden; background: var(--paper) !important; }
+.container { display: block !important; padding: 0 !important; margin: 0 !important; max-width: 100% !important; height: 100dvh; overflow: hidden !important; }
+main { display: block !important; padding: 0 !important; margin: 0 !important; height: 100dvh; overflow: hidden !important; }
 
 .chat-room-wrap {
     display: flex;
     flex-direction: column;
-    flex: 1;
-    height: 100%;
+    height: 100dvh;
     max-width: 760px;
     margin: 0 auto;
     width: 100%;
-    background: var(--page-bg, #f5f7fa);
+    background: var(--paper) !important;
     position: relative;
     overflow: hidden;
 }
@@ -75,7 +68,7 @@ main { padding: 0 !important; flex: 1; overflow: hidden; }
     display: flex;
     flex-direction: column;
     gap: 3px;
-    background-color: var(--page-bg, #f5f7fa);
+    background-color: var(--paper, #f5f7fa);
     /* Military style subtle pattern */
     background-image: url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M20 20.5V18H0v-2h20v-2H0v-2h20v-2H0V8h20V6H0V4h20V2H0V0h22v20h2v-2h2v2h2v-2h2v2h2v-2h2v2h2v-2h2v2h2v-2h2v2h2v2h-2v2h2v2h-2v2h2v2h-2v2h2v2h-2v2h2v2h-2v2h2v2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2V20h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2v-2h-2v2h-2V20.5zM0 22h20v2H0v-2zm0 4h20v2H0v-2zm0 4h20v2H0v-2zm0 4h20v2H0v-2z' fill='%23000000' fill-opacity='0.02' fill-rule='evenodd'/%3E%3C/svg%3E");
     -webkit-overflow-scrolling: touch;

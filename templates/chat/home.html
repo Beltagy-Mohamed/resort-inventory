@@ -8,7 +8,7 @@
 /* Hide standard layout */
 aside.sidebar, .mobile-nav, nav.navbar, header.navbar { display: none !important; }
 .container { padding: 0 !important; margin: 0 !important; max-width: 100% !important; height: auto !important; min-height: 100vh; overflow: visible !important; }
-main { padding: 0 !important; margin: 0 !important; min-height: 100vh; overflow: visible !important; background: var(--page-bg, #f5f7fa); }
+main { padding: 0 !important; margin: 0 !important; min-height: 100vh; overflow: visible !important; background: var(--paper, #f5f7fa); }
 
 /* ======= CHAT HOME - MOBILE FIRST ======= */
 .chat-page {
@@ -17,7 +17,7 @@ main { padding: 0 !important; margin: 0 !important; min-height: 100vh; overflow:
     padding: 0;
     font-family: 'IBM Plex Sans Arabic', sans-serif;
     min-height: 100vh;
-    background: var(--page-bg, #f5f7fa);
+    background: var(--paper, #f5f7fa);
 }
 
 /* ---- Top Bar ---- */
@@ -73,7 +73,7 @@ main { padding: 0 !important; margin: 0 !important; min-height: 100vh; overflow:
     align-items: center;
     gap: 12px;
     padding: 12px 18px;
-    background: var(--accent-soft, rgba(193,154,107,0.1));
+    background: var(--surface) !important;
     border-bottom: 1px solid var(--border-soft);
 }
 .my-avatar {
@@ -83,8 +83,8 @@ main { padding: 0 !important; margin: 0 !important; min-height: 100vh; overflow:
     font-weight: 700; font-size: .95rem; color: #fff;
     flex-shrink: 0;
 }
-.my-profile-strip .my-name { font-weight: 600; font-size: .9rem; color: var(--text, #1a1a2e); }
-.my-profile-strip .my-sub { font-size: .75rem; color: var(--text-muted); }
+.my-profile-strip .my-name { font-weight: 600; font-size: .9rem; color: var(--text) !important; }
+.my-profile-strip .my-sub { font-size: .75rem; color: var(--text-muted) !important; }
 .my-profile-strip .edit-name-btn {
     margin-right: auto;
     background: none; border: 1px solid var(--resort-gold, #c19a6b);
@@ -134,7 +134,7 @@ html[data-theme="dark"] .room-item:hover { background: rgba(255,255,255,0.04); }
 .room-name {
     font-weight: 700;
     font-size: .97rem;
-    color: var(--text, #1a1a2e);
+    color: var(--text) !important;
     white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     margin-bottom: 4px;
 }
@@ -182,7 +182,7 @@ html[data-theme="dark"] .room-item:hover { background: rgba(255,255,255,0.04); }
 .empty-state {
     text-align: center;
     padding: 60px 20px;
-    color: var(--text-muted);
+    color: var(--text-muted) !important;
 }
 .empty-state i { font-size: 3.5rem; display: block; margin-bottom: 16px; opacity: .4; }
 
@@ -254,7 +254,7 @@ html[data-theme="dark"] .room-item:hover { background: rgba(255,255,255,0.04); }
     font-family: 'IBM Plex Sans Arabic', sans-serif;
     outline: none;
     background: var(--surface, #f9f9f9);
-    color: var(--text, #1a1a2e);
+    color: var(--text) !important;
     margin: 16px 0;
     box-sizing: border-box;
     text-align: center;
