@@ -444,6 +444,11 @@ if os.environ.get('RENDER'):
 # Auto-allow Vercel hosts
 if os.environ.get('VERCEL'):
     ALLOWED_HOSTS.append('resort-inventory.vercel.app')
+    # VERCEL_URL is auto-injected per-deployment (e.g. resort-inventory-abc123-beltagy2.vercel.app)
+    # Adding it allows preview deployments to work without wildcard *.vercel.app
+    vercel_url = os.environ.get('VERCEL_URL', '')
+    if vercel_url and vercel_url not in ALLOWED_HOSTS:
+        ALLOWED_HOSTS.append(vercel_url)
 
 # Session Security Settings
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
