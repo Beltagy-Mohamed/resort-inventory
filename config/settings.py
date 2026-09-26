@@ -74,7 +74,7 @@ def env_bool(name, default):
 
 # SECURITY WARNING: keep the secret key used in production secret!
 
-DEBUG = env_bool("DJANGO_DEBUG", False)
+DEBUG = env_bool("DJANGO_DEBUG", True)
 
 
 
