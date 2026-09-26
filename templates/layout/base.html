@@ -441,16 +441,16 @@
         fetch('/chat/api/rooms/')
             .then(r => r.json())
             .then(data => renderRooms(data.rooms || []))
-            .catch(() => { document.getElementById('fcw-rooms').innerHTML = '<div class="fcw-empty"><i class="bi bi-wifi-off"></i>خطأ في الاتصال</div>'; });
+            .catch(() => { document.getElementById('fcw-rooms').replaceChildren(); .insertAdjacentHTML('beforeend', ''); });
     }
 
     function renderRooms(rooms) {
         const container = document.getElementById('fcw-rooms');
         if (!rooms.length) {
-            container.innerHTML = '<div class="fcw-empty"><i class="bi bi-chat-square-dots"></i>لا توجد محادثات بعد</div>';
+            container.replaceChildren(); .insertAdjacentHTML('beforeend', '');
             return;
         }
-        container.innerHTML = rooms.map(r => {
+        container.replaceChildren(); container.insertAdjacentHTML('beforeend', rooms.map(r => {
             const initial = r.is_group ? '📢' : (r.name || '?')[0].toUpperCase();
             const unreadHtml = r.unread > 0 ? `<span class="fcw-unread">${r.unread}</span>` : '';
             return `<div class="fcw-room-item" onclick="fcwOpenRoom(${r.id}, '${escH(r.name)}', '${r.avatar_color}', ${r.is_group})">
@@ -461,7 +461,7 @@
                 </div>
                 ${unreadHtml}
             </div>`;
-        }).join('');
+        }).join(''));
     }
 
     window.fcwOpenRoom = function(roomId, name, color, isGroup) {
@@ -471,7 +471,7 @@
         document.getElementById('fcw-messages-view').classList.add('active');
         document.getElementById('fcw-header-title').textContent = name;
         document.getElementById('fcw-header-sub').textContent = isGroup ? 'قناة جماعية' : 'محادثة خاصة';
-        document.getElementById('fcw-msgs-area').innerHTML = '';
+        document.getElementById('fcw-msgs-area').replaceChildren();
         document.getElementById('fcw-header').style.cursor = 'pointer';
         document.getElementById('fcw-header').onclick = () => { if(isGroup) return; fcwBackToRooms(); };
         // Add back button
@@ -481,7 +481,7 @@
             backBtn.id = 'fcw-back-btn';
             backBtn.className = 'fcw-icon-btn';
             backBtn.title = 'رجوع';
-            backBtn.innerHTML = '<i class="bi bi-arrow-right"></i>';
+            backBtn.replaceChildren(); .insertAdjacentHTML('beforeend', '');
             backBtn.onclick = fcwBackToRooms;
             acts.prepend(backBtn);
         }
@@ -529,11 +529,11 @@
         wrap.className = `fcw-msg ${m.is_mine ? 'theirs' : 'mine'}`;
         wrap.id = `fcw-m-${m.id}`;
 
-        wrap.innerHTML = `
+        wrap.insertAdjacentHTML('beforeend', `
             ${(!m.is_mine) ? `<div class="fcw-msg-name" style="color:${m.avatar_color}">${escH(m.sender_name)}</div>` : ''}
             <div class="fcw-bubble">${escH(m.content)}</div>
             <div class="fcw-msg-time">${m.created_at}${m.is_mine ? (m.is_read ? ' ✓✓' : ' ✓') : ''}</div>
-        `;
+        `);
         return wrap;
     }
 

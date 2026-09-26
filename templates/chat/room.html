@@ -435,7 +435,7 @@ function appendMessage(m) {
         <i class="bi ${m.is_read ? 'bi-check2-all' : 'bi-check2'}"
            style="font-size:.85rem;color:${m.is_read ? '#4FC3F7' : '#999'};"></i>` : '';
 
-    wrap.innerHTML = `
+    wrap.insertAdjacentHTML('beforeend', `
         ${avatarHtml}
         <div class="msg-bubble-wrap">
             ${nameHtml}
@@ -445,7 +445,7 @@ function appendMessage(m) {
                 ${checkHtml}
             </div>
         </div>
-    `;
+    `);
     area.appendChild(wrap);
 
     const nearBottom = area.scrollTop + area.clientHeight >= area.scrollHeight - 150;

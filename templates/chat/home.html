@@ -400,10 +400,10 @@ function openNewChat() {
         .then(data => {
             const list = document.getElementById('userPickList');
             if (!data.users.length) {
-                list.innerHTML = '<li style="text-align:center;color:#888;padding:20px;">لا يوجد مستخدمون آخرون في النظام</li>';
+                list.replaceChildren(); list.insertAdjacentHTML('beforeend', '');
                 return;
             }
-            list.innerHTML = data.users.map(u => `
+            list.replaceChildren(); list.insertAdjacentHTML('beforeend', data.users.map(u => `
                 <li class="user-pick-item" onclick="startChat(${u.id})">
                     <div class="user-pick-avatar" style="background:${u.avatar_color}">${u.display_name[0].toUpperCase()}</div>
                     <div>
@@ -412,7 +412,7 @@ function openNewChat() {
                     </div>
                     <i class="bi bi-arrow-left" style="margin-right:auto;color:#aaa;"></i>
                 </li>
-            `).join('');
+            `).join(''));
         });
 }
 function closeNewChat() {
