@@ -1,6 +1,14 @@
 {% extends 'layout/base.html' %}
 {% block title %}تعيين اسمك{% endblock %}
 
+{% block extra_css %}
+<style>
+aside.sidebar, .mobile-nav, nav.navbar, header.navbar { display: none !important; }
+.container { padding: 0 !important; margin: 0 !important; max-width: 100% !important; height: 100vh; overflow: hidden; background: var(--page-bg, #f5f7fa); }
+main { padding: 0 !important; margin: 0 !important; height: 100vh; overflow-y: auto; }
+</style>
+{% endblock %}
+
 {% block content %}
 <div style="max-width:420px; margin: 50px auto; padding: 0 16px;">
     <div style="background: var(--card-bg,#fff); border-radius: 20px; padding: 36px 28px; box-shadow: 0 6px 28px rgba(0,0,0,0.1); text-align:center;">

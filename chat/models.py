@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 import random
+from django.utils import timezone
+import datetime
 
 
 AVATAR_COLORS = [
@@ -18,6 +20,7 @@ class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     display_name = models.CharField(max_length=60, verbose_name='اسم العرض')
     avatar_color = models.CharField(max_length=7, default=random_color)
+    last_seen = models.DateTimeField(auto_now=True)
 
     class Meta:
         verbose_name = 'ملف المستخدم'
@@ -25,6 +28,12 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return self.display_name
+
+    @property
+    def is_online(self):
+        if not self.last_seen:
+            return False
+        return timezone.now() - self.last_seen < datetime.timedelta(minutes=1)
 
     @classmethod
     def get_or_create_for(cls, user):
@@ -108,7 +117,8 @@ class Room(models.Model):
 class Message(models.Model):
     room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='messages')
     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_messages')
-    content = models.TextField()
+    content = models.TextField(blank=True)
+    image = models.ImageField(upload_to='chat_images/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -119,6 +129,18 @@ class Message(models.Model):
 
     def __str__(self):
         return f'{self.sender} → {self.room}: {self.content[:40]}'
+
+    def is_read_by_others(self):
+        if self.room.room_type == 'GROUP':
+            return False # Group read receipts are complex, ignore for now
+        other_user = self.room.participants.exclude(pk=self.sender_id).first()
+        if not other_user:
+            return False
+        try:
+            status = MessageReadStatus.objects.get(user=other_user, room=self.room)
+            return status.last_read_at >= self.created_at
+        except MessageReadStatus.DoesNotExist:
+            return False
 
     def to_dict(self, current_user=None):
         try:
@@ -135,9 +157,11 @@ class Message(models.Model):
             'sender_name': display_name,
             'avatar_color': avatar_color,
             'content': self.content,
+            'image_url': self.image.url if self.image else None,
             'is_mine': (self.sender_id == current_user.pk) if current_user else False,
             'created_at': self.created_at.strftime('%H:%M'),
             'created_at_full': self.created_at.isoformat(),
+            'is_read': self.is_read_by_others(),
         }
 
 

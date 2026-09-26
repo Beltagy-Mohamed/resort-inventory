@@ -5,12 +5,19 @@
 
 {% block extra_css %}
 <style>
+/* Hide standard layout */
+aside.sidebar, .mobile-nav, nav.navbar, header.navbar { display: none !important; }
+.container { padding: 0 !important; margin: 0 !important; max-width: 100% !important; height: 100vh; overflow: hidden; }
+main { padding: 0 !important; margin: 0 !important; height: 100vh; overflow-y: auto; background: var(--page-bg, #f5f7fa); }
+
 /* ======= CHAT HOME - MOBILE FIRST ======= */
 .chat-page {
     max-width: 700px;
     margin: 0 auto;
     padding: 0;
     font-family: 'IBM Plex Sans Arabic', sans-serif;
+    min-height: 100vh;
+    background: var(--page-bg, #f5f7fa);
 }
 
 /* ---- Top Bar ---- */
@@ -19,18 +26,31 @@
     align-items: center;
     justify-content: space-between;
     padding: 16px 18px 12px;
+    padding-top: max(16px, env(safe-area-inset-top));
     position: sticky;
     top: 0;
-    background: var(--sidebar-bg, #0f172a);
-    z-index: 10;
+    background: #0f172a;
+    z-index: 100;
     border-bottom: 1px solid rgba(255,255,255,0.07);
 }
+.chat-topbar-left { display: flex; align-items: center; gap: 12px; }
+.btn-back-dashboard {
+    background: rgba(255,255,255,0.12);
+    border: none; color: #fff; border-radius: 8px;
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem; cursor: pointer;
+}
 .chat-topbar h1 {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     font-weight: 700;
     margin: 0;
     color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
+
 .chat-topbar .topbar-actions { display: flex; gap: 10px; align-items: center; }
 .topbar-btn {
     background: rgba(255,255,255,0.12);
@@ -254,7 +274,12 @@ html[data-theme="dark"] .room-item:hover { background: rgba(255,255,255,0.04); }
 
     <!-- Top Bar -->
     <div class="chat-topbar">
-        <h1><i class="bi bi-chat-dots-fill" style="color:#3498DB;"></i> الدردشة</h1>
+        <div class="chat-topbar-left">
+            <a href="{% url 'dashboard' %}" class="btn-back-dashboard" title="الرئيسية">
+                <i class="bi bi-arrow-right"></i>
+            </a>
+            <h1><i class="bi bi-chat-dots-fill" style="color:#3498DB;"></i> الدردشة</h1>
+        </div>
         <div class="topbar-actions">
             <button class="topbar-btn" onclick="openRenameModal()" title="تغيير اسمك">
                 <i class="bi bi-person-badge"></i>

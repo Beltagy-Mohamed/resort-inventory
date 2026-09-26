@@ -112,12 +112,18 @@ def room_view(request, room_id):
     messages_list = list(reversed(messages_qs))
 
     # Room display name
+    is_online = False
     if room.room_type == 'GROUP':
         room_name = 'القناة العامة 📢'
         other_user = None
     else:
         other_user = room.get_other_user(request.user)
         room_name = room.get_display_name_for(request.user)
+        if other_user:
+            try:
+                is_online = other_user.profile.is_online
+            except:
+                pass
 
     context = {
         'room': room,
@@ -125,6 +131,7 @@ def room_view(request, room_id):
         'messages_list': messages_list,
         'profile': profile,
         'other_user': other_user,
+        'is_online': is_online,
         'last_timestamp': messages_list[-1].created_at.isoformat() if messages_list else '',
     }
     return render(request, 'chat/room.html', context)
@@ -149,16 +156,22 @@ def api_messages(request, room_id):
         return JsonResponse({'error': 'Forbidden'}, status=403)
 
     if request.method == 'POST':
-        try:
-            data = json.loads(request.body)
-            content = data.get('content', '').strip()
-        except (json.JSONDecodeError, KeyError):
-            content = ''
+        content = ''
+        image = None
+        if request.content_type.startswith('multipart/form-data'):
+            content = request.POST.get('content', '').strip()
+            image = request.FILES.get('image')
+        else:
+            try:
+                data = json.loads(request.body)
+                content = data.get('content', '').strip()
+            except (json.JSONDecodeError, KeyError):
+                pass
 
-        if not content:
+        if not content and not image:
             return JsonResponse({'error': 'Empty message'}, status=400)
 
-        msg = Message.objects.create(room=room, sender=request.user, content=content)
+        msg = Message.objects.create(room=room, sender=request.user, content=content, image=image)
 
         # Update read status for sender
         MessageReadStatus.objects.update_or_create(
@@ -183,7 +196,12 @@ def api_messages(request, room_id):
         qs = qs.order_by('-created_at')[:50]
         qs = list(reversed(qs))
 
-    # Update read status
+    # Update read status and last_seen
+    if request.user.is_authenticated:
+        profile, _ = _get_or_create_profile(request.user)
+        profile.last_seen = timezone.now()
+        profile.save()
+
     if qs:
         MessageReadStatus.objects.update_or_create(
             user=request.user, room=room,

@@ -5,6 +5,11 @@
 
 {% block extra_css %}
 <style>
+/* Hide standard layout elements */
+aside.sidebar, .mobile-nav, nav.navbar, header.navbar { display: none !important; }
+.container { padding: 0 !important; margin: 0 !important; max-width: 100% !important; height: 100vh; overflow: hidden; }
+main { padding: 0 !important; margin: 0 !important; height: 100vh; overflow: hidden; }
+
 /* ======= CHAT ROOM - FULL SCREEN MOBILE ======= */
 
 /* Make the main container flex so chat fills screen */
@@ -256,7 +261,9 @@ html[data-theme="dark"] .chat-textarea { background: #2a3942; color: #e9edef; }
         <div class="chat-room-title">
             <div class="name">{{ room_name }}</div>
             <div class="sub">
-                {% if room.room_type == 'GROUP' %}قناة مشتركة لجميع الأعضاء{% else %}محادثة خاصة{% endif %}
+                {% if room.room_type == 'GROUP' %}قناة مشتركة لجميع الأعضاء
+                {% elif is_online %}<span style="color:#DCF8C6;">متصل الآن</span>
+                {% else %}آخر ظهور غير معروف{% endif %}
             </div>
         </div>
     </div>
@@ -285,11 +292,15 @@ html[data-theme="dark"] .chat-textarea { background: #2a3942; color: #e9edef; }
                     {% with p=msg.sender.profile %}{{ p.display_name }}{% endwith %}
                 </div>
                 {% endif %}
-                <div class="msg-bubble">{{ msg.content }}</div>
+                <div class="msg-bubble">
+                    {% if msg.image %}<img src="{{ msg.image.url }}" style="max-width:100%; border-radius:4px; margin-bottom:4px; display:block;">{% endif %}
+                    {{ msg.content }}
+                </div>
                 <div class="msg-time-row">
                     <span class="msg-time">{{ msg.created_at|time:"H:i" }}</span>
                     {% if msg.sender == request.user %}
-                    <i class="bi bi-check2-all" style="font-size:.7rem; color:#4FC3F7;"></i>
+                    <i class="bi {% if msg.is_read_by_others %}bi-check2-all{% else %}bi-check2{% endif %}"
+                       style="font-size:.85rem; color:{% if msg.is_read_by_others %}#4FC3F7{% else %}#999{% endif %};"></i>
                     {% endif %}
                 </div>
             </div>
@@ -300,13 +311,24 @@ html[data-theme="dark"] .chat-textarea { background: #2a3942; color: #e9edef; }
 
     <!-- Input -->
     <div class="chat-input-wrap">
-        <textarea
-            class="chat-textarea"
-            id="chatInput"
-            placeholder="اكتب رسالتك..."
-            rows="1"
-            dir="auto"
-        ></textarea>
+        <label for="imageUpload" style="cursor:pointer; color:#888; font-size:1.3rem; padding:8px;" title="إرفاق صورة">
+            <i class="bi bi-image"></i>
+        </label>
+        <input type="file" id="imageUpload" accept="image/*" style="display:none;" onchange="previewImage()">
+        
+        <div style="flex:1; display:flex; flex-direction:column;">
+            <div id="imagePreviewContainer" style="display:none; padding:4px 8px;">
+                <img id="imagePreview" src="" style="height:60px; border-radius:8px;">
+                <i class="bi bi-x-circle-fill" style="color:#E74C3C; cursor:pointer; vertical-align:top;" onclick="clearImage()"></i>
+            </div>
+            <textarea
+                class="chat-textarea"
+                id="chatInput"
+                placeholder="اكتب رسالتك..."
+                rows="1"
+                dir="auto"
+            ></textarea>
+        </div>
         <button class="send-btn" id="sendBtn" onclick="sendMessage()">
             <i class="bi bi-send-fill"></i>
         </button>
@@ -327,6 +349,26 @@ let lastTimestamp = "{{ last_timestamp }}";
 let polling = null;
 let notifPermission = false;
 let lastSenderId = null;
+let selectedImageFile = null;
+
+function previewImage() {
+    const fileInput = document.getElementById('imageUpload');
+    if (fileInput.files && fileInput.files[0]) {
+        selectedImageFile = fileInput.files[0];
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('imagePreview').src = e.target.result;
+            document.getElementById('imagePreviewContainer').style.display = 'block';
+            document.getElementById('chatInput').focus();
+        };
+        reader.readAsDataURL(selectedImageFile);
+    }
+}
+function clearImage() {
+    selectedImageFile = null;
+    document.getElementById('imageUpload').value = '';
+    document.getElementById('imagePreviewContainer').style.display = 'none';
+}
 
 // ===== Scroll =====
 function scrollBottom(smooth = true) {
@@ -375,13 +417,17 @@ function appendMessage(m) {
         <div class="msg-sender-name" style="color:${m.avatar_color};">${m.sender_name}</div>
     ` : '';
 
-    const checkHtml = isMine ? `<i class="bi bi-check2-all" style="font-size:.7rem;color:#4FC3F7;"></i>` : '';
+    const checkHtml = isMine ? `
+        <i class="bi ${m.is_read ? 'bi-check2-all' : 'bi-check2'}"
+           style="font-size:.85rem;color:${m.is_read ? '#4FC3F7' : '#999'};"></i>` : '';
+
+    const imgHtml = m.image_url ? `<img src="${m.image_url}" style="max-width:100%; border-radius:4px; margin-bottom:4px; display:block;">` : '';
 
     wrap.innerHTML = `
         ${avatarHtml}
         <div class="msg-bubble-wrap">
             ${nameHtml}
-            <div class="msg-bubble">${escapeHtml(m.content)}</div>
+            <div class="msg-bubble">${imgHtml}${escapeHtml(m.content)}</div>
             <div class="msg-time-row">
                 <span class="msg-time">${m.created_at}</span>
                 ${checkHtml}
@@ -409,6 +455,15 @@ async function pollMessages() {
             if (!document.getElementById(`msg-${m.id}`)) {
                 appendMessage(m);
                 if (!m.is_mine) showNotif(m.sender_name, m.content);
+            } else if (m.is_mine && m.is_read) {
+                // Update checkmarks to blue if read
+                const msgEl = document.getElementById(`msg-${m.id}`);
+                const checks = msgEl.querySelector('.bi-check2');
+                if (checks) {
+                    checks.classList.remove('bi-check2');
+                    checks.classList.add('bi-check2-all');
+                    checks.style.color = '#4FC3F7';
+                }
             }
             lastTimestamp = m.created_at_full;
         });
@@ -424,19 +479,28 @@ startPolling();
 async function sendMessage() {
     const input = document.getElementById('chatInput');
     const content = input.value.trim();
-    if (!content) return;
+    if (!content && !selectedImageFile) return;
+    
     input.value = '';
     input.style.height = 'auto';
 
-    // If no lastTimestamp yet, set a dummy so poll works after first send
+    let body, headers;
+    
+    if (selectedImageFile) {
+        body = new FormData();
+        body.append('content', content);
+        body.append('image', selectedImageFile);
+        headers = { 'X-CSRFToken': CSRF_TOKEN }; // browser sets multipart boundry automatically
+        clearImage();
+    } else {
+        body = JSON.stringify({ content });
+        headers = { 'Content-Type': 'application/json', 'X-CSRFToken': CSRF_TOKEN };
+    }
+
     if (!lastTimestamp) lastTimestamp = new Date(0).toISOString();
 
     try {
-        const resp = await fetch(API_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': CSRF_TOKEN },
-            body: JSON.stringify({ content }),
-        });
+        const resp = await fetch(API_URL, { method: 'POST', headers, body });
         if (resp.ok) {
             const data = await resp.json();
             if (!document.getElementById(`msg-${data.message.id}`)) {
