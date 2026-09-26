@@ -365,7 +365,7 @@ let lastTimestamp = "{{ last_timestamp }}";
 let polling = null;
 let notifPermission = false;
 let lastSenderId = null;
-let selectedImageFile = null; document.getElementById("imageUpload").value = ""; let selectedFile = null;
+let selectedImageFile = null; let selectedFile = null;
 
 function previewFile() { const fi = document.getElementById("fileUpload"); if(fi.files && fi.files[0]) { selectedFile = fi.files[0]; selectedImageFile = null; document.getElementById("imageUpload").value = ""; document.getElementById("imagePreview").style.display = "none"; document.getElementById("filePreviewName").style.display = "inline"; document.getElementById("filePreviewName").innerText = selectedFile.name; document.getElementById("imagePreviewContainer").style.display = "block"; document.getElementById("chatInput").focus(); } } function previewImage() {
     const fileInput = document.getElementById('imageUpload');
@@ -431,7 +431,7 @@ function appendMessage(m) {
     lastSenderId = m.sender_id;
 
     const wrap = document.createElement('div');
-    wrap.className = `msg-row ${isMine ? 'mine' : 'theirs'}${isNewSender ? ' first-in-group' : '}`; wrap.setAttribute("data-ts", m.created_at_full);
+    wrap.className = `msg-row ${isMine ? "mine" : "theirs"}${isNewSender ? " first-in-group" : ""}`; wrap.setAttribute("data-ts", m.created_at_full);
     wrap.id = `msg-${m.id}`;
 
     const avatarHtml = !isMine ? `
@@ -520,7 +520,7 @@ async function pollMessages() {
                 }
             }
         }
-    } catch(e) {}
+    } catch(e) { alert("Network Error: " + e.message); }
 }
 function startPolling() {
     if (polling) clearInterval(polling);
@@ -529,7 +529,7 @@ function startPolling() {
 startPolling();
 
 // ===== Send =====
-async function sendMessage() { try { const dummyCtx = new (window.AudioContext || window.webkitAudioContext)(); dummyCtx.resume(); }catch(e){} 
+async function sendMessage() { alert("Sending message..."); try { const dummyCtx = new (window.AudioContext || window.webkitAudioContext)(); dummyCtx.resume(); }catch(e){} 
     const input = document.getElementById('chatInput');
     const content = input.value.trim();
     if (!content && !selectedImageFile && !selectedFile) return;
@@ -562,7 +562,7 @@ async function sendMessage() { try { const dummyCtx = new (window.AudioContext |
             lastTimestamp = data.message.created_at_full;
         }
     } catch(e) {
-        alert('تعذر إرسال الرسالة، تحقق من الاتصال.');
+        alert("Network Error: " + e.message);
     }
 }
 
