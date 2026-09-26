@@ -235,10 +235,16 @@
     border: 1px solid var(--border, rgba(0,0,0,0.1));
 }
 @media (max-width: 480px) {
-    #fcw-panel { left: 12px; width: calc(100vw - 24px); bottom: 85px; height: 420px; max-height: 75vh; }
-    #fcw-btn { bottom: 16px; left: 16px; }
+    #fcw-panel { 
+        left: 5% !important; 
+        width: 90% !important; 
+        bottom: 90px !important; 
+        height: 70vh !important;
+        max-height: 500px !important;
+    }
+    #fcw-btn { bottom: 16px !important; left: 16px !important; }
 }
-#fcw-panel.open { display: flex !important; }
+#fcw-panel.open { display: flex !important; opacity: 1 !important; visibility: visible !important; transform: none !important; }
 .fcw-header {
     background: var(--resort-teal-deep, #294043);
     color: #fff;
