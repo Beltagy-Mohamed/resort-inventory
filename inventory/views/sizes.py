@@ -1,121 +1,23 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required, permission_required
-
-from ..models import Size
+﻿from django.contrib.auth.decorators import login_required, permission_required
 from ..forms import SizeForm
-
+from ..models import Size
+from .crud import generic_list, generic_add, generic_edit, generic_delete
 
 @login_required
 def sizes_list(request):
-
-    sizes = Size.objects.all().order_by("name")
-
-    return render(
-        request,
-        "sizes/list.html",
-        {
-            "sizes": sizes
-        }
-    )
-
+    return generic_list(request, Size, "sizes/list.html", "sizes")
 
 @login_required
 @permission_required("inventory.add_size", raise_exception=True)
 def add_size(request):
-
-    if request.method == "POST":
-
-        form = SizeForm(request.POST)
-
-        if form.is_valid():
-
-            form.save()
-
-            messages.success(
-                request,
-                "تم إضافة المقاس."
-            )
-
-            return redirect("sizes_list")
-
-    else:
-
-        form = SizeForm()
-
-    return render(
-        request,
-        "sizes/add.html",
-        {
-            "form": form
-        }
-    )
-
+    return generic_add(request, SizeForm, "sizes/add.html", "sizes_list", "تمت إضافة المقاس بنجاح.")
 
 @login_required
 @permission_required("inventory.change_size", raise_exception=True)
 def edit_size(request, pk):
-
-    size = get_object_or_404(
-        Size,
-        pk=pk
-    )
-
-    if request.method == "POST":
-
-        form = SizeForm(
-            request.POST,
-            instance=size
-        )
-
-        if form.is_valid():
-
-            form.save()
-
-            messages.success(
-                request,
-                "تم تعديل المقاس."
-            )
-
-            return redirect("sizes_list")
-
-    else:
-
-        form = SizeForm(instance=size)
-
-    return render(
-        request,
-        "sizes/edit.html",
-        {
-            "form": form
-        }
-    )
-
+    return generic_edit(request, Size, SizeForm, pk, "sizes/edit.html", "size", "sizes_list", "تم تعديل المقاس بنجاح.")
 
 @login_required
 @permission_required("inventory.delete_size", raise_exception=True)
 def delete_size(request, pk):
-
-    size = get_object_or_404(
-        Size,
-        pk=pk
-    )
-
-    if request.method == "POST":
-
-        size.delete()
-
-        messages.success(
-            request,
-            "تم حذف المقاس."
-        )
-
-        return redirect("sizes_list")
-
-    return render(
-        request,
-        "sizes/delete.html",
-        {
-            "size": size
-        }
-    )
+    return generic_delete(request, Size, pk, "sizes/delete.html", "size", "sizes_list", "تم حذف المقاس.")

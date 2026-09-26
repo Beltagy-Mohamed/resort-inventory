@@ -74,7 +74,7 @@ def env_bool(name, default):
 
 # SECURITY WARNING: keep the secret key used in production secret!
 
-DEBUG = env_bool("DJANGO_DEBUG", True)
+DEBUG = env_bool("DJANGO_DEBUG", False)
 
 
 
@@ -118,7 +118,7 @@ if DEBUG and not ALLOWED_HOSTS:
 
 
 
-CSRF_TRUSTED_ORIGINS = ['https://resort-inventory.vercel.app', 'https://*.vercel.app'] + [
+CSRF_TRUSTED_ORIGINS = ['https://resort-inventory.vercel.app', ] + [
     origin.strip()
     for origin in os.environ.get("DJANGO_CSRF_TRUSTED_ORIGINS", "").split(",")
     if origin.strip()
@@ -443,7 +443,7 @@ if os.environ.get('RENDER'):
 
 # Auto-allow Vercel hosts
 if os.environ.get('VERCEL'):
-    ALLOWED_HOSTS.append('.vercel.app')
+    ALLOWED_HOSTS.append('resort-inventory.vercel.app')
 
 # Session Security Settings
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False

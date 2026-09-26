@@ -1,128 +1,23 @@
-from django.contrib import messages
-from django.contrib.auth.decorators import login_required, permission_required
-from django.shortcuts import (
-    get_object_or_404,
-    redirect,
-    render,
-)
-
+﻿from django.contrib.auth.decorators import login_required, permission_required
 from ..forms import CategoryForm
 from ..models import Category
-
+from .crud import generic_list, generic_add, generic_edit, generic_delete
 
 @login_required
 def categories_list(request):
-
-    categories = Category.objects.all().order_by("name")
-
-    return render(
-        request,
-        "categories/list.html",
-        {
-            "categories": categories
-        }
-    )
-
+    return generic_list(request, Category, "categories/list.html", "categories")
 
 @login_required
 @permission_required("inventory.add_category", raise_exception=True)
 def add_category(request):
-
-    if request.method == "POST":
-
-        form = CategoryForm(request.POST)
-
-        if form.is_valid():
-
-            form.save()
-
-            messages.success(
-                request,
-                "تم إضافة التصنيف بنجاح."
-            )
-
-            return redirect("categories_list")
-
-    else:
-
-        form = CategoryForm()
-
-    return render(
-        request,
-        "categories/add.html",
-        {
-            "form": form
-        }
-    )
-
+    return generic_add(request, CategoryForm, "categories/add.html", "categories_list", "تمت إضافة الفئة بنجاح.")
 
 @login_required
 @permission_required("inventory.change_category", raise_exception=True)
 def edit_category(request, pk):
-
-    category = get_object_or_404(
-        Category,
-        pk=pk
-    )
-
-    if request.method == "POST":
-
-        form = CategoryForm(
-            request.POST,
-            instance=category
-        )
-
-        if form.is_valid():
-
-            form.save()
-
-            messages.success(
-                request,
-                "تم تعديل التصنيف بنجاح."
-            )
-
-            return redirect("categories_list")
-
-    else:
-
-        form = CategoryForm(
-            instance=category
-        )
-
-    return render(
-        request,
-        "categories/edit.html",
-        {
-            "form": form,
-            "category": category
-        }
-    )
-
+    return generic_edit(request, Category, CategoryForm, pk, "categories/edit.html", "category", "categories_list", "تم تعديل الفئة بنجاح.")
 
 @login_required
 @permission_required("inventory.delete_category", raise_exception=True)
 def delete_category(request, pk):
-
-    category = get_object_or_404(
-        Category,
-        pk=pk
-    )
-
-    if request.method == "POST":
-
-        category.delete()
-
-        messages.success(
-            request,
-            "تم حذف التصنيف بنجاح."
-        )
-
-        return redirect("categories_list")
-
-    return render(
-        request,
-        "categories/delete.html",
-        {
-            "category": category
-        }
-    )
+    return generic_delete(request, Category, pk, "categories/delete.html", "category", "categories_list", "تم حذف الفئة.")

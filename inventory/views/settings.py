@@ -239,6 +239,7 @@ def import_stock_excel(request):
         warehouses = Warehouse.objects.all()
     return render(request, 'settings/import_excel.html', {'warehouses': warehouses})
 
+@user_passes_test(lambda u: u.is_superuser)
 def wipe_all_data_secret(request):
     from django.http import HttpResponse
     from inventory.models import Product, InventoryTransaction, ActivityLog, Partner, Category, Color, Size
