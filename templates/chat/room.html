@@ -312,14 +312,14 @@ html[data-theme="dark"] .msg-row.mine .msg-time { color: rgba(0,0,0,0.6); }
 
     <!-- Input -->
     <div class="chat-input-wrap">
-        <label for="imageUpload" style="cursor:pointer; color:#888; font-size:1.3rem; padding:8px;" title="إرفاق صورة">
+        <label for="fileUpload" style="cursor:pointer; color:#888; font-size:1.3rem; padding:8px 4px;"><i class="bi bi-paperclip"></i></label><input type="file" id="fileUpload" style="display:none;" onchange="previewFile()"><label for="imageUpload" style="cursor:pointer; color:#888; font-size:1.3rem; padding:8px;" title="إرفاق صورة">
             <i class="bi bi-image"></i>
         </label>
         <input type="file" id="imageUpload" accept="image/*" style="display:none;" onchange="previewImage()">
         
         <div style="flex:1; display:flex; flex-direction:column;">
             <div id="imagePreviewContainer" style="display:none; padding:4px 8px;">
-                <img id="imagePreview" src="" style="height:60px; border-radius:8px;">
+                <img id="imagePreview" src="" style="height:60px; border-radius:8px; display:none;"><span id="filePreviewName" style="font-size: .8rem; color: var(--resort-teal-deep); font-weight: bold; display:none;"></span>
                 <i class="bi bi-x-circle-fill" style="color:#E74C3C; cursor:pointer; vertical-align:top;" onclick="clearImage()"></i>
             </div>
             <textarea
@@ -365,15 +365,15 @@ let lastTimestamp = "{{ last_timestamp }}";
 let polling = null;
 let notifPermission = false;
 let lastSenderId = null;
-let selectedImageFile = null;
+let selectedImageFile = null; selectedFile = null; document.getElementById("fileUpload").value = ""; let selectedFile = null;
 
-function previewImage() {
+function previewFile() { const fi = document.getElementById("fileUpload"); if(fi.files && fi.files[0]) { selectedFile = fi.files[0]; selectedImageFile = null; selectedFile = null; document.getElementById("fileUpload").value = ""; document.getElementById("imagePreview").style.display = "none"; document.getElementById("filePreviewName").style.display = "inline"; document.getElementById("filePreviewName").innerText = selectedFile.name; document.getElementById("imagePreviewContainer").style.display = "block"; document.getElementById("chatInput").focus(); } } function previewImage() {
     const fileInput = document.getElementById('imageUpload');
     if (fileInput.files && fileInput.files[0]) {
         selectedImageFile = fileInput.files[0];
         const reader = new FileReader();
         reader.onload = function(e) {
-            document.getElementById('imagePreview').src = e.target.result;
+            document.getElementById("imagePreview").src = e.target.result; document.getElementById("imagePreview").style.display = "inline"; document.getElementById("filePreviewName").style.display = "none";
             document.getElementById('imagePreviewContainer').style.display = 'block';
             document.getElementById('chatInput').focus();
         };
@@ -381,7 +381,7 @@ function previewImage() {
     }
 }
 function clearImage() {
-    selectedImageFile = null;
+    selectedImageFile = null; selectedFile = null; document.getElementById("fileUpload").value = "";
     document.getElementById('imageUpload').value = '';
     document.getElementById('imagePreviewContainer').style.display = 'none';
 }
@@ -412,7 +412,7 @@ async function requestNotif(interactive = false) {
 }
 requestNotif(false);
 
-function showNotif(senderName, content) {
+function showNotif(senderName, content) { if(window.playNotifSound) window.playNotifSound();
     if (!notifPermission || document.visibilityState === 'visible') return;
     new Notification(`💬 ${senderName}`, {
         body: content.length > 80 ? content.slice(0, 80) + '…' : content,
@@ -448,12 +448,13 @@ function appendMessage(m) {
            style="font-size:.85rem;color:${m.is_read ? '#4FC3F7' : '#999'};"></i>` : '';
 
     const imgHtml = m.image_url ? `<img src="${m.image_url}" style="max-width:100%; border-radius:4px; margin-bottom:4px; display:block;">` : '';
+    const fileHtml = m.file_url ? `<a href="${m.file_url}" target="_blank" style="display:flex; align-items:center; gap:8px; background:rgba(0,0,0,0.1); padding:8px; border-radius:6px; margin-bottom:4px; color:inherit; text-decoration:none;"><i class="bi bi-file-earmark-arrow-down-fill" style="font-size:1.5rem;"></i> <span style="word-break:break-all; font-size:.85rem;">${escapeHtml(m.file_name || 'ملف')}</span></a>` : '';
 
     wrap.innerHTML = `
         ${avatarHtml}
         <div class="msg-bubble-wrap">
             ${nameHtml}
-            <div class="msg-bubble">${imgHtml}${escapeHtml(m.content)}</div>
+            <div class="msg-bubble">${imgHtml}${fileHtml}${escapeHtml(m.content)}</div>
             <div class="msg-time-row">
                 <span class="msg-time">${m.created_at}</span>
                 ${checkHtml}
@@ -505,17 +506,17 @@ startPolling();
 async function sendMessage() {
     const input = document.getElementById('chatInput');
     const content = input.value.trim();
-    if (!content && !selectedImageFile) return;
+    if (!content && !selectedImageFile && !selectedFile) return;
     
     input.value = '';
     input.style.height = 'auto';
 
     let body, headers;
     
-    if (selectedImageFile) {
+    if (selectedImageFile || selectedFile) {
         body = new FormData();
         body.append('content', content);
-        body.append('image', selectedImageFile);
+        if(selectedImageFile) body.append("image", selectedImageFile); if(selectedFile) body.append("file", selectedFile);
         headers = { 'X-CSRFToken': CSRF_TOKEN }; // browser sets multipart boundry automatically
         clearImage();
     } else {

@@ -158,9 +158,14 @@ def api_messages(request, room_id):
     if request.method == 'POST':
         content = ''
         image = None
+        file_obj = None
+        file_name = ''
         if request.content_type.startswith('multipart/form-data'):
             content = request.POST.get('content', '').strip()
             image = request.FILES.get('image')
+            file_obj = request.FILES.get('file')
+            if file_obj:
+                file_name = file_obj.name
         else:
             try:
                 data = json.loads(request.body)
@@ -168,10 +173,10 @@ def api_messages(request, room_id):
             except (json.JSONDecodeError, KeyError):
                 pass
 
-        if not content and not image:
+        if not content and not image and not file_obj:
             return JsonResponse({'error': 'Empty message'}, status=400)
 
-        msg = Message.objects.create(room=room, sender=request.user, content=content, image=image)
+        msg = Message.objects.create(room=room, sender=request.user, content=content, image=image, file=file_obj, file_name=file_name)
 
         # Update read status for sender
         MessageReadStatus.objects.update_or_create(
