@@ -182,7 +182,7 @@ html[data-theme="dark"] .msg-row.mine .msg-time { color: rgba(0,0,0,0.6); }
 }
 
 /* ---- Input area ---- */
-.chat-input-wrap {
+.chat-input-wrap { width: 100%; box-sizing: border-box;
     display: flex;
     align-items: flex-end;
     gap: 4px;
@@ -192,7 +192,7 @@ html[data-theme="dark"] .msg-row.mine .msg-time { color: rgba(0,0,0,0.6); }
     flex-shrink: 0;
 }
 
-.chat-textarea {
+.chat-textarea { width: 100%; box-sizing: border-box;
     flex: 1; min-width: 0;
     border: none;
     border-radius: 24px;
@@ -317,7 +317,7 @@ html[data-theme="dark"] .msg-row.mine .msg-time { color: rgba(0,0,0,0.6); }
         </label>
         <input type="file" id="imageUpload" accept="image/*" style="display:none;" onchange="previewImage()">
         
-        <div style="flex:1; display:flex; flex-direction:column;">
+        <div style="flex:1; display:flex; flex-direction:column; min-width:0;">
             <div id="imagePreviewContainer" style="display:none; padding:4px 8px;">
                 <img id="imagePreview" src="" style="height:60px; border-radius:8px; display:none;"><span id="filePreviewName" style="font-size: .8rem; color: var(--resort-teal-deep); font-weight: bold; display:none;"></span>
                 <i class="bi bi-x-circle-fill" style="color:#E74C3C; cursor:pointer; vertical-align:top;" onclick="clearImage()"></i>
@@ -420,7 +420,7 @@ function showNotif(senderName, content) { if(window.playNotifSound) window.playN
     });
 }
 
-window.downloadDataUri = function(e, uri, name) { e.preventDefault(); const a = document.createElement("a"); a.href = uri; a.download = name; document.body.appendChild(a); a.click(); document.body.removeChild(a); }; // ===== Append message =====
+window.downloadDataUri = function(e, uri, name) { e.preventDefault(); try { const arr = uri.split(","); const mime = arr[0].match(/:(.*?);/)[1]; const bstr = atob(arr[1]); let n = bstr.length; const u8arr = new Uint8Array(n); while(n--){ u8arr[n] = bstr.charCodeAt(n); } const blob = new Blob([u8arr], {type:mime}); const blobUrl = URL.createObjectURL(blob); const a = document.createElement("a"); a.href = blobUrl; a.download = name; document.body.appendChild(a); a.click(); document.body.removeChild(a); setTimeout(() => URL.revokeObjectURL(blobUrl), 100); } catch(err) { window.open(uri, "_blank"); } }; // ===== Append message =====
 function appendMessage(m) {
     const area = document.getElementById('messagesArea');
     const empty = area.querySelector('.chat-empty');
@@ -529,7 +529,7 @@ function startPolling() {
 startPolling();
 
 // ===== Send =====
-async function sendMessage() { alert("Sending message..."); try { const dummyCtx = new (window.AudioContext || window.webkitAudioContext)(); dummyCtx.resume(); }catch(e){} 
+async function sendMessage() {  try { const dummyCtx = new (window.AudioContext || window.webkitAudioContext)(); dummyCtx.resume(); }catch(e){} 
     const input = document.getElementById('chatInput');
     const content = input.value.trim();
     if (!content && !selectedImageFile && !selectedFile) return;
