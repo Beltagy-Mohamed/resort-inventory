@@ -1,4 +1,4 @@
-{% extends 'layout/base.html' %}
+﻿{% extends 'layout/base.html' %}
 {% load static %}
 
 {% block title %}{{ room_name }}{% endblock %}
@@ -259,12 +259,12 @@ html[data-theme="dark"] .msg-row.mine .msg-time { color: rgba(0,0,0,0.6); }
         <div class="chat-room-title">
             <div class="name">{{ room_name }}</div>
             <div class="sub">
-                {% if room.room_type == 'GROUP' %}قناة مشتركة لجميع الأعضاء
-                {% elif is_online %}<span style="color:#DCF8C6;">متصل الآن</span>
-                {% else %}آخر ظهور غير معروف{% endif %}
+                {% if room.room_type == 'GROUP' %}Ù‚Ù†Ø§Ø© Ù…Ø´ØªØ±ÙƒØ© Ù„Ø¬Ù…ÙŠØ¹ Ø§Ù„Ø£Ø¹Ø¶Ø§Ø¡
+                {% elif is_online %}<span style="color:#DCF8C6;">Ù…ØªØµÙ„ Ø§Ù„Ø¢Ù†</span>
+                {% else %}Ø¢Ø®Ø± Ø¸Ù‡ÙˆØ± ØºÙŠØ± Ù…Ø¹Ø±ÙˆÙ{% endif %}
             </div>
         </div>
-        <button id="enableNotifBtn" style="display:none; background:none; border:none; color:var(--resort-gold); font-size:1.2rem; cursor:pointer;" onclick="requestNotif(true)" title="تفعيل الإشعارات">
+        <button id="enableNotifBtn" style="display:none; background:none; border:none; color:var(--resort-gold); font-size:1.2rem; cursor:pointer;" onclick="requestNotif(true)" title="ØªÙØ¹ÙŠÙ„ Ø§Ù„Ø¥Ø´Ø¹Ø§Ø±Ø§Øª">
             <i class="bi bi-bell-slash"></i>
         </button>
     </div>
@@ -274,7 +274,7 @@ html[data-theme="dark"] .msg-row.mine .msg-time { color: rgba(0,0,0,0.6); }
         {% if not messages_list %}
         <div class="chat-empty">
             <i class="bi bi-chat-heart"></i>
-            <div>ابدأ المحادثة الآن 👋</div>
+            <div>Ø§Ø¨Ø¯Ø£ Ø§Ù„Ù…Ø­Ø§Ø¯Ø«Ø© Ø§Ù„Ø¢Ù† ðŸ‘‹</div>
         </div>
         {% endif %}
 
@@ -353,26 +353,7 @@ let lastTimestamp = "{{ last_timestamp }}";
 let polling = null;
 let notifPermission = false;
 let lastSenderId = null;
-let selectedImageFile = null; let selectedFile = null;
 
-function previewFile() { const fi = document.getElementById("fileUpload"); if(fi.files && fi.files[0]) { selectedFile = fi.files[0]; selectedImageFile = null; document.getElementById("imageUpload").value = ""; document.getElementById("imagePreview").style.display = "none"; document.getElementById("filePreviewName").style.display = "inline"; document.getElementById("filePreviewName").innerText = selectedFile.name; document.getElementById("imagePreviewContainer").style.display = "block"; document.getElementById("chatInput").focus(); } } function previewImage() {
-    const fileInput = document.getElementById('imageUpload');
-    if (fileInput.files && fileInput.files[0]) {
-        selectedImageFile = fileInput.files[0]; selectedFile = null; document.getElementById("fileUpload").value = "";
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            document.getElementById("imagePreview").src = e.target.result; document.getElementById("imagePreview").style.display = "inline"; document.getElementById("filePreviewName").style.display = "none";
-            document.getElementById('imagePreviewContainer').style.display = 'block';
-            document.getElementById('chatInput').focus();
-        };
-        reader.readAsDataURL(selectedImageFile);
-    }
-}
-function clearImage() { selectedFile = null; document.getElementById("fileUpload").value = "";
-    selectedImageFile = null; document.getElementById("imageUpload").value = "";
-    document.getElementById('imageUpload').value = '';
-    document.getElementById('imagePreviewContainer').style.display = 'none';
-}
 
 // ===== Scroll =====
 function scrollBottom(smooth = true) {
@@ -402,8 +383,8 @@ requestNotif(false);
 
 function showNotif(senderName, content) { if(window.playNotifSound) window.playNotifSound();
     if (!notifPermission || document.visibilityState === 'visible') return;
-    new Notification(`💬 ${senderName}`, {
-        body: content.length > 80 ? content.slice(0, 80) + '…' : content,
+    new Notification(`ðŸ’¬ ${senderName}`, {
+        body: content.length > 80 ? content.slice(0, 80) + 'â€¦' : content,
         icon: '/static/pwa/icons/icon-192.png',
     });
 }
@@ -497,11 +478,11 @@ async function pollMessages() {
         
         if (data.other_is_online !== undefined) {
             const sub = document.querySelector('.chat-room-title .sub');
-            if (sub && sub.innerText.indexOf('قناة') === -1) {
+            if (sub && sub.innerText.indexOf('Ù‚Ù†Ø§Ø©') === -1) {
                 if (data.other_is_online) {
-                    sub.innerHTML = '<span style="color: #4CAF50;">● متصل الآن</span>';
+                    sub.innerHTML = '<span style="color: #4CAF50;">â— Ù…ØªØµÙ„ Ø§Ù„Ø¢Ù†</span>';
                 } else {
-                    sub.innerHTML = '<span style="color: #bbb;">غير متصل</span>';
+                    sub.innerHTML = '<span style="color: #bbb;">ØºÙŠØ± Ù…ØªØµÙ„</span>';
                 }
             }
         }
@@ -565,4 +546,5 @@ if (window.innerWidth > 768) {
 }
 </script>
 {% endblock %}
+
 

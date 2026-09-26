@@ -1,1 +1,0 @@
-﻿const fs = require('fs'); let content = fs.readFileSync('templates/chat/room.html', 'utf8'); content = content.replace(/sub\.innerHTML = '(<span[^>]*>[^<]*<\/span>)';/g, 'sub.replaceChildren(); sub.insertAdjacentHTML('beforeend', '');'); fs.writeFileSync('templates/chat/room.html', content);

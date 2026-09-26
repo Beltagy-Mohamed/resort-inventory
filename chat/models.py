@@ -156,9 +156,9 @@ class Message(models.Model):
             'sender_name': display_name,
             'avatar_color': avatar_color,
             'content': self.content,
-            'image_url': self.image,
-            'file_url': self.file,
-            'file_name': self.file_name,
+            
+            
+            
             'is_mine': (self.sender_id == current_user.pk) if current_user else False,
             'created_at': self.created_at.strftime('%H:%M'),
             'created_at_full': self.created_at.isoformat(),
