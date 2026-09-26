@@ -8,18 +8,20 @@
 /* Hide standard layout elements */
 aside.sidebar, .mobile-nav, nav.navbar, header.navbar { display: none !important; }
 body { overflow: hidden; background: var(--paper) !important; }
-.container { display: block !important; padding: 0 !important; margin: 0 !important; max-width: 100% !important; height: 100vh; height: 100dvh; overflow: hidden !important; }
-main { display: block !important; padding: 0 !important; margin: 0 !important; height: 100vh; height: 100dvh; overflow: hidden !important; }
+.container { display: block !important; padding: 0 !important; margin: 0 !important; max-width: 100% !important; height: 100vh;  overflow: hidden !important; }
+main { display: block !important; padding: 0 !important; margin: 0 !important; height: 100vh;  overflow: hidden !important; }
 
 .chat-room-wrap {
     display: flex;
     flex-direction: column;
-    height: 100vh; height: 100dvh;
+    position: fixed !important;
+    top: 0; left: 0; right: 0; bottom: 0;
+    
     max-width: 760px;
     margin: 0 auto;
     width: 100%;
-    background: var(--paper) !important;
-    position: relative;
+    background: var(--paper, #f5f7fa) !important;
+    z-index: 99990;
     overflow: hidden;
 }
 
