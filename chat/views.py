@@ -161,27 +161,14 @@ def api_messages(request, room_id):
         file_b64 = None
         file_name = ''
         
-        import base64
-        
-        if request.content_type.startswith('multipart/form-data'):
-            content = request.POST.get('content', '').strip()
-            
-            image_obj = request.FILES.get('image')
-            if image_obj:
-                img_data = image_obj.read()
-                image_b64 = f"data:{image_obj.content_type};base64,{base64.b64encode(img_data).decode('utf-8')}"
-                
-            file_obj = request.FILES.get('file')
-            if file_obj:
-                file_name = file_obj.name
-                file_data = file_obj.read()
-                file_b64 = f"data:{file_obj.content_type};base64,{base64.b64encode(file_data).decode('utf-8')}"
-        else:
-            try:
-                data = json.loads(request.body)
-                content = data.get('content', '').strip()
-            except (json.JSONDecodeError, KeyError):
-                pass
+        try:
+            data = json.loads(request.body)
+            content = data.get('content', '').strip()
+            image_b64 = data.get('image_b64')
+            file_b64 = data.get('file_b64')
+            file_name = data.get('file_name', '')
+        except (json.JSONDecodeError, KeyError):
+            pass
 
         if not content and not image_b64 and not file_b64:
             return JsonResponse({'error': 'Empty message'}, status=400)
