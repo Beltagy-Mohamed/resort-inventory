@@ -157,15 +157,25 @@ def api_messages(request, room_id):
 
     if request.method == 'POST':
         content = ''
-        image = None
-        file_obj = None
+        image_b64 = None
+        file_b64 = None
         file_name = ''
+        
+        import base64
+        
         if request.content_type.startswith('multipart/form-data'):
             content = request.POST.get('content', '').strip()
-            image = request.FILES.get('image')
+            
+            image_obj = request.FILES.get('image')
+            if image_obj:
+                img_data = image_obj.read()
+                image_b64 = f"data:{image_obj.content_type};base64,{base64.b64encode(img_data).decode('utf-8')}"
+                
             file_obj = request.FILES.get('file')
             if file_obj:
                 file_name = file_obj.name
+                file_data = file_obj.read()
+                file_b64 = f"data:{file_obj.content_type};base64,{base64.b64encode(file_data).decode('utf-8')}"
         else:
             try:
                 data = json.loads(request.body)
@@ -173,10 +183,10 @@ def api_messages(request, room_id):
             except (json.JSONDecodeError, KeyError):
                 pass
 
-        if not content and not image and not file_obj:
+        if not content and not image_b64 and not file_b64:
             return JsonResponse({'error': 'Empty message'}, status=400)
 
-        msg = Message.objects.create(room=room, sender=request.user, content=content, image=image, file=file_obj, file_name=file_name)
+        msg = Message.objects.create(room=room, sender=request.user, content=content, image=image_b64, file=file_b64, file_name=file_name)
 
         # Update read status for sender
         MessageReadStatus.objects.update_or_create(

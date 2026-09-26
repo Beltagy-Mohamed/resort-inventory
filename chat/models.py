@@ -118,8 +118,8 @@ class Message(models.Model):
     room = models.ForeignKey(Room, on_delete=models.CASCADE, related_name='messages')
     sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_messages')
     content = models.TextField(blank=True)
-    image = models.ImageField(upload_to='chat_images/', blank=True, null=True)
-    file = models.FileField(upload_to='chat_files/', blank=True, null=True)
+    image = models.TextField(blank=True, null=True) # Stored as base64 data URI
+    file = models.TextField(blank=True, null=True) # Stored as base64 data URI
     file_name = models.CharField(max_length=255, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -159,8 +159,8 @@ class Message(models.Model):
             'sender_name': display_name,
             'avatar_color': avatar_color,
             'content': self.content,
-            'image_url': self.image.url if self.image else None,
-            'file_url': self.file.url if self.file else None,
+            'image_url': self.image,
+            'file_url': self.file,
             'file_name': self.file_name,
             'is_mine': (self.sender_id == current_user.pk) if current_user else False,
             'created_at': self.created_at.strftime('%H:%M'),

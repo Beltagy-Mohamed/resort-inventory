@@ -365,12 +365,12 @@ let lastTimestamp = "{{ last_timestamp }}";
 let polling = null;
 let notifPermission = false;
 let lastSenderId = null;
-let selectedImageFile = null; selectedFile = null; document.getElementById("fileUpload").value = ""; let selectedFile = null;
+let selectedImageFile = null; document.getElementById("imageUpload").value = ""; let selectedFile = null;
 
-function previewFile() { const fi = document.getElementById("fileUpload"); if(fi.files && fi.files[0]) { selectedFile = fi.files[0]; selectedImageFile = null; selectedFile = null; document.getElementById("fileUpload").value = ""; document.getElementById("imagePreview").style.display = "none"; document.getElementById("filePreviewName").style.display = "inline"; document.getElementById("filePreviewName").innerText = selectedFile.name; document.getElementById("imagePreviewContainer").style.display = "block"; document.getElementById("chatInput").focus(); } } function previewImage() {
+function previewFile() { const fi = document.getElementById("fileUpload"); if(fi.files && fi.files[0]) { selectedFile = fi.files[0]; selectedImageFile = null; document.getElementById("imageUpload").value = ""; document.getElementById("imagePreview").style.display = "none"; document.getElementById("filePreviewName").style.display = "inline"; document.getElementById("filePreviewName").innerText = selectedFile.name; document.getElementById("imagePreviewContainer").style.display = "block"; document.getElementById("chatInput").focus(); } } function previewImage() {
     const fileInput = document.getElementById('imageUpload');
     if (fileInput.files && fileInput.files[0]) {
-        selectedImageFile = fileInput.files[0];
+        selectedImageFile = fileInput.files[0]; selectedFile = null; document.getElementById("fileUpload").value = "";
         const reader = new FileReader();
         reader.onload = function(e) {
             document.getElementById("imagePreview").src = e.target.result; document.getElementById("imagePreview").style.display = "inline"; document.getElementById("filePreviewName").style.display = "none";
@@ -380,8 +380,8 @@ function previewFile() { const fi = document.getElementById("fileUpload"); if(fi
         reader.readAsDataURL(selectedImageFile);
     }
 }
-function clearImage() {
-    selectedImageFile = null; selectedFile = null; document.getElementById("fileUpload").value = "";
+function clearImage() { selectedFile = null; document.getElementById("fileUpload").value = "";
+    selectedImageFile = null; document.getElementById("imageUpload").value = "";
     document.getElementById('imageUpload').value = '';
     document.getElementById('imagePreviewContainer').style.display = 'none';
 }
