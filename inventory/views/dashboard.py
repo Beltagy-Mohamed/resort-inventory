@@ -173,12 +173,16 @@ def dashboard(request):
         ),
     ).order_by("-movement_count", "name")[:5]
 
+    total_target = products.aggregate(Sum("target_quantity"))["target_quantity__sum"] or 0
+    total_current = products.aggregate(Sum("quantity"))["quantity__sum"] or 0
+    completion_percentage = min(100, round((total_current / total_target) * 100, 1)) if total_target > 0 else 0
+
     context = {
         "products_count": products.count(),
         "categories_count": categories.count(),
-        "total_quantity": products.aggregate(
-            Sum("quantity")
-        )["quantity__sum"] or 0,
+        "total_quantity": total_current,
+        "total_target": total_target,
+        "completion_percentage": completion_percentage,
         "inventory_value": inventory_value,
         "low_stock": products.filter(
             quantity__lte=F("minimum_stock"),

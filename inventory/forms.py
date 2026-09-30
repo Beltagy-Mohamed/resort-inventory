@@ -43,6 +43,27 @@ class ProductForm(StripWhitespaceMixin, forms.ModelForm):
         help_text="اختر المورد إذا أردت ربط هذه الكمية بكشف حسابه."
     )
 
+
+    def clean_name(self):
+        name = self.cleaned_data.get('name')
+        if name:
+            name = name.strip()
+            import re
+            def normalize_ar(text):
+                t = re.sub(r'[أإآ]', 'ا', text)
+                return t.replace('ة', 'ه').replace('ي', 'ى')
+            
+            norm_name = normalize_ar(name)
+            qs = Product.all_objects.all()
+            if self.instance and self.instance.pk:
+                qs = qs.exclude(pk=self.instance.pk)
+            
+            for p in qs:
+                if normalize_ar(p.name) == norm_name:
+                    from django import forms
+                    raise forms.ValidationError(f"هذا المنتج مسجل بالفعل مسبقاً باسم: {p.name}")
+        return name
+
     class Meta:
         model = Product
         fields = [

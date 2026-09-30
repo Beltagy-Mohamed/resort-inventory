@@ -160,32 +160,70 @@ def import_stock_excel(request):
                     Partner.all_objects.bulk_create(new_parts)
                     existing_parts.update({p.name: p for p in Partner.all_objects.filter(name__in=partner_names)})
 
-                # --- 5. Create / match Products by (name + company) ---
-                all_product_names = [d['name'] for d in product_data]
-                existing_prods_list = Product.all_objects.select_related('supplier').filter(name__in=all_product_names)
-                existing_prods_by_key = {(p.name, p.supplier.name if p.supplier else None): p for p in existing_prods_list}
-
+                # --- 5. Create / match Products by Barcode and Normalized Name ---
+                import re
+                def normalize_ar(text):
+                    if not text: return ""
+                    t = text.strip()
+                    t = re.sub(r'[أإآ]', 'ا', t)
+                    t = t.replace('ة', 'ه').replace('ي', 'ى')
+                    return t
+                
+                existing_prods_list = list(Product.all_objects.select_related('supplier').all())
+                prods_by_barcode = {p.barcode: p for p in existing_prods_list if p.barcode}
+                prods_by_norm_name = {normalize_ar(p.name): p for p in existing_prods_list}
+                
+                existing_prods_by_key = {}
                 new_products = []
+
                 for d in product_data:
                     key = (d['name'], d['partner'])
-                    p = existing_prods_by_key.get(key)
+                    barcode = d.get('barcode')
+                    norm_name = normalize_ar(d['name'])
+                    
+                    p = None
+                    if barcode and barcode in prods_by_barcode:
+                        p = prods_by_barcode[barcode]
+                    elif norm_name in prods_by_norm_name:
+                        p = prods_by_norm_name[norm_name]
+                        
                     if not p:
                         new_p = Product(
                             name=d['name'],
-                            barcode=d['barcode'],
+                            barcode=barcode,
                             target_quantity=d['target_quantity'],
                             quantity=0,
                             supplier=existing_parts.get(d['partner']),
                         )
                         new_products.append(new_p)
+                        if barcode:
+                            prods_by_barcode[barcode] = new_p
+                        prods_by_norm_name[norm_name] = new_p
                         existing_prods_by_key[key] = new_p
                     else:
                         p.target_quantity = d['target_quantity']
+                        if not p.supplier and d.get('partner'):
+                            p.supplier = existing_parts.get(d['partner'])
+                        if barcode and not p.barcode:
+                            p.barcode = barcode
+                            prods_by_barcode[barcode] = p
+                        existing_prods_by_key[key] = p
 
                 if new_products:
                     Product.all_objects.bulk_create(new_products)
-                    existing_prods_list = Product.all_objects.select_related('supplier').filter(name__in=all_product_names)
-                    existing_prods_by_key = {(p.name, p.supplier.name if p.supplier else None): p for p in existing_prods_list}
+                    # Re-fetch to get IDs
+                    existing_prods_list = list(Product.all_objects.select_related('supplier').all())
+                    prods_by_barcode = {p.barcode: p for p in existing_prods_list if p.barcode}
+                    prods_by_norm_name = {normalize_ar(p.name): p for p in existing_prods_list}
+                    
+                    for d in product_data:
+                        key = (d['name'], d['partner'])
+                        barcode = d.get('barcode')
+                        norm_name = normalize_ar(d['name'])
+                        if barcode and barcode in prods_by_barcode:
+                            existing_prods_by_key[key] = prods_by_barcode[barcode]
+                        elif norm_name in prods_by_norm_name:
+                            existing_prods_by_key[key] = prods_by_norm_name[norm_name]
 
                 # --- 6. Prepare Transactions and Stocks ---
                 transactions_to_create = []
