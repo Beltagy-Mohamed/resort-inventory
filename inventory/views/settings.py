@@ -271,7 +271,10 @@ def import_stock_excel(request):
                             stocks_to_create.append(new_stock)
                             existing_stocks[p.id] = new_stock
 
-                    p.quantity = (p.quantity or 0) + d['supplied']
+                    if upload_mode == 'overwrite':
+                        p.quantity = (p.quantity or 0) + diff
+                    else:
+                        p.quantity = (p.quantity or 0) + d['supplied']
 
                 # --- 7. Execute Bulk Operations ---
                 if transactions_to_create:
@@ -328,3 +331,21 @@ def wipe_duplicates(request):
         
     dups.delete()
     return HttpResponse(f"<h1 style='text-align:center; margin-top:50px;' dir='rtl'>تم الحذف بنجاح! تم مسح {count} منتج مكرر (يبدأ بـ ITEM-) مع حركاتهم المخزنية من قاعدة البيانات.</h1>")
+
+
+def fix_quantities_now(request):
+    from ..models import Product, Stock
+    from django.db.models import Sum
+    if not request.user.is_superuser:
+        return HttpResponse("Unauthorized", status=403)
+        
+    products = Product.all_objects.all()
+    fixed_count = 0
+    for p in products:
+        real_qty = Stock.all_objects.filter(product=p).aggregate(total=Sum('quantity'))['total'] or 0
+        if p.quantity != real_qty:
+            p.quantity = real_qty
+            p.save(update_fields=['quantity'])
+            fixed_count += 1
+            
+    return HttpResponse(f"<h1 style='text-align:center; margin-top:50px;' dir='rtl'>تم الإصلاح بنجاح! تم إعادة حساب الكميات لـ {fixed_count} منتج.</h1>")
