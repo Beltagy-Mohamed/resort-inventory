@@ -152,6 +152,7 @@ def import_stock_excel(request):
             from django.db import transaction
             from inventory.models import Stock, Partner
 
+            upload_mode = request.POST.get('upload_mode', 'add')
             with transaction.atomic():
                 # --- 4. Bulk Create Partners ---
                 existing_parts = {p.name: p for p in Partner.all_objects.filter(name__in=partner_names)}
@@ -167,7 +168,7 @@ def import_stock_excel(request):
                     t = text.strip()
                     t = re.sub(r'[أإآ]', 'ا', t)
                     t = t.replace('ة', 'ه').replace('ي', 'ى')
-                    return t
+                    return t.lower()
                 
                 existing_prods_list = list(Product.all_objects.select_related('supplier').all())
                 prods_by_barcode = {p.barcode: p for p in existing_prods_list if p.barcode}
@@ -237,21 +238,38 @@ def import_stock_excel(request):
                     p = existing_prods_by_key.get(key)
                     part_obj = existing_parts.get(d['partner'])
 
-                    if d['supplied'] > 0:
-                        transactions_to_create.append(InventoryTransaction(
-                            product=p, transaction_type='IN', quantity=d['supplied'],
-                            warehouse=warehouse, partner=part_obj, notes='وارد أولي (من ملف الإكسيل)',
-                        ))
-
                     stock = existing_stocks.get(p.id)
-                    if stock:
-                        stock.quantity += d['supplied']
-                        if stock not in stocks_to_update:
-                            stocks_to_update.append(stock)
+                    current_qty = stock.quantity if stock else 0
+
+                    if upload_mode == 'overwrite':
+                        diff = d['supplied'] - current_qty
+                        if diff != 0:
+                            transactions_to_create.append(InventoryTransaction(
+                                product=p, transaction_type='ADJUST', quantity=abs(diff),
+                                warehouse=warehouse, partner=part_obj, notes='تسوية أرصدة من ملف الإكسيل (تحديث ومطابقة)'
+                            ))
+                            if stock:
+                                stock.quantity = d['supplied']
+                                if stock not in stocks_to_update:
+                                    stocks_to_update.append(stock)
+                            else:
+                                new_stock = Stock(product=p, warehouse=warehouse, quantity=d['supplied'])
+                                stocks_to_create.append(new_stock)
+                                existing_stocks[p.id] = new_stock
                     else:
-                        new_stock = Stock(product=p, warehouse=warehouse, quantity=d['supplied'])
-                        stocks_to_create.append(new_stock)
-                        existing_stocks[p.id] = new_stock
+                        if d['supplied'] > 0:
+                            transactions_to_create.append(InventoryTransaction(
+                                product=p, transaction_type='IN', quantity=d['supplied'],
+                                warehouse=warehouse, partner=part_obj, notes='وارد إضافي تراكمي (من ملف الإكسيل)',
+                            ))
+                        if stock:
+                            stock.quantity += d['supplied']
+                            if stock not in stocks_to_update:
+                                stocks_to_update.append(stock)
+                        else:
+                            new_stock = Stock(product=p, warehouse=warehouse, quantity=d['supplied'])
+                            stocks_to_create.append(new_stock)
+                            existing_stocks[p.id] = new_stock
 
                     p.quantity = (p.quantity or 0) + d['supplied']
 
