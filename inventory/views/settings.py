@@ -349,3 +349,30 @@ def fix_quantities_now(request):
             fixed_count += 1
             
     return HttpResponse(f"<h1 style='text-align:center; margin-top:50px;' dir='rtl'>تم الإصلاح بنجاح! تم إعادة حساب الكميات لـ {fixed_count} منتج.</h1>")
+
+
+def fix_transactions_now(request):
+    from ..models import Product, Stock, InventoryTransaction
+    if not request.user.is_superuser:
+        return HttpResponse("Unauthorized", status=403)
+        
+    # Delete all transactions to reset history
+    InventoryTransaction.objects.all().delete()
+    
+    # Recreate IN transactions based on current stock
+    transactions_to_create = []
+    stocks = Stock.all_objects.filter(quantity__gt=0).select_related('product', 'warehouse')
+    for stock in stocks:
+        transactions_to_create.append(InventoryTransaction(
+            product=stock.product,
+            transaction_type='IN',
+            warehouse=stock.warehouse,
+            quantity=stock.quantity,
+            notes='تأسيس الرصيد الافتتاحي (تم الإصلاح)',
+            user=request.user
+        ))
+        
+    InventoryTransaction.objects.bulk_create(transactions_to_create)
+    count = len(transactions_to_create)
+    
+    return HttpResponse(f"<h1 style='text-align:center; margin-top:50px;' dir='rtl'>تم تنظيف السجل بنجاح! تم إنشاء {count} حركة استلام تطابق الرصيد الفعلي الحالي تماماً.</h1>")
