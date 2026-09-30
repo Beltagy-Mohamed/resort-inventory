@@ -36,7 +36,23 @@
                         <input type="file" name="excel_file" class="form-control" accept=".xlsx" required>
                     </div>
 
-                    <button type="submit" class="btn btn-success">
+                    <div class="form-group" style="margin-bottom: 20px; background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #e9ecef;">
+                        <label style="display: block; margin-bottom: 12px; font-weight: bold; font-size: 1.1em; color: #192F40;">طريقة معالجة الكميات الموردة (هام جداً):</label>
+                        
+                        <div style="margin-bottom: 15px;">
+                            <input type="radio" id="mode_overwrite" name="upload_mode" value="overwrite" checked>
+                            <label for="mode_overwrite" style="font-weight: bold; color: #192F40; cursor: pointer;">(1) تحديث الأرصدة الإجمالية (استبدال ومطابقة)</label>
+                            <p style="margin: 5px 0 0 25px; color: #666; font-size: 0.9em;">يجعل الكميات في السيستم مطابقة تماماً للكميات الموجودة في الشيت.</p>
+                        </div>
+
+                        <div>
+                            <input type="radio" id="mode_add" name="upload_mode" value="add">
+                            <label for="mode_add" style="font-weight: bold; color: #192F40; cursor: pointer;">(2) تسجيل حركة توريد جديدة (إضافة تراكمية)</label>
+                            <p style="margin: 5px 0 0 25px; color: #666; font-size: 0.9em;">يضيف الكميات الموجودة في الشيت فوق الرصيد الحالي الموجود في السيستم.</p>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-success" onclick="this.disabled=true;this.form.submit();">
                         <i class="fas fa-file-import"></i> بدء الاستيراد
                     </button>
                 </form>
