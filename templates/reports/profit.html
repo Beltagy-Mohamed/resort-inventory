@@ -53,7 +53,7 @@
 </div>
 <div class="summary-card">
 <h3>صافي الربح</h3>
-<div class="value {% if total_profit &gt; 0 %}profit-positive{% elif total_profit &lt; 0 %}profit-negative{% endif %}">
+<div class="value {% if total_profit > 0 %}profit-positive{% elif total_profit < 0 %}profit-negative{% endif %}">
             {{ total_profit|humanize_arabic }}
         </div>
 </div>
@@ -82,7 +82,7 @@
 <td data-label="سعر البيع">{{ trans.unit_price }}</td>
 <td data-label="الإجمالي">{% widthratio trans.product.cost_price 1 trans.quantity %}</td>
 <td data-label="الإجمالي">{% widthratio trans.unit_price 1 trans.quantity %}</td>
-<td class="{% if trans.profit &gt; 0 %}profit-positive{% elif trans.profit &lt; 0 %}profit-negative{% endif %}" data-label="الربح">
+<td class="{% if trans.profit > 0 %}profit-positive{% elif trans.profit < 0 %}profit-negative{% endif %}" data-label="الربح">
                     {{ trans.profit|floatformat:2 }}
                 </td>
 </tr>

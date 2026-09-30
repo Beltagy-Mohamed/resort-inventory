@@ -69,9 +69,9 @@
 <td data-label="ما تم توريده">{{ p.total_supplied }}</td>
 <td data-label="المتبقي">{{ p.remaining_target }}</td>
 <td data-label="الحالة">
-                {% if p.display_quantity &lt;= 0 %}
+                {% if p.display_quantity <= 0 %}
                     <span class="badge" style="background-color: #dc3545; color: white;">نفد</span>
-                {% elif p.display_quantity &lt;= p.minimum_stock %}
+                {% elif p.display_quantity <= p.minimum_stock %}
                     <span class="badge" style="background-color: #ffc107; color: black;">منخفض</span>
                 {% else %}
                     <span class="badge" style="background-color: #198754; color: white;">متوفر</span>
@@ -79,7 +79,7 @@
               </td>
 <td data-label="نسبة التوريد">
 <div style="background: #e9ecef; border-radius: 4px; width: 100%; height: 22px; overflow: hidden; position: relative; border: 1px solid #ced4da; box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);">
-<div style="background: {% if p.availability_percentage &gt; 50 %}#198754{% elif p.availability_percentage &gt; 20 %}#ffc107{% else %}#dc3545{% endif %}; width: {% if p.availability_percentage &gt; 100 %}100{% else %}{{ p.availability_percentage }}{% endif %}%; height: 100%; transition: width 0.3s ease;"></div>
+<div style="background: {% if p.availability_percentage > 50 %}#198754{% elif p.availability_percentage > 20 %}#ffc107{% else %}#dc3545{% endif %}; width: {% if p.availability_percentage > 100 %}100{% else %}{{ p.availability_percentage }}{% endif %}%; height: 100%; transition: width 0.3s ease;"></div>
 <span style="position: absolute; width: 100%; text-align: center; font-size: 13px; font-weight: 800; color: #000; line-height: 22px; top: 0; left: 0; text-shadow: 1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0px 0px 3px #fff;">
                           {{ p.availability_percentage }}%
                       </span>
