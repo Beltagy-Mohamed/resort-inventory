@@ -317,7 +317,7 @@ html[data-theme="dark"] .msg-row.mine .msg-time { color: rgba(0,0,0,0.6); }
         <textarea
             class="chat-textarea"
             id="chatInput"
-            placeholder="???? ?????..."
+            placeholder="اكتب رسالتك..."
             rows="1"
             dir="auto"
         ></textarea>
@@ -478,17 +478,16 @@ async function pollMessages() {
             });
         }
         
-        if (data.other_is_online !== undefined) {
+                if (data.other_is_online !== undefined) {
             const sub = document.querySelector('.chat-room-title .sub');
-            if (sub && !sub.innerText.includes('قناة')) {
+            if (sub && !sub.innerText.includes('تكتب')) {
                 if (data.other_is_online) {
                     sub.innerHTML = '<span style="color: #4CAF50;">متصل الآن</span>';
                 } else {
                     sub.innerHTML = '<span style="color: #bbb;">غير متصل</span>';
                 }
-            } else {
-                    sub.innerHTML = '<span style="color: #bbb;">ØºÙŠØ± Ù…ØªØµÙ„</span>';
-                }
+            } else if (sub) {
+                sub.innerHTML = '<span style="color: #bbb;">غير متصل</span>';
             }
         }
     } catch(e) { alert("Network Error: " + e.message); }
