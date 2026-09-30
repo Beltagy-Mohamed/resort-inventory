@@ -247,14 +247,31 @@ def leadership_warehouses_list(request):
 def leadership_transactions_list(request):
     log_leadership_access(request, "VIEW_TRANSACTIONS")
     
+    search = request.GET.get("search", "")
+    transaction_type = request.GET.get("type", "")
+    month_filter = request.GET.get("month_filter", "")
+    year_filter = request.GET.get("year_filter", "")
+    warehouse_filter = request.GET.get("warehouse", "")
+
     # Use all_objects to bypass the PublicManager filter
     transactions = InventoryTransaction.all_objects.filter(product__is_leadership_restricted=True)
     
-    search = request.GET.get("search", "")
     if search:
         transactions = transactions.filter(
             Q(product__name__icontains=search) | Q(product__barcode__icontains=search)
         )
+
+    if transaction_type:
+        transactions = transactions.filter(transaction_type=transaction_type)
+
+    if warehouse_filter:
+        transactions = transactions.filter(warehouse_id=warehouse_filter)
+        
+    if month_filter and month_filter.isdigit():
+        transactions = transactions.filter(created_at__month=int(month_filter))
+    
+    if year_filter and year_filter.isdigit():
+        transactions = transactions.filter(created_at__year=int(year_filter))
         
     transactions = transactions.select_related("product", "warehouse", "partner").order_by("-created_at")
     
@@ -262,9 +279,18 @@ def leadership_transactions_list(request):
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
     
+    from inventory.models import Warehouse
+    
     return render(request, "transactions/list.html", {
         "page_obj": page_obj,
         "search": search,
+        "transaction_type": transaction_type,
+        "month_filter": int(month_filter) if month_filter.isdigit() else "",
+        "year_filter": int(year_filter) if year_filter.isdigit() else "",
+        "months": [(1, "يناير"), (2, "فبراير"), (3, "مارس"), (4, "أبريل"), (5, "مايو"), (6, "يونيو"), (7, "يوليو"), (8, "أغسطس"), (9, "سبتمبر"), (10, "أكتوبر"), (11, "نوفمبر"), (12, "ديسمبر")],
+        "years": range(2025, 2035),
+        "warehouses": Warehouse.all_objects.all(),
+        "warehouse_filter": warehouse_filter,
         "is_leadership": True
     })
 
