@@ -130,11 +130,11 @@
         <tbody>
             {% for product in products %}
             <tr>
-                <td><strong>{{ product.name }}</strong></td>
-                <td style="color: var(--text-muted);">{{ product.id }}</td>
-                <td>{{ product.category|default:"-" }}</td>
-                <td>{{ product.quantity }}</td>
-                <td>
+                <td data-label="اسم الصنف"><strong>{{ product.name }}</strong></td>
+                <td data-label="كود" style="color: var(--text-muted);">{{ product.id }}</td>
+                <td data-label="الفئة">{{ product.category|default:"-" }}</td>
+                <td data-label="الكمية">{{ product.quantity }}</td>
+                <td data-label="حالة المخزون">
                     {% if product.quantity == 0 %}
                         <span class="status-pill status-danger">{{ product.stock_status_text }}</span>
                     {% elif product.quantity <= product.minimum_stock %}
@@ -143,8 +143,8 @@
                         <span class="status-pill status-success">{{ product.stock_status_text }}</span>
                     {% endif %}
                 </td>
-                <td>{{ product.cost_price|floatformat:2|intcomma }}</td>
-                <td><strong>{{ product.total_value|humanize_arabic }}</strong></td>
+                <td data-label="السعر">{{ product.cost_price|floatformat:2|intcomma }}</td>
+                <td data-label="القيمة"><strong>{{ product.total_value|humanize_arabic }}</strong></td>
             </tr>
             {% empty %}
             <tr>
