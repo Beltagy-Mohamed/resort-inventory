@@ -7,7 +7,7 @@
  * - صفحة Offline بديلة
  */
 
-const CACHE_VERSION = "v1.0.1";
+const CACHE_VERSION = "v1.0.2";
 const STATIC_CACHE = `resort-inventory-static-${CACHE_VERSION}`;
 const RUNTIME_CACHE = `resort-inventory-runtime-${CACHE_VERSION}`;
 
