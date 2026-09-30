@@ -435,5 +435,31 @@ document.getElementById('newChatModal').addEventListener('click', function(e) {
 document.getElementById('renameModal').addEventListener('click', function(e) {
     if (e.target === this) closeRenameModal();
 });
+
+// Handle BFCache when user navigates back
+window.addEventListener("pageshow", function (event) {
+    if (event.persisted) {
+        window.location.reload();
+    }
+});
+
+// Live Polling for Rooms
+setInterval(() => {
+    fetch("/chat/api/rooms/")
+        .then(res => res.json())
+        .then(data => {
+            const ul = document.querySelector('.room-list');
+            if (!ul || !data.rooms || !data.rooms.length) return;
+            ul.innerHTML = data.rooms.map(rd => {
+                const avatar = rd.is_group ? '<i class="bi bi-megaphone-fill" style="font-size:1.3rem;"></i>' : (rd.name ? rd.name[0].toUpperCase() : '');
+                const groupLabel = rd.is_group ? '<span class="group-label">القناة العامة</span>' : '';
+                const lastMsg = rd.last_msg ? rd.last_msg.substring(0, 45) : '<em>لا يوجد رسائل بعد!</em>';
+                const timeStr = rd.last_msg ? '<span class="room-time">الآن</span>' : '';
+                const unreadStr = rd.unread > 0 ? '<span class="unread-badge">' + rd.unread + '</span>' : '';
+                return <li><a href="/chat/room/ + rd.id + /" class="room-item  + (rd.is_group ? 'group-room' : '') + "><div class="room-avatar" style="background:  + rd.avatar_color + ;"> + avatar + </div><div class="room-info"><div class="room-name"> + rd.name + </div> + groupLabel + <div class="room-last-msg"> + lastMsg + </div></div><div class="room-meta"> + timeStr + unreadStr + </div></a></li>;
+            }).join('');
+        })
+        .catch(err => console.error("Poll Error:", err));
+}, 3000);
 </script>
 {% endblock %}

@@ -11,6 +11,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from django.utils import timezone
 
+from django.views.decorators.cache import never_cache
 from django.views.decorators.http import require_POST, require_http_methods
 
 from django.db.models import Max
