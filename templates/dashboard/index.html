@@ -49,11 +49,11 @@
 
 </div>
 
-<div class="card" style="margin-bottom: 2rem; padding: 20px;">
-    <h3 style="margin-bottom: 15px;">نسبة إكمال توريد منتجات المشروع</h3>
-    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; margin-bottom: 10px; align-items: center; gap: 10px;">
+<div class="dashboard-card" style="margin-bottom: 2rem;">
+    <h2 style="margin-bottom: 15px;">نسبة إكمال توريد منتجات المشروع</h2>
+    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; margin-bottom: 10px; align-items: center; gap: 5px;">
         <span style="font-size: 2rem; font-weight: bold; color: #C9A550;">{{ completion_percentage }}%</span>
-        <span style="color: var(--text-muted, #999); font-size: 0.95rem; text-align: left;">(المورد: {{ total_quantity }} / التنميط: {{ total_target }})</span>
+        <span style="color: var(--text-muted, #999); font-size: 0.95rem;">(المورد: {{ total_quantity }} / التنميط المطلوب: {{ total_target }})</span>
     </div>
     <div style="background-color: rgba(255, 255, 255, 0.1); border-radius: 8px; height: 16px; width: 100%; overflow: hidden; box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);">
         <div style="background-color: #C9A550; height: 100%; width: {{ completion_percentage }}%; transition: width 1s ease; border-radius: 8px;"></div>
@@ -206,52 +206,172 @@
 
 <div class="dashboard-grid active-products-grid">
 
-    <div class="card" style="margin-bottom: 2rem; padding: 20px;">
-    <h3 style="margin-bottom: 15px;">نسبة إكمال توريد منتجات المشروع</h3>
-    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; margin-bottom: 10px; align-items: center; gap: 10px;">
-        <span style="font-size: 2rem; font-weight: bold; color: #C9A550;">{{ completion_percentage }}%</span>
-        <span style="color: var(--text-muted, #999); font-size: 0.95rem; text-align: left;">(المورد: {{ total_quantity }} / التنميط: {{ total_target }})</span>
-    </div>
-    <div style="background-color: rgba(255, 255, 255, 0.1); border-radius: 8px; height: 16px; width: 100%; overflow: hidden; box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);">
-        <div style="background-color: #C9A550; height: 100%; width: {{ completion_percentage }}%; transition: width 1s ease; border-radius: 8px;"></div>
-    </div>
+    <div class="dashboard-card">
+
+        <h2>أحدث المنتجات</h2>
+
+        <div class=table-container>
+<table class="products-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>اسم المنتج</th>
+
+                    <th>الكمية</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for product in latest_products %}
+
+                <tr>
+
+                    <td>{{ product.name }}</td>
+
+                    <td>{{ product.quantity }}</td>
+
+                </tr>
+
+                {% empty %}
+
+                <tr>
+
+                    <td colspan="3">
+
+                        لا يوجد منتجات
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
 </div>
 
-    <div class="card" style="margin-bottom: 2rem; padding: 20px;">
-    <h3 style="margin-bottom: 15px;">نسبة إكمال توريد منتجات المشروع</h3>
-    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; margin-bottom: 10px; align-items: center; gap: 10px;">
-        <span style="font-size: 2rem; font-weight: bold; color: #C9A550;">{{ completion_percentage }}%</span>
-        <span style="color: var(--text-muted, #999); font-size: 0.95rem; text-align: left;">(المورد: {{ total_quantity }} / التنميط: {{ total_target }})</span>
     </div>
-    <div style="background-color: rgba(255, 255, 255, 0.1); border-radius: 8px; height: 16px; width: 100%; overflow: hidden; box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);">
-        <div style="background-color: #C9A550; height: 100%; width: {{ completion_percentage }}%; transition: width 1s ease; border-radius: 8px;"></div>
-    </div>
+
+    <div class="dashboard-card">
+
+        <h2>أحدث الحركات</h2>
+
+        <div class=table-container>
+<table class="products-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>المنتج</th>
+
+                    <th>النوع</th>
+
+                    <th>الكمية</th>
+
+                    <th>التاريخ</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                {% for transaction in latest_transactions %}
+
+                <tr>
+
+                    <td>{{ transaction.product.name }}</td>
+
+                    <td>{{ transaction.get_transaction_type_display }}</td>
+
+                    <td>{{ transaction.quantity }}</td>
+
+                    <td>{{ transaction.created_at|date:"Y-m-d H:i" }}</td>
+
+                </tr>
+
+                {% empty %}
+
+                <tr>
+
+                    <td colspan="4">
+
+                        لا يوجد حركات
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
 </div>
+
+    </div>
 
 </div>
 
-<div class="card" style="margin-bottom: 2rem; padding: 20px;">
-    <h3 style="margin-bottom: 15px;">نسبة إكمال توريد منتجات المشروع</h3>
-    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; margin-bottom: 10px; align-items: center; gap: 10px;">
-        <span style="font-size: 2rem; font-weight: bold; color: #C9A550;">{{ completion_percentage }}%</span>
-        <span style="color: var(--text-muted, #999); font-size: 0.95rem; text-align: left;">(المورد: {{ total_quantity }} / التنميط: {{ total_target }})</span>
-    </div>
-    <div style="background-color: rgba(255, 255, 255, 0.1); border-radius: 8px; height: 16px; width: 100%; overflow: hidden; box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);">
-        <div style="background-color: #C9A550; height: 100%; width: {{ completion_percentage }}%; transition: width 1s ease; border-radius: 8px;"></div>
-    </div>
+<div class="dashboard-card">
+
+    <h2>المنتجات حسب الفئة</h2>
+
+    <canvas id="categoryChart"></canvas>
+
+</div>
+
+<div class="dashboard-chart-grid">
+<div class="dashboard-card movement-chart-card">
+
+    <h2>{% if dashboard_period == "year" %}حركة المخزون هذا العام{% else %}حركة المخزون هذا الشهر{% endif %}</h2>
+
+    <canvas id="transactionsChart"></canvas>
+
+</div>
+
+<div class="dashboard-card category-chart-card">
+        <div class="section-heading">
+            <div>
+                <span class="eyebrow">توزيع رأس المال</span>
+                <h2>قيمة المخزون حسب الفئة</h2>
+            </div>
+            <i class="bi bi-pie-chart" aria-hidden="true"></i>
+        </div>
+        <canvas id="categoryValueChart"></canvas>
+</div>
 </div>
 
 <div class="dashboard-grid">
-    <div class="card" style="margin-bottom: 2rem; padding: 20px;">
-    <h3 style="margin-bottom: 15px;">نسبة إكمال توريد منتجات المشروع</h3>
-    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; margin-bottom: 10px; align-items: center; gap: 10px;">
-        <span style="font-size: 2rem; font-weight: bold; color: #C9A550;">{{ completion_percentage }}%</span>
-        <span style="color: var(--text-muted, #999); font-size: 0.95rem; text-align: left;">(المورد: {{ total_quantity }} / التنميط: {{ total_target }})</span>
+    <div class="dashboard-card">
+        <div class="section-heading">
+            <div>
+                <span class="eyebrow">التركيز التشغيلي</span>
+                <h2>المنتجات الأكثر نشاطاً</h2>
+            </div>
+            <i class="bi bi-activity" aria-hidden="true"></i>
+        </div>
+        <div class="active-products-list">
+            {% for product in top_active_products %}
+                <a href="{% url 'product_detail' product.id %}" class="active-product-row">
+                    <span>
+                        <strong>{{ product.name }}</strong>
+                        
+                    </span>
+                    <b>{{ product.movement_count }}</b>
+                </a>
+            {% empty %}
+                <p class="empty-state">لا يوجد نشاط في هذه الفترة</p>
+            {% endfor %}
+        </div>
     </div>
-    <div style="background-color: rgba(255, 255, 255, 0.1); border-radius: 8px; height: 16px; width: 100%; overflow: hidden; box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);">
-        <div style="background-color: #C9A550; height: 100%; width: {{ completion_percentage }}%; transition: width 1s ease; border-radius: 8px;"></div>
-    </div>
-</div>
 </div>
 
 <div class="dashboard-grid alerts-grid">
@@ -349,15 +469,34 @@
 </div>
 <hr>
 
-<div class="card" style="margin-bottom: 2rem; padding: 20px;">
-    <h3 style="margin-bottom: 15px;">نسبة إكمال توريد منتجات المشروع</h3>
-    <div style="display: flex; flex-wrap: wrap; justify-content: space-between; margin-bottom: 10px; align-items: center; gap: 10px;">
-        <span style="font-size: 2rem; font-weight: bold; color: #C9A550;">{{ completion_percentage }}%</span>
-        <span style="color: var(--text-muted, #999); font-size: 0.95rem; text-align: left;">(المورد: {{ total_quantity }} / التنميط: {{ total_target }})</span>
+<div class="dashboard-card">
+
+    <h2>⚡ اختصارات سريعة</h2>
+
+    <div class="quick-actions">
+
+        {% if perms.inventory.add_product %}
+        <a href="{% url 'add_product' %}" class="quick-btn">
+            ➕ إضافة منتج
+        </a>
+        {% endif %}
+
+        <a href="{% url 'transactions_list' %}" class="quick-btn">
+            🔄 حركات المخزون
+        </a>
+
+        {% if perms.inventory.view_inventorytransaction %}
+        <a href="{% url 'inventory_report' %}" class="quick-btn">
+            📈 تقرير المخزون
+        </a>
+        {% endif %}
+
+        <a href="{% url 'low_stock_products' %}" class="quick-btn">
+            ⚠ منخفض المخزون
+        </a>
+
     </div>
-    <div style="background-color: rgba(255, 255, 255, 0.1); border-radius: 8px; height: 16px; width: 100%; overflow: hidden; box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);">
-        <div style="background-color: #C9A550; height: 100%; width: {{ completion_percentage }}%; transition: width 1s ease; border-radius: 8px;"></div>
-    </div>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
