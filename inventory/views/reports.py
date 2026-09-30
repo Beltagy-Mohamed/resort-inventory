@@ -14,6 +14,7 @@ def inventory_report(request):
     category = request.GET.get("category", "")
     status = request.GET.get("status", "")
     warehouse = request.GET.get("warehouse", "")
+    day = request.GET.get("day", "")
 
     products = Product.objects.select_related(
         "category",
@@ -32,11 +33,16 @@ def inventory_report(request):
 
     if category:
         products = products.filter(category_id=category)
+        
+    if day:
+        products = products.filter(transactions__created_at__date=day).distinct()
 
     if status == "low":
         products = products.filter(quantity__lte=F("minimum_stock"), quantity__gt=0)
     elif status == "out":
         products = products.filter(quantity=0)
+    elif status == "in":
+        products = products.filter(quantity__gt=F("minimum_stock"))
 
     products = products.annotate(total_value=F("cost_price") * F("quantity")).order_by("-id")
     products_list = list(products)
@@ -121,6 +127,7 @@ def inventory_report(request):
         "category": category,
         "status": status,
         "warehouse": warehouse,
+        "day": day,
         "total_products": len(products_list),
         "total_quantity": total_quantity,
         "inventory_value": inventory_value,

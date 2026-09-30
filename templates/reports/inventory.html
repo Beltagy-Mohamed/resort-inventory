@@ -20,7 +20,7 @@
         <div></div>
         
         <div class="action-buttons">
-            <a href="?search={{ search }}&category={{ category }}&warehouse={{ warehouse }}&status={{ status }}&export=xlsx" class="btn-export">
+            <a href="?search={{ search }}&category={{ category }}&warehouse={{ warehouse }}&status={{ status }}&day={{ day }}&export=xlsx" class="btn-export">
                 <svg width="18" height="18" fill="none" stroke="currentاللون" stroke-width="2" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                 تصدير
             </a>
@@ -101,8 +101,10 @@
         {% endfor %}
     </select>
 
+    <input type="date" name="day" value="{{ day }}" title="تصفية حسب المنتجات التي تم عليها حركات في هذا اليوم">
     <select name="status">
         <option value="">كل الحالات</option>
+        <option value="in" {% if status == "in" %}selected{% endif %}>متوفر (كمية آمنة)</option>
         <option value="low" {% if status == "low" %}selected{% endif %}>منخفض</option>
         <option value="out" {% if status == "out" %}selected{% endif %}>نفد من المخزون</option>
     </select>
