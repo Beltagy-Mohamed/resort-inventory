@@ -204,7 +204,10 @@ def leadership_item_delete(request, pk):
             product.delete()
             messages.success(request, "تم حذف صنف القائد بنجاح.")
         except ProtectedError:
-            messages.error(request, "لا يمكن حذف الصنف لارتباطه بحركات مخزنية.")
+            messages.error(
+                request,
+                "لا يمكن الحذف لارتباط هذا العنصر بحركات مخزنية سابقة. يرجى الاحتفاظ به للأرشيف.",
+            )
         return redirect("leadership_items_list")
     
     return render(request, "products/delete.html", {"product": product, "is_leadership_form": True})

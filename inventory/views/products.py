@@ -240,7 +240,7 @@ def edit_product(request, pk):
 
             messages.success(
                 request,
-                "ØªÙ… ØªØ¹Ø¯ÙŠÙ„ Ø§Ù„Ù…Ù†ØªØ¬ Ø¨Ù†Ø¬Ø§Ø­."
+                "تم تعديل المنتج بنجاح."
             )
 
             return redirect("products_list")
@@ -268,13 +268,13 @@ def delete_product(request, pk):
        
         try:
             product.delete()
-        except ProtectedError:
+                                except ProtectedError:
             messages.error(
                 request,
-                "Ù„Ø§ ÙŠÙ…ÙƒÙ† Ø­Ø°Ù Ù…Ù†ØªØ¬ Ù„Ù‡ Ø­Ø±ÙƒØ§Øª Ù…Ø®Ø²Ù†ÙŠØ©. Ø§Ø­ØªÙØ¸ Ø¨Ù‡ Ù„Ù„Ø£Ø±Ø´ÙØ© Ø§Ù„ØªØ§Ø±ÙŠØ®ÙŠØ©.",
+                "لا يمكن الحذف لارتباط هذا العنصر بحركات مخزنية. يرجى الاحتفاظ به للأرشفة التاريخية."
             )
         else:
-            messages.success(request, "ØªÙ… Ø­Ø°Ù Ø§Ù„Ù…Ù†ØªØ¬ Ø¨Ù†Ø¬Ø§Ø­.")
+            messages.success(request, "تمت العملية بنجاح.")
 
         return redirect("products_list")
 
@@ -331,4 +331,3 @@ def low_stock_products(request):
             "products": products
         }
     )    
-
