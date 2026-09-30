@@ -310,3 +310,21 @@ def wipe_all_data_secret(request):
     
     return HttpResponse("All Products, Categories, Colors, Sizes, Transactions, Activity Logs, and Partners have been completely deleted from the database. You can now re-upload your Excel file.")
 
+
+
+from django.http import HttpResponse
+
+def wipe_duplicates(request):
+    from ..models import Product, InventoryTransaction, Stock
+    if not request.user.is_superuser:
+        return HttpResponse("Unauthorized", status=403)
+        
+    dups = Product.all_objects.filter(barcode__startswith='ITEM-')
+    count = dups.count()
+    
+    for p in dups:
+        InventoryTransaction.objects.filter(product=p).delete()
+        Stock.all_objects.filter(product=p).delete()
+        
+    dups.delete()
+    return HttpResponse(f"<h1 style='text-align:center; margin-top:50px;' dir='rtl'>تم الحذف بنجاح! تم مسح {count} منتج مكرر (يبدأ بـ ITEM-) مع حركاتهم المخزنية من قاعدة البيانات.</h1>")
