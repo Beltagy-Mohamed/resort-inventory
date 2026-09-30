@@ -17,37 +17,36 @@
     .status-inactive { color: #ff3b30; background: #ffe5e5; padding: 4px 10px; border-radius: 12px; font-size: 0.8rem; }
     .group-badge { background: #f2f2f7; color: #1d1d1f; padding: 4px 10px; border-radius: 12px; font-size: 0.8rem; margin-right: 4px; display: inline-block; margin-bottom: 4px; }
 </style>
-<link rel="stylesheet" href="{% static 'css/products.css' %}">
+<link href="{% static 'css/products.css' %}" rel="stylesheet"/>
 {% endblock %}
 
 {% block content %}
 <div class="page-header" style="margin-bottom: 30px; margin-top: 10px;">
-    <h1 style="margin: 0; font-size: 1.75rem; font-weight: 600;">
-        <i class="bi bi-people"></i> المستخدمون والصلاحيات
+<h1 style="margin: 0; font-size: 1.75rem; font-weight: 600;">
+<i class="bi bi-people"></i> المستخدمون والصلاحيات
     </h1>
-    <a href="{% url 'add_user' %}" class="btn-primary" style="padding: 10px 20px; font-weight: bold; border-radius: 8px; text-decoration: none;">
-        <i class="bi bi-person-plus"></i> إضافة مستخدم
+<a class="btn-primary" href="{% url 'add_user' %}" style="padding: 10px 20px; font-weight: bold; border-radius: 8px; text-decoration: none;">
+<i class="bi bi-person-plus"></i> إضافة مستخدم
     </a>
 </div>
-
 <div class="apple-card p-0 overflow-hidden">
-    <div class="table-responsive">
-        <table class="apple-table">
-            <thead>
-                <tr>
-                    <th>اسم المستخدم</th>
-                    <th>الاسم بالكامل</th>
-                    <th>الصلاحيات</th>
-                    <th>الحالة</th>
-                    <th class="text-center">إجراءات</th>
-                </tr>
-            </thead>
-            <tbody>
+<div class="table-responsive">
+<table class="apple-table">
+<thead>
+<tr>
+<th>اسم المستخدم</th>
+<th>الاسم بالكامل</th>
+<th>الصلاحيات</th>
+<th>الحالة</th>
+<th class="text-center">إجراءات</th>
+</tr>
+</thead>
+<tbody>
                 {% for u in users %}
                 <tr>
-                    <td style="font-weight: 600;">{{ u.username }}</td>
-                    <td>{{ u.get_full_name|default:"-" }}</td>
-                    <td>
+<td data-label="اسم المستخدم" style="font-weight: 600;">{{ u.username }}</td>
+<td data-label="الاسم بالكامل">{{ u.get_full_name|default:"-" }}</td>
+<td data-label="الصلاحيات">
                         {% if u.is_superuser %}
                         <span class="group-badge text-white bg-primary">مدير النظام (Superuser)</span>
                         {% else %}
@@ -60,23 +59,23 @@
                             {% endfor %}
                         {% endif %}
                     </td>
-                    <td>
+<td data-label="الحالة">
                         {% if u.is_active %}
                         <span class="status-active">نشط</span>
                         {% else %}
                         <span class="status-inactive">غير نشط</span>
                         {% endif %}
                     </td>
-                    <td class="text-center">
-                        <a href="{% url 'edit_user' u.id %}" class="apple-btn-icon" title="تعديل"><i class="bi bi-pencil"></i></a>
-                        <a href="{% url 'delete_user' u.id %}" class="apple-btn-icon text-danger" title="حذف" onclick="return confirm('هل أنت متأكد من تعطيل/حذف هذا المستخدم؟');"><i class="bi bi-trash"></i></a>
-                    </td>
-                </tr>
+<td class="text-center" data-label="إجراءات">
+<a class="apple-btn-icon" href="{% url 'edit_user' u.id %}" title="تعديل"><i class="bi bi-pencil"></i></a>
+<a class="apple-btn-icon text-danger" href="{% url 'delete_user' u.id %}" onclick="return confirm('هل أنت متأكد من تعطيل/حذف هذا المستخدم؟');" title="حذف"><i class="bi bi-trash"></i></a>
+</td>
+</tr>
                 {% empty %}
-                <tr><td colspan="5" class="text-center py-5 text-muted">لا يوجد مستخدمين.</td></tr>
+                <tr><td class="text-center py-5 text-muted" colspan="5">لا يوجد مستخدمين.</td></tr>
                 {% endfor %}
             </tbody>
-        </table>
-    </div>
+</table>
+</div>
 </div>
 {% endblock %}

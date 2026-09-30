@@ -17,35 +17,34 @@
     .apple-btn-icon:hover { background-color: #0071e3; color: #fff; }
     .badge-leader { background-color: #f2f2f7; color: #1d1d1f; padding: 4px 10px; border-radius: 12px; font-size: 0.8rem; }
 </style>
-<link rel="stylesheet" href="{% static 'css/products.css' %}">
+<link href="{% static 'css/products.css' %}" rel="stylesheet"/>
 {% endblock %}
 
 {% block content %}
 <div class="page-header" style="margin-bottom: 30px; margin-top: 10px;">
-    <h1 style="margin: 0; font-size: 1.75rem; font-weight: 600;">
-        <i class="bi bi-building"></i> جهات التعامل
+<h1 style="margin: 0; font-size: 1.75rem; font-weight: 600;">
+<i class="bi bi-building"></i> جهات التعامل
     </h1>
-    <a href="{% url 'add_partner' %}" class="btn-primary">
-        <i class="bi bi-plus-square"></i> إضافة جهة
+<a class="btn-primary" href="{% url 'add_partner' %}">
+<i class="bi bi-plus-square"></i> إضافة جهة
     </a>
 </div>
-
 <div class="apple-card p-0 overflow-hidden">
-    <div class="table-responsive">
-        <table class="apple-table">
-            <thead>
-                <tr>
-                    <th>الاسم</th>
-                    <th>النوع</th>
-                    <th>بيانات التواصل</th>
-                    <th class="text-center">إجراءات</th>
-                </tr>
-            </thead>
-            <tbody>
+<div class="table-responsive">
+<table class="apple-table">
+<thead>
+<tr>
+<th>الاسم</th>
+<th>النوع</th>
+<th>بيانات التواصل</th>
+<th class="text-center">إجراءات</th>
+</tr>
+</thead>
+<tbody>
                 {% for p in partners %}
                 <tr>
-                    <td style="font-weight: 600;">{{ p.name }}</td>
-                    <td>
+<td data-label="الاسم" style="font-weight: 600;">{{ p.name }}</td>
+<td data-label="النوع">
                         {% if p.partner_type == 'SUPPLIER' or p.partner_type == 'مورد' %}
                         <span class="badge-supplier">مورد</span>
                         {% elif p.partner_type == 'CLIENT' or p.partner_type == 'عميل' %}
@@ -54,31 +53,30 @@
                         <span class="badge-client">{{ p.get_partner_type_display|default:"أخرى" }}</span>
                         {% endif %}
                     </td>
-                    <td>{{ p.contact_info|default:"-" }}</td>
-                    
-                    <td>
+<td data-label="بيانات التواصل">{{ p.contact_info|default:"-" }}</td>
+<td data-label="إجراءات">
                         {% if p.is_leader_only %}
                         <span class="badge-leader"><i class="bi bi-lock-fill text-warning"></i> خاص للقائد</span>
                         {% else %}
                         <span class="text-muted">عام</span>
                         {% endif %}
                     </td>
-                    <td class="text-center">
-                        <a href="{% url 'edit_partner' p.id %}" class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm" style="transition: all 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'"><i class="bi bi-pencil me-1"></i> تعديل</a>
+<td class="text-center">
+<a class="btn btn-primary btn-sm rounded-pill px-3 shadow-sm" href="{% url 'edit_partner' p.id %}" onmouseout="this.style.transform='scale(1)'" onmouseover="this.style.transform='scale(1.05)'" style="transition: all 0.2s;"><i class="bi bi-pencil me-1"></i> تعديل</a>
                         {% if perms.inventory.delete_partner %}
-                        <form method="post" action="{% url 'delete_partner' p.id %}" style="display:inline;">
+                        <form action="{% url 'delete_partner' p.id %}" method="post" style="display:inline;">
                             {% csrf_token %}
-                            <button type="submit" class="btn btn-danger btn-sm rounded-pill px-3 shadow-sm ms-1" style="transition: all 0.2s;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'" onclick="return confirm('هل أنت متأكد من حذف هذه الجهة؟
-تحذير: سيتم منع الحذف إذا كانت هناك حركات مالية مسجلة لهذه الجهة.');"><i class="bi bi-trash me-1"></i> حذف</button>
-                        </form>
+                            <button class="btn btn-danger btn-sm rounded-pill px-3 shadow-sm ms-1" onclick="return confirm('هل أنت متأكد من حذف هذه الجهة؟
+تحذير: سيتم منع الحذف إذا كانت هناك حركات مالية مسجلة لهذه الجهة.');" onmouseout="this.style.transform='scale(1)'" onmouseover="this.style.transform='scale(1.05)'" style="transition: all 0.2s;" type="submit"><i class="bi bi-trash me-1"></i> حذف</button>
+</form>
                         {% endif %}
                     </td>
-                </tr>
+</tr>
                 {% empty %}
-                <tr><td colspan="5" class="text-center py-5 text-muted">لا توجد جهات تعامل.</td></tr>
+                <tr><td class="text-center py-5 text-muted" colspan="5">لا توجد جهات تعامل.</td></tr>
                 {% endfor %}
             </tbody>
-        </table>
-    </div>
+</table>
+</div>
 </div>
 {% endblock %}

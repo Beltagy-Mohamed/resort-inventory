@@ -4,7 +4,7 @@
 {% block title %}تقرير الأرباح والمبيعات{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/products.css' %}">
+<link href="{% static 'css/products.css' %}" rel="stylesheet"/>
 <style>
     .summary-cards { display: flex; gap: 20px; margin-bottom: 30px; flex-wrap: wrap; }
     .summary-card { flex: 1; background: white; padding: 20px; border-radius: 8px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); text-align: center; border-right: 4px solid #3A5457; }
@@ -17,84 +17,81 @@
 
 {% block content %}
 <div class="page-header">
-    <h1>تقرير الأرباح والمبيعات (الحركات الصادرة فقط)</h1>
+<h1>تقرير الأرباح والمبيعات (الحركات الصادرة فقط)</h1>
 </div>
-
 <div class="search-bar">
-    <form method="get">
-        <select name="warehouse" class="form-control" style="min-width: 120px;">
-            <option value="">-- كل المخازن --</option>
+<form method="get">
+<select class="form-control" name="warehouse" style="min-width: 120px;">
+<option value="">-- كل المخازن --</option>
             {% for w in warehouses %}
-            <option value="{{ w.id }}" {% if warehouse_filter == w.id|stringformat:"s" %}selected{% endif %}>{{ w.name }}</option>
+            <option %}="" %}selected{%="" endif="" if="" value="{{ w.id }}" w.id|stringformat:"s"="" warehouse_filter="=" {%="">{{ w.name }}</option>
             {% endfor %}
         </select>
-        <select name="month_filter" class="form-control" style="min-width: 120px;">
-            <option value="">-- الشهر --</option>
+<select class="form-control" name="month_filter" style="min-width: 120px;">
+<option value="">-- الشهر --</option>
             {% for m_id, m_name in months %}
-            <option value="{{ m_id }}" {% if month_filter == m_id %}selected{% endif %}>{{ m_name }}</option>
+            <option %}="" %}selected{%="" endif="" if="" m_id="" month_filter="=" value="{{ m_id }}" {%="">{{ m_name }}</option>
             {% endfor %}
         </select>
-        <select name="year_filter" class="form-control" style="min-width: 100px;">
-            <option value="">-- السنة --</option>
+<select class="form-control" name="year_filter" style="min-width: 100px;">
+<option value="">-- السنة --</option>
             {% for y in years %}
-            <option value="{{ y }}" {% if year_filter == y %}selected{% endif %}>{{ y }}</option>
+            <option %}="" %}selected{%="" endif="" if="" value="{{ y }}" y="" year_filter="=" {%="">{{ y }}</option>
             {% endfor %}
         </select>
-        <button type="submit" class="btn-primary" style="padding: 10px 15px; background: #3A5457; color: white; border: none; border-radius: 4px;">عرض التقرير</button>
-    </form>
+<button class="btn-primary" style="padding: 10px 15px; background: #3A5457; color: white; border: none; border-radius: 4px;" type="submit">عرض التقرير</button>
+</form>
 </div>
-
 <div class="summary-cards">
-    <div class="summary-card">
-        <h3>إجمالي المبيعات (قيمة البضاعة المنصرفة)</h3>
-        <div class="value">{{ total_sales|humanize_arabic }}</div>
-    </div>
-    <div class="summary-card">
-        <h3>إجمالي التكلفة</h3>
-        <div class="value">{{ total_cost|humanize_arabic }}</div>
-    </div>
-    <div class="summary-card">
-        <h3>صافي الربح</h3>
-        <div class="value {% if total_profit > 0 %}profit-positive{% elif total_profit < 0 %}profit-negative{% endif %}">
+<div class="summary-card">
+<h3>إجمالي المبيعات (قيمة البضاعة المنصرفة)</h3>
+<div class="value">{{ total_sales|humanize_arabic }}</div>
+</div>
+<div class="summary-card">
+<h3>إجمالي التكلفة</h3>
+<div class="value">{{ total_cost|humanize_arabic }}</div>
+</div>
+<div class="summary-card">
+<h3>صافي الربح</h3>
+<div class="value {% if total_profit &gt; 0 %}profit-positive{% elif total_profit &lt; 0 %}profit-negative{% endif %}">
             {{ total_profit|humanize_arabic }}
         </div>
-    </div>
 </div>
-
+</div>
 <div class="table-responsive">
-    <table class="products-table">
-        <thead>
-            <tr>
-                <th>التاريخ</th>
-                <th>المنتج</th>
-                <th>الكمية المنصرفة</th>
-                <th>تكلفة الوحدة</th>
-                <th>سعر البيع الفعلي</th>
-                <th>إجمالي التكلفة</th>
-                <th>إجمالي البيع</th>
-                <th>الربح</th>
-            </tr>
-        </thead>
-        <tbody>
+<table class="products-table">
+<thead>
+<tr>
+<th>التاريخ</th>
+<th>المنتج</th>
+<th>الكمية المنصرفة</th>
+<th>تكلفة الوحدة</th>
+<th>سعر البيع الفعلي</th>
+<th>إجمالي التكلفة</th>
+<th>إجمالي البيع</th>
+<th>الربح</th>
+</tr>
+</thead>
+<tbody>
             {% for trans in transactions %}
             <tr>
-                <td data-label="التاريخ">{{ trans.created_at|date:"Y-m-d H:i" }}</td>
-                <td data-label="المنتج">{{ trans.product.name }}</td>
-                <td data-label="الكمية">{{ trans.quantity }}</td>
-                <td data-label="سعر التكلفة">{{ trans.product.cost_price }}</td>
-                <td data-label="سعر البيع">{{ trans.unit_price }}</td>
-                <td data-label="الإجمالي">{% widthratio trans.product.cost_price 1 trans.quantity %}</td>
-                <td data-label="الإجمالي">{% widthratio trans.unit_price 1 trans.quantity %}</td>
-                <td class="{% if trans.profit > 0 %}profit-positive{% elif trans.profit < 0 %}profit-negative{% endif %}">
+<td data-label="التاريخ">{{ trans.created_at|date:"Y-m-d H:i" }}</td>
+<td data-label="المنتج">{{ trans.product.name }}</td>
+<td data-label="الكمية">{{ trans.quantity }}</td>
+<td data-label="سعر التكلفة">{{ trans.product.cost_price }}</td>
+<td data-label="سعر البيع">{{ trans.unit_price }}</td>
+<td data-label="الإجمالي">{% widthratio trans.product.cost_price 1 trans.quantity %}</td>
+<td data-label="الإجمالي">{% widthratio trans.unit_price 1 trans.quantity %}</td>
+<td class="{% if trans.profit &gt; 0 %}profit-positive{% elif trans.profit &lt; 0 %}profit-negative{% endif %}" data-label="الربح">
                     {{ trans.profit|floatformat:2 }}
                 </td>
-            </tr>
+</tr>
             {% empty %}
             <tr>
-                <td colspan="8" style="text-align: center;">لا توجد مبيعات (حركات منصرفة) في الفترة المحددة</td>
-            </tr>
+<td colspan="8" style="text-align: center;">لا توجد مبيعات (حركات منصرفة) في الفترة المحددة</td>
+</tr>
             {% endfor %}
         </tbody>
-    </table>
+</table>
 </div>
 {% endblock %}

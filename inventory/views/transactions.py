@@ -105,11 +105,13 @@ def add_transaction(request):
         # Force the transaction type based on the action parameter to ensure data integrity
         post_data = request.POST.copy()
         post_data['transaction_type'] = action
-        form = InventoryTransactionForm(post_data, user=request.user)
+        from inventory.decorators import is_the_leader
+        is_leader = is_the_leader(request.user) and request.GET.get('leader') == '1'
+        form = InventoryTransactionForm(post_data, is_leader=is_leader)
         
         # Enforce partner type filtering on POST (respecting leader access)
         from inventory.decorators import is_the_leader
-        partner_qs = Partner.all_objects if (request.user.is_superuser or is_the_leader(request.user)) else Partner.objects
+        partner_qs = Partner.objects
         if action == "IN":
             form.fields['partner'].queryset = partner_qs.filter(partner_type="SUPPLIER")
         elif action == "OUT":
@@ -152,11 +154,13 @@ def add_transaction(request):
                 )
 
     else:
-        form = InventoryTransactionForm(user=request.user)
+        from inventory.decorators import is_the_leader
+        is_leader = is_the_leader(request.user) and request.GET.get('leader') == '1'
+        form = InventoryTransactionForm(is_leader=is_leader)
         
         # Enforce partner type filtering on GET (respecting leader access)
         from inventory.decorators import is_the_leader
-        partner_qs = Partner.all_objects if (request.user.is_superuser or is_the_leader(request.user)) else Partner.objects
+        partner_qs = Partner.objects
         if action == "IN":
             form.fields['partner'].queryset = partner_qs.filter(partner_type="SUPPLIER")
         elif action == "OUT":

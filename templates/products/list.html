@@ -3,153 +3,149 @@
 {% block title %}{% if is_leadership %}أصناف القائد{% else %}المنتجات - المستودع العادي{% endif %}{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/products.css' %}">
+<link href="{% static 'css/products.css' %}" rel="stylesheet"/>
 {% endblock %}
 
 {% block content %}
 <div class="page-header">
-    <h1>
+<h1>
         {% if is_leadership %}
             <i class="bi bi-box-seam"></i> أصناف القائد
         {% else %}
             <i class="bi bi-boxes"></i> إدارة المنتجات
         {% endif %}
     </h1>
-    
-    <div>
+<div>
         {% if is_leadership %}
-            <button type="submit" form="search-form" name="export" value="xlsx" class="btn-secondary" style="margin-inline-end: 10px;">
-                <i class="bi bi-file-earmark-excel"></i> تصدير Excel
+            <button class="btn-secondary" form="search-form" name="export" style="margin-inline-end: 10px;" type="submit" value="xlsx">
+<i class="bi bi-file-earmark-excel"></i> تصدير Excel
             </button>
-            <a href="{% url 'leadership_item_add' %}" class="btn-primary">
-                <i class="bi bi-plus"></i> إضافة صنف
+<a class="btn-primary" href="{% url 'leadership_item_add' %}">
+<i class="bi bi-plus"></i> إضافة صنف
             </a>
         {% else %}
-            <button type="submit" form="search-form" name="export" value="xlsx" class="btn-secondary" style="margin-inline-end: 10px;">
-                <i class="bi bi-file-earmark-excel"></i> تصدير Excel
+            <button class="btn-secondary" form="search-form" name="export" style="margin-inline-end: 10px;" type="submit" value="xlsx">
+<i class="bi bi-file-earmark-excel"></i> تصدير Excel
             </button>
-            <a href="{% url 'add_product' %}" class="btn-primary">
-                <i class="bi bi-plus"></i> إضافة صنف
+<a class="btn-primary" href="{% url 'add_product' %}">
+<i class="bi bi-plus"></i> إضافة صنف
             </a>
         {% endif %}
     </div>
 </div>
-
 <div class="search-bar">
-    <form method="get" id="search-form">
-        <input type="text" name="search" placeholder="البحث عن منتج بالاسم أو الكود..." value="{{ search }}">
+<form id="search-form" method="get">
+<input name="search" placeholder="البحث عن منتج بالاسم أو الكود..." type="text" value="{{ search }}"/>
         
         {% if not is_leadership %}
         <select name="category">
-            <option value="">كل الفئات</option>
+<option value="">كل الفئات</option>
             {% for c in categories %}
-            <option value="{{ c.id }}" {% if category_id == c.id|stringformat:"s" %}selected{% endif %}>{{ c.name }}</option>
+            <option %}="" %}selected{%="" c.id|stringformat:"s"="" category_id="=" endif="" if="" value="{{ c.id }}" {%="">{{ c.name }}</option>
             {% endfor %}
         </select>
-        <select name="color">
-            <option value="">كل الألوان</option>
+<select name="color">
+<option value="">كل الألوان</option>
             {% for c in colors %}
-            <option value="{{ c.id }}" {% if color_id == c.id|stringformat:"s" %}selected{% endif %}>{{ c.name }}</option>
+            <option %}="" %}selected{%="" c.id|stringformat:"s"="" color_id="=" endif="" if="" value="{{ c.id }}" {%="">{{ c.name }}</option>
             {% endfor %}
         </select>
-        <select name="size">
-            <option value="">كل المقاسات</option>
+<select name="size">
+<option value="">كل المقاسات</option>
             {% for s in sizes %}
-            <option value="{{ s.id }}" {% if size_id == s.id|stringformat:"s" %}selected{% endif %}>{{ s.name }}</option>
+            <option %}="" %}selected{%="" endif="" if="" s.id|stringformat:"s"="" size_id="=" value="{{ s.id }}" {%="">{{ s.name }}</option>
             {% endfor %}
         </select>
-        
-        <select name="warehouse" onchange="this.form.submit()">
-            <option value="">كل المخازن</option>
+<select name="warehouse" onchange="this.form.submit()">
+<option value="">كل المخازن</option>
             {% for w in warehouses %}
-            <option value="{{ w.id }}" {% if warehouse_id == w.id|stringformat:"s" %}selected{% endif %}>{{ w.name }}</option>
+            <option %}="" %}selected{%="" endif="" if="" value="{{ w.id }}" w.id|stringformat:"s"="" warehouse_id="=" {%="">{{ w.name }}</option>
             {% endfor %}
         </select>
-        <select name="status">
-            <option value="">كل الحالات</option>
-            <option value="available" {% if status == 'available' %}selected{% endif %}>متوفر</option>
-            <option value="low" {% if status == 'low' %}selected{% endif %}>منخفض</option>
-            <option value="out" {% if status == 'out' %}selected{% endif %}>نفد</option>
-        </select>
+<select name="status">
+<option value="">كل الحالات</option>
+<option %}="" %}selected{%="" 'available'="" endif="" if="" status="=" value="available" {%="">متوفر</option>
+<option %}="" %}selected{%="" 'low'="" endif="" if="" status="=" value="low" {%="">منخفض</option>
+<option %}="" %}selected{%="" 'out'="" endif="" if="" status="=" value="out" {%="">نفد</option>
+</select>
         {% endif %}
         
-        <button type="submit" class="btn-primary" style="margin-top:10px;">بحث و تصفية</button>
+        <button class="btn-primary" style="margin-top:10px;" type="submit">بحث و تصفية</button>
         {% if search or category_id or color_id or size_id or status or period %}
-        <a href="?{% if request.GET %}{% endif %}" class="btn-secondary" style="padding: 9px 12px; font-size: 13.5px;"><i class="bi bi-x-circle"></i> مسح</a>
+        <a class="btn-secondary" href="?{% if request.GET %}{% endif %}" style="padding: 9px 12px; font-size: 13.5px;"><i class="bi bi-x-circle"></i> مسح</a>
         {% endif %}
     </form>
 </div>
-
 <div class="table-container">
-    <table class="products-table">
-    <thead>
-        <tr>
-            <th>الكود</th>
-            <th>اسم الصنف</th>
-            <th>التنميط</th>
-            <th>ما تم توريده</th>
-            <th>المتبقي</th>
-            <th>الحالة</th>
-                    <th>نسبة التوفر</th>
-            <th>اسم الشركة</th>
-            <th>الإجراءات</th>
-        </tr>
-    </thead>
-        <tbody>
+<table class="products-table">
+<thead>
+<tr>
+<th>الكود</th>
+<th>اسم الصنف</th>
+<th>التنميط</th>
+<th>ما تم توريده</th>
+<th>المتبقي</th>
+<th>الحالة</th>
+<th>نسبة التوفر</th>
+<th>اسم الشركة</th>
+<th>الإجراءات</th>
+</tr>
+</thead>
+<tbody>
     {% for p in page_obj %}
         <tr>
-            <td data-label="الكود">{{ p.barcode|default:"-" }}</td>
-            <td data-label="اسم الصنف"><strong>{{ p.name }}</strong></td>
-            <td data-label="التنميط">{{ p.target_quantity }}</td>
-            <td data-label="ما تم توريده">{{ p.total_supplied }}</td>
-            <td data-label="المتبقي">{{ p.remaining_target }}</td>
-            <td data-label="الحالة">
-                {% if p.display_quantity <= 0 %}
+<td data-label="الكود">{{ p.barcode|default:"-" }}</td>
+<td data-label="اسم الصنف"><strong>{{ p.name }}</strong></td>
+<td data-label="التنميط">{{ p.target_quantity }}</td>
+<td data-label="ما تم توريده">{{ p.total_supplied }}</td>
+<td data-label="المتبقي">{{ p.remaining_target }}</td>
+<td data-label="الحالة">
+                {% if p.display_quantity &lt;= 0 %}
                     <span class="badge" style="background-color: #dc3545; color: white;">نفد</span>
-                {% elif p.display_quantity <= p.minimum_stock %}
+                {% elif p.display_quantity &lt;= p.minimum_stock %}
                     <span class="badge" style="background-color: #ffc107; color: black;">منخفض</span>
                 {% else %}
                     <span class="badge" style="background-color: #198754; color: white;">متوفر</span>
                   {% endif %}
               </td>
-              <td data-label="نسبة التوريد">
-                  <div style="background: #e9ecef; border-radius: 4px; width: 100%; height: 22px; overflow: hidden; position: relative; border: 1px solid #ced4da; box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);">
-                      <div style="background: {% if p.availability_percentage > 50 %}#198754{% elif p.availability_percentage > 20 %}#ffc107{% else %}#dc3545{% endif %}; width: {% if p.availability_percentage > 100 %}100{% else %}{{ p.availability_percentage }}{% endif %}%; height: 100%; transition: width 0.3s ease;"></div>
-                      <span style="position: absolute; width: 100%; text-align: center; font-size: 13px; font-weight: 800; color: #000; line-height: 22px; top: 0; left: 0; text-shadow: 1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0px 0px 3px #fff;">
+<td data-label="نسبة التوريد">
+<div style="background: #e9ecef; border-radius: 4px; width: 100%; height: 22px; overflow: hidden; position: relative; border: 1px solid #ced4da; box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);">
+<div style="background: {% if p.availability_percentage &gt; 50 %}#198754{% elif p.availability_percentage &gt; 20 %}#ffc107{% else %}#dc3545{% endif %}; width: {% if p.availability_percentage &gt; 100 %}100{% else %}{{ p.availability_percentage }}{% endif %}%; height: 100%; transition: width 0.3s ease;"></div>
+<span style="position: absolute; width: 100%; text-align: center; font-size: 13px; font-weight: 800; color: #000; line-height: 22px; top: 0; left: 0; text-shadow: 1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0px 0px 3px #fff;">
                           {{ p.availability_percentage }}%
                       </span>
-                  </div>
-              </td>
-              <td data-label="الشركة (المورد)">{{ p.supplier.name|default:"-" }}</td>
-            <td class="actions" style="display: flex; gap: 8px; justify-content: center; align-items: center; padding: 10px;">
+</div>
+</td>
+<td data-label="الشركة (المورد)">{{ p.supplier.name|default:"-" }}</td>
+<td class="actions" data-label="الإجراءات" style="display: flex; gap: 8px; justify-content: center; align-items: center; padding: 10px;">
                 {% if is_leadership %}
-                    <a href="{% url 'leadership_item_detail' p.id %}" class="action-btn view-btn" title="عرض التفاصيل"><i class="bi bi-eye"></i></a>
-                    <a href="{% url 'leadership_item_edit' p.id %}" class="action-btn edit-btn" title="تعديل"><i class="bi bi-pencil"></i></a>
-                    <a href="{% url 'leadership_item_delete' p.id %}" class="action-btn delete-btn" title="حذف"><i class="bi bi-trash"></i></a>
+                    <a class="action-btn view-btn" href="{% url 'leadership_item_detail' p.id %}" title="عرض التفاصيل"><i class="bi bi-eye"></i></a>
+<a class="action-btn edit-btn" href="{% url 'leadership_item_edit' p.id %}" title="تعديل"><i class="bi bi-pencil"></i></a>
+<a class="action-btn delete-btn" href="{% url 'leadership_item_delete' p.id %}" title="حذف"><i class="bi bi-trash"></i></a>
                 {% else %}
-                    <a href="{% url 'product_detail' p.id %}" class="action-btn view-btn" title="عرض التفاصيل"><i class="bi bi-eye"></i></a>
-                    <a href="{% url 'edit_product' p.id %}" class="action-btn edit-btn" title="تعديل"><i class="bi bi-pencil"></i></a>
-                    <a href="{% url 'delete_product' p.id %}" class="action-btn delete-btn" title="حذف"><i class="bi bi-trash"></i></a>
+                    <a class="action-btn view-btn" href="{% url 'product_detail' p.id %}" title="عرض التفاصيل"><i class="bi bi-eye"></i></a>
+<a class="action-btn edit-btn" href="{% url 'edit_product' p.id %}" title="تعديل"><i class="bi bi-pencil"></i></a>
+<a class="action-btn delete-btn" href="{% url 'delete_product' p.id %}" title="حذف"><i class="bi bi-trash"></i></a>
                 {% endif %}
             </td>
-        </tr>
+</tr>
     {% empty %}
         <tr><td colspan="9" style="text-align: center; padding: 20px;">لا توجد منتجات مطابقة للبحث.</td></tr>
     {% endfor %}
 </tbody>
-    </table>
+</table>
 </div>
 
 {% if page_obj.has_other_pages %}
 <div class="pagination">
     {% if page_obj.has_previous %}
-        <a href="?page={{ page_obj.previous_page_number }}{% if search %}&search={{ search }}{% endif %}">السابق</a>
+        <a href="?page={{ page_obj.previous_page_number }}{% if search %}&amp;search={{ search }}{% endif %}">السابق</a>
     {% endif %}
     
     <span class="current">{{ page_obj.number }}</span>
     
     {% if page_obj.has_next %}
-        <a href="?page={{ page_obj.next_page_number }}{% if search %}&search={{ search }}{% endif %}">التالي</a>
+        <a href="?page={{ page_obj.next_page_number }}{% if search %}&amp;search={{ search }}{% endif %}">التالي</a>
     {% endif %}
 </div>
 {% endif %}

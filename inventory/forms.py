@@ -154,10 +154,11 @@ class SizeForm(StripWhitespaceMixin, forms.ModelForm):
 
 class InventoryTransactionForm(StripWhitespaceMixin, forms.ModelForm):
     def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user', None)
+        user = kwargs.pop('user', None) # keep for compatibility but don't use it for leader check
+        is_leader = kwargs.pop('is_leader', False)
         super().__init__(*args, **kwargs)
         
-        if user and (user.is_superuser or is_the_leader(user)):
+        if is_leader:
             # Leader/superuser: see all products, warehouses, partners
             self.fields['product'].queryset = Product.all_objects.filter(is_archived=False).order_by('name')
             self.fields['warehouse'].queryset = Warehouse.all_objects.all().order_by('name')

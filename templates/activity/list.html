@@ -6,72 +6,57 @@
 {% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/products.css' %}">
+<link href="{% static 'css/products.css' %}" rel="stylesheet"/>
 {% endblock %}
 
 {% block content %}
 
 <h1>سجل النشاطات</h1>
-
 <div class="search-bar" style="margin-bottom: 20px;">
-    <form method="get" style="display: flex; gap: 10px; align-items: center;">
-        <select name="day_filter" class="form-control" style="min-width: 100px;">
-            <option value="">-- اليوم --</option>
+<form method="get" style="display: flex; gap: 10px; align-items: center;">
+<select class="form-control" name="day_filter" style="min-width: 100px;">
+<option value="">-- اليوم --</option>
             {% for d in days %}
-            <option value="{{ d }}" {% if day_filter == d %}selected{% endif %}>{{ d }}</option>
+            <option %}="" %}selected{%="" d="" day_filter="=" endif="" if="" value="{{ d }}" {%="">{{ d }}</option>
             {% endfor %}
         </select>
-        <select name="month_filter" class="form-control" style="min-width: 120px;">
-            <option value="">-- الشهر --</option>
+<select class="form-control" name="month_filter" style="min-width: 120px;">
+<option value="">-- الشهر --</option>
             {% for m_id, m_name in months %}
-            <option value="{{ m_id }}" {% if month_filter == m_id %}selected{% endif %}>{{ m_name }}</option>
+            <option %}="" %}selected{%="" endif="" if="" m_id="" month_filter="=" value="{{ m_id }}" {%="">{{ m_name }}</option>
             {% endfor %}
         </select>
-        <select name="year_filter" class="form-control" style="min-width: 100px;">
-            <option value="">-- السنة --</option>
+<select class="form-control" name="year_filter" style="min-width: 100px;">
+<option value="">-- السنة --</option>
             {% for y in years %}
-            <option value="{{ y }}" {% if year_filter == y %}selected{% endif %}>{{ y }}</option>
+            <option %}="" %}selected{%="" endif="" if="" value="{{ y }}" y="" year_filter="=" {%="">{{ y }}</option>
             {% endfor %}
         </select>
-        <button type="submit" class="btn-primary" style="padding: 10px 15px; background: #3A5457; color: white; border: none; border-radius: 4px;">عرض التقرير</button>
-    </form>
+<button class="btn-primary" style="padding: 10px 15px; background: #3A5457; color: white; border: none; border-radius: 4px;" type="submit">عرض التقرير</button>
+</form>
 </div>
-
-
 <table class="products-table">
-
-    <thead>
-
-        <tr>
-
-            <th>الوقت</th>
-            <th>المستخدم</th>
-
-            <th>الإجراء</th>
-
-            <th>المنتج</th>
-
-            <th>الوصف</th>
-            <th>الكمية السابقة</th>
-            <th>المضافة/المنصرفة</th>
-            <th>الإجمالي</th>
-
-        </tr>
-
-    </thead>
-
-    <tbody>
+<thead>
+<tr>
+<th>الوقت</th>
+<th>المستخدم</th>
+<th>الإجراء</th>
+<th>المنتج</th>
+<th>الوصف</th>
+<th>الكمية السابقة</th>
+<th>المضافة/المنصرفة</th>
+<th>الإجمالي</th>
+</tr>
+</thead>
+<tbody>
 
         {% for log in logs %}
 
         <tr>
-
-            <td data-label="التاريخ">{{ log.created_at|date:"Y-m-d H:i" }}</td>
-            <td data-label="المستخدم">{% if log.user %}{{ log.user.username }}{% else %}-{% endif %}</td>
-
-            <td>{{ log.get_action_display }}</td>
-
-            <td>
+<td data-label="التاريخ">{{ log.created_at|date:"Y-m-d H:i" }}</td>
+<td data-label="المستخدم">{% if log.user %}{{ log.user.username }}{% else %}-{% endif %}</td>
+<td data-label="الإجراء">{{ log.get_action_display }}</td>
+<td data-label="المنتج">
 
                 {% if log.product %}
 
@@ -84,32 +69,26 @@
                 {% endif %}
 
             </td>
-
-            <td>{{ log.description }}</td>
-            <td>{{ log.old_quantity|default:"-" }}</td>
-            <td dir="ltr" style="text-align: right;">{{ log.diff_quantity }}</td>
-            <td>{{ log.new_quantity|default:"-" }}</td>
-
-        </tr>
+<td data-label="الوصف">{{ log.description }}</td>
+<td data-label="الكمية السابقة">{{ log.old_quantity|default:"-" }}</td>
+<td data-label="المضافة/المنصرفة" dir="ltr" style="text-align: right;">{{ log.diff_quantity }}</td>
+<td data-label="الإجمالي">{{ log.new_quantity|default:"-" }}</td>
+</tr>
 
         {% empty %}
 
         <tr>
-
-            <td colspan="8">
+<td colspan="8">
 
                 لا يوجد نشاط
 
             </td>
-
-        </tr>
+</tr>
 
         {% endfor %}
 
     </tbody>
-
 </table>
-
 <div class="pagination">
 
     {% if page_obj.has_previous %}

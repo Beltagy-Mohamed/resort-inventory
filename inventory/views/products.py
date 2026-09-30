@@ -173,11 +173,10 @@ def products_list(request):
 @permission_required("inventory.add_product", raise_exception=True)
 def add_product(request):
     from inventory.decorators import is_the_leader
-    is_leader = is_the_leader(request.user)
-
+    
     if request.method == "POST":
 
-        form = ProductForm(request.POST, is_leader=is_leader)
+        form = ProductForm(request.POST)
 
         if form.is_valid():
 
@@ -204,7 +203,7 @@ def add_product(request):
 
     else:
 
-        form = ProductForm(is_leader=is_leader)
+        form = ProductForm()
 
     return render(
         request,
@@ -219,8 +218,7 @@ def add_product(request):
 @permission_required("inventory.change_product", raise_exception=True)
 def edit_product(request, pk):
     from inventory.decorators import is_the_leader
-    is_leader = is_the_leader(request.user)
-    
+        
     product = get_object_or_404(
         Product,
         pk=pk
@@ -231,7 +229,7 @@ def edit_product(request, pk):
         form = ProductForm(
             request.POST,
             instance=product,
-            is_leader=is_leader
+            
         )
 
         if form.is_valid():
@@ -247,7 +245,7 @@ def edit_product(request, pk):
 
     else:
 
-        form = ProductForm(instance=product, is_leader=is_leader)
+        form = ProductForm(instance=product)
 
     return render(
         request,

@@ -6,53 +6,36 @@
 {% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/products.css' %}">
+<link href="{% static 'css/products.css' %}" rel="stylesheet"/>
 {% endblock %}
 
 {% block content %}
 
 <div class="page-header">
-
-    <h1>
+<h1>
 
         منتجات منخفض المخزون
 
     </h1>
-
 </div>
-
 <table class="products-table">
-
 <thead>
-
 <tr>
-
 <th>المنتج</th>
-
 <th>الكمية الحالية</th>
-
 <th>الحد الأدنى</th>
-
 <th>حالة المخزون</th>
-
 </tr>
-
 </thead>
-
 <tbody>
 
 {% for product in products %}
 
 <tr>
-
-<td>{{ product.id }}</td>
-
-<td>{{ product.name }}</td>
-
-<td>{{ product.quantity }}</td>
-
-<td>{{ product.minimum_stock }}</td>
-
+<td data-label="المنتج">{{ product.id }}</td>
+<td data-label="الكمية الحالية">{{ product.name }}</td>
+<td data-label="الحد الأدنى">{{ product.quantity }}</td>
+<td data-label="حالة المخزون">{{ product.minimum_stock }}</td>
 <td>
 
 {% if product.quantity == 0 %}
@@ -74,25 +57,21 @@
 {% endif %}
 
 </td>
-
 </tr>
 
 {% empty %}
 
 <tr>
-
 <td colspan="5">
 
 لا توجد منتجات منخفضة المخزون
 
 </td>
-
 </tr>
 
 {% endfor %}
 
 </tbody>
-
 </table>
 
 {% endblock %}

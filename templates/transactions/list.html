@@ -6,143 +6,100 @@
 {% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/products.css' %}">
+<link href="{% static 'css/products.css' %}" rel="stylesheet"/>
 {% endblock %}
 
 {% block content %}
 
 <div class="page-header">
-
-    <h1>حركات المخزون</h1>
-
+<h1>حركات المخزون</h1>
 </div>
-
 <div class="search-bar">
-
-    <form method="get">
-
-        <input
-            type="text"
-            name="search"
-            value="{{ search }}"
-            placeholder="البحث عن منتج بالاسم...">
-
-        <select name="warehouse">
-        <option value="">كل المخازن</option>
+<form method="get">
+<input name="search" placeholder="البحث عن منتج بالاسم..." type="text" value="{{ search }}"/>
+<select name="warehouse">
+<option value="">كل المخازن</option>
         {% for w in warehouses %}
-            <option value="{{ w.id }}" {% if warehouse_filter == w.id|stringformat:"s" %}selected{% endif %}>{{ w.name }}</option>
+            <option %}="" %}selected{%="" endif="" if="" value="{{ w.id }}" w.id|stringformat:"s"="" warehouse_filter="=" {%="">{{ w.name }}</option>
         {% endfor %}
     </select>
-    
-    <select name="type">
-
-            <option value="">
+<select name="type">
+<option value="">
                 كل الحركات
             </option>
-
-            <option value="IN"
-                {% if transaction_type == "IN" %}
-                selected
-                {% endif %}>
+<option "in"="" %}="" endif="" if="" selected="" transaction_type="=" value="IN" {%="">
 
                 وارد
 
             </option>
-
-            <option value="OUT"
-                {% if transaction_type == "OUT" %}
-                selected
-                {% endif %}>
+<option "out"="" %}="" endif="" if="" selected="" transaction_type="=" value="OUT" {%="">
 
                 منصرف
 
             </option>
-
-            <option value="ADJUST"
-                {% if transaction_type == "ADJUST" %}
-                selected
-                {% endif %}>
+<option "adjust"="" %}="" endif="" if="" selected="" transaction_type="=" value="ADJUST" {%="">
 
                 تسوية
 
             </option>
-
-        </select>
-
-        <select name="month_filter" class="form-control" style="min-width: 120px;">
-            <option value="">-- الشهر --</option>
+</select>
+<select class="form-control" name="month_filter" style="min-width: 120px;">
+<option value="">-- الشهر --</option>
             {% for m_id, m_name in months %}
-            <option value="{{ m_id }}" {% if month_filter == m_id %}selected{% endif %}>{{ m_name }}</option>
+            <option %}="" %}selected{%="" endif="" if="" m_id="" month_filter="=" value="{{ m_id }}" {%="">{{ m_name }}</option>
             {% endfor %}
         </select>
-        <select name="year_filter" class="form-control" style="min-width: 100px;">
-            <option value="">-- السنة --</option>
+<select class="form-control" name="year_filter" style="min-width: 100px;">
+<option value="">-- السنة --</option>
             {% for y in years %}
-            <option value="{{ y }}" {% if year_filter == y %}selected{% endif %}>{{ y }}</option>
+            <option %}="" %}selected{%="" endif="" if="" value="{{ y }}" y="" year_filter="=" {%="">{{ y }}</option>
             {% endfor %}
         </select>
-        <button class="btn-save">
+<button class="btn-save">
             بحث
         </button>
-
-    </form>
-
+</form>
 </div>
-
 <div class="table-container">
 <table class="products-table">
-
 <thead>
-
 <tr>
-
 <th>المنتج</th>
-                <th>المستخدم</th>
-
+<th>المستخدم</th>
 <th>النوع</th>
 <th>الجهة</th>
 <th>المخزن</th>
 <th>الكمية</th>
-
 <th>التاريخ</th>
-
 </tr>
-
 </thead>
-
 <tbody>
 
 {% for t in page_obj %}
 
 <tr>
-
 <td data-label="المنتج">{{ t.product.name }}</td>
 <td data-label="المستخدم">{% if t.user %}{{ t.user.username }}{% else %}-{% endif %}</td>
 <td data-label="النوع">{{ t.get_transaction_type_display }}</td>
 <td data-label="الجهة">{% if t.partner %}{{ t.partner.name }}{% else %}-{% endif %}</td>
 <td data-label="المخزن">{% if t.warehouse %}{{ t.warehouse.name }}{% else %}-{% endif %}</td>
 <td data-label="الكمية">{{ t.quantity }}</td>
-
-<td>{{ t.created_at|date:"Y-m-d H:i" }}</td>
-
+<td data-label="التاريخ">{{ t.created_at|date:"Y-m-d H:i" }}</td>
 </tr>
 
 {% empty %}
 
 <tr>
-
 <td colspan="8">
 
 لا يوجد حركات
 
 </td>
-
 </tr>
 
 {% endfor %}
 
 </tbody>
-
 </table>
 </div>
 
