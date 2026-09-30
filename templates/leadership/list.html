@@ -91,12 +91,12 @@
     <tbody>
     {% for p in page_obj %}
         <tr>
-            <td>{{ p.barcode|default:"-" }}</td>
-            <td><strong>{{ p.name }}</strong></td>
-            <td>{{ p.target_quantity }}</td>
-            <td>{{ p.total_supplied }}</td>
-            <td>{{ p.remaining_target }}</td>
-            <td>
+            <td data-label="الكود">{{ p.barcode|default:"-" }}</td>
+            <td data-label="اسم الصنف"><strong>{{ p.name }}</strong></td>
+            <td data-label="التنميط">{{ p.target_quantity }}</td>
+            <td data-label="ما تم توريده">{{ p.total_supplied }}</td>
+            <td data-label="المتبقي">{{ p.remaining_target }}</td>
+            <td data-label="الحالة">
                 {% if p.display_quantity <= 0 %}
                     <span class="badge" style="background-color: #dc3545; color: white;">نفد</span>
                 {% elif p.display_quantity <= p.minimum_stock %}
@@ -105,7 +105,7 @@
                     <span class="badge" style="background-color: #198754; color: white;">متوفر</span>
                   {% endif %}
               </td>
-              <td>
+              <td data-label="نسبة التوريد">
                   <div style="background: #e9ecef; border-radius: 4px; width: 100%; height: 22px; overflow: hidden; position: relative; border: 1px solid #ced4da; box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);">
                       <div style="background: {% if p.availability_percentage > 50 %}#198754{% elif p.availability_percentage > 20 %}#ffc107{% else %}#dc3545{% endif %}; width: {% if p.availability_percentage > 100 %}100{% else %}{{ p.availability_percentage }}{% endif %}%; height: 100%; transition: width 0.3s ease;"></div>
                       <span style="position: absolute; width: 100%; text-align: center; font-size: 13px; font-weight: 800; color: #000; line-height: 22px; top: 0; left: 0; text-shadow: 1px 1px 0 #fff, -1px -1px 0 #fff, 1px -1px 0 #fff, -1px 1px 0 #fff, 0px 0px 3px #fff;">
@@ -113,7 +113,7 @@
                       </span>
                   </div>
               </td>
-              <td>{{ p.supplier.name|default:"-" }}</td>
+              <td data-label="الشركة (المورد)">{{ p.supplier.name|default:"-" }}</td>
             <td class="actions" style="display: flex; gap: 8px; justify-content: center; align-items: center; padding: 10px;">
                 {% if is_leadership %}
                     <a href="{% url 'leadership_item_detail' p.id %}" class="action-btn view-btn" title="عرض التفاصيل"><i class="bi bi-eye"></i></a>
