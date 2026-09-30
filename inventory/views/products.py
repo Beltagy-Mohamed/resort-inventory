@@ -268,7 +268,7 @@ def delete_product(request, pk):
        
         try:
             product.delete()
-                                except ProtectedError:
+        except ProtectedError:
             messages.error(
                 request,
                 "لا يمكن الحذف لارتباط هذا العنصر بحركات مخزنية. يرجى الاحتفاظ به للأرشفة التاريخية."
