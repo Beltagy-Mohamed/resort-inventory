@@ -41,7 +41,6 @@ def system_settings(request):
         }
     )
 
-import openpyxl
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import user_passes_test
@@ -53,6 +52,7 @@ def superuser_required(user):
 
 @user_passes_test(superuser_required, login_url='/')
 def import_stock_excel(request):
+    import openpyxl
     """(B11) Excel import view for Superuser - Auto-detects columns from header."""
     if request.method == 'POST':
         excel_file = request.FILES.get('excel_file')
