@@ -7,6 +7,18 @@ from inventory.api.main import api
 from django.conf import settings
 from django.conf.urls.static import static
 
+
+from django.http import HttpResponse
+
+
+import os
+from django.core.exceptions import PermissionDenied
+
+
+
+
+
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path(
@@ -20,6 +32,7 @@ urlpatterns = [
         name="logout",
     ),
     path("", include("inventory.urls")),
+    path("chat/", include("chat.urls")),
     path("api/v1/", api.urls),
 ]
 
