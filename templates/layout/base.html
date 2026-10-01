@@ -182,7 +182,7 @@
             .catch(() => {});
     }
     updateBadge();
-    setInterval(updateBadge, 10000);
+    setInterval(updateBadge, 60000);
 })();
 </script>
 {% if user.is_authenticated %}
@@ -562,7 +562,7 @@
 
     function startPoll() {
         stopPoll();
-        pollTimer = setInterval(() => loadMessages(), 2000);
+        pollTimer = setInterval(() => loadMessages(), 5000);
     }
     function stopPoll() {
         if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
@@ -592,7 +592,7 @@
             }).catch(()=>{});
     }
     updateBadges();
-    setInterval(updateBadges, 8000);
+    setInterval(updateBadges, 60000);
 })();
 </script>
 {% endif %}

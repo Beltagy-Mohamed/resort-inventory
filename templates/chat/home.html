@@ -444,7 +444,7 @@ window.addEventListener("pageshow", function (event) {
 });
 
 // Live Polling for Rooms
-setInterval(() => {
+setInterval(() => { // Was 5s, maybe change? 
     fetch("/chat/api/rooms/")
         .then(res => res.json())
         .then(data => {
@@ -460,6 +460,6 @@ setInterval(() => {
             }).join('');
         })
         .catch(err => console.error("Poll Error:", err));
-}, 3000);
+}, 15000);
 </script>
 {% endblock %}

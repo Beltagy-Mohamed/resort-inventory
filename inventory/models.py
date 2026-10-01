@@ -70,7 +70,7 @@ class Warehouse(models.Model):
     location = models.CharField(max_length=250, blank=True, null=True)
     manager  = models.CharField(max_length=150, blank=True, null=True)
     is_leader_only = models.BooleanField(default=False, db_index=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     objects     = PublicWarehouseManager()
     all_objects = models.Manager()
     def __str__(self):
@@ -82,7 +82,7 @@ class Partner(models.Model):
     partner_type = models.CharField(max_length=20, choices=PARTNER_TYPES, default='CLIENT')
     contact_info = models.TextField(blank=True, null=True)
     is_leader_only = models.BooleanField(default=False, db_index=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     objects     = PublicPartnerManager()
     all_objects = models.Manager()
     def __str__(self):
@@ -110,7 +110,7 @@ class LeadershipAccessLog(models.Model):
     action     = models.CharField(max_length=20, choices=ACTION_CHOICES)
     product    = models.ForeignKey('Product', null=True, blank=True, on_delete=models.SET_NULL)
     ip_address = models.GenericIPAddressField(null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     class Meta:
         ordering = ['-created_at']
 
@@ -181,7 +181,7 @@ class InventoryTransaction(models.Model):
     unit_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     quantity   = models.PositiveIntegerField()
     notes      = models.TextField(blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     class Meta:
         ordering = ['-created_at']
         indexes  = [models.Index(fields=['product','created_at'])]
