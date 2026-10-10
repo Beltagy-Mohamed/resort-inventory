@@ -41,7 +41,6 @@ def system_settings(request):
         }
     )
 
-import openpyxl
 from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import user_passes_test
@@ -53,6 +52,7 @@ def superuser_required(user):
 
 @user_passes_test(superuser_required, login_url='/')
 def import_stock_excel(request):
+    import openpyxl
     """(B11) Excel import view for Superuser - Auto-detects columns from header."""
     if request.method == 'POST':
         excel_file = request.FILES.get('excel_file')
@@ -298,7 +298,9 @@ def import_stock_excel(request):
         warehouses = Warehouse.objects.all()
     return render(request, 'settings/import_excel.html', {'warehouses': warehouses})
 
+from django.views.decorators.http import require_POST
 @user_passes_test(lambda u: u.is_superuser)
+@require_POST
 def wipe_all_data_secret(request):
     from django.http import HttpResponse
     from inventory.models import Product, InventoryTransaction, ActivityLog, Partner, Category, Color, Size
@@ -317,6 +319,8 @@ def wipe_all_data_secret(request):
 
 from django.http import HttpResponse
 
+from django.views.decorators.http import require_POST
+@require_POST
 def wipe_duplicates(request):
     from ..models import Product, InventoryTransaction, Stock
     if not request.user.is_superuser:

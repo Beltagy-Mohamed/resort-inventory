@@ -494,7 +494,7 @@ async function pollMessages() {
 }
 function startPolling() {
     if (polling) clearInterval(polling);
-    polling = setInterval(pollMessages, 2000);
+    polling = setInterval(pollMessages, 5000);
 }
 startPolling();
 

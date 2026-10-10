@@ -1,3 +1,6 @@
+from decimal import Decimal
+from django.db.models import DecimalField, Sum, F, Value
+from django.db.models.functions import Coalesce
 from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import render
 from django.http import HttpResponse
@@ -45,12 +48,24 @@ def inventory_report(request):
         products = products.filter(quantity__gt=F("minimum_stock"))
 
     products = products.annotate(total_value=F("cost_price") * F("quantity")).order_by("-id")
-    products_list = list(products)
-
-    total_quantity = sum(p.quantity for p in products_list)
-    inventory_value = sum(p.total_value for p in products_list if p.total_value)
+    
+    # DB-side Aggregation for performance
+    aggregates = products.aggregate(
+        total_quantity=Coalesce(Sum("quantity"), Value(0)),
+        inventory_value=Coalesce(
+            Sum(
+                F('cost_price') * F('quantity'),
+                output_field=DecimalField(max_digits=14, decimal_places=2)
+            ),
+            Value(Decimal('0.00'), output_field=DecimalField(max_digits=14, decimal_places=2))
+        )
+    )
+    total_quantity = aggregates["total_quantity"]
+    inventory_value = aggregates["inventory_value"]
+    total_products_count = products.count()
 
     if request.GET.get("export") == "xlsx":
+        products_list = list(products)
         import openpyxl
         from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
         from openpyxl.utils import get_column_letter
@@ -119,8 +134,13 @@ def inventory_report(request):
         wb.save(response)
         return response
 
+    # Pagination
+    from inventory.utils import paginate_queryset
+    page_obj = paginate_queryset(request, products, 50)
+
     context = {
-        "products": products_list,
+        "products": page_obj,
+        "page_obj": page_obj,
         "categories": Category.objects.all(),
         "warehouses": Warehouse.objects.all(),
         "search": search,
@@ -128,7 +148,7 @@ def inventory_report(request):
         "status": status,
         "warehouse": warehouse,
         "day": day,
-        "total_products": len(products_list),
+        "total_products": total_products_count,
         "total_quantity": total_quantity,
         "inventory_value": inventory_value,
         "low_stock": Product.objects.filter(quantity__lte=F("minimum_stock"), quantity__gt=0).count(),

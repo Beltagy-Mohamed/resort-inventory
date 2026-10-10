@@ -1,3 +1,6 @@
+from decimal import Decimal
+from django.db.models import DecimalField, Sum, F, Value
+from django.db.models.functions import Coalesce
 from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import render
 from django.db.models import Sum, F, ExpressionWrapper, DecimalField
@@ -15,8 +18,12 @@ def warehouse_stock_report(request):
         
     stocks = stocks.order_by("warehouse__name", "product__name")
     
+    from inventory.utils import paginate_queryset
+    page_obj = paginate_queryset(request, stocks, 50)
+
     context = {
-        "stocks": stocks,
+        "stocks": page_obj,
+        "page_obj": page_obj,
         "warehouses": Warehouse.objects.all(),
         "selected_warehouse": int(warehouse_id) if (warehouse_id and warehouse_id.isdigit()) else "",
     }
@@ -43,8 +50,12 @@ def partner_statement_report(request):
                 
         transactions = transactions.order_by("-created_at")
         
+    from inventory.utils import paginate_queryset
+    page_obj = paginate_queryset(request, transactions, 50)
+
     context = {
-        "transactions": transactions,
+        "transactions": page_obj,
+        "page_obj": page_obj,
         "partners": Partner.objects.all(),
         "selected_partner": int(partner_id) if (partner_id and partner_id.isdigit()) else "",
         "month_filter": int(month_filter) if month_filter.isdigit() else "",
@@ -82,12 +93,21 @@ def profit_report(request):
         )
     ).order_by("-created_at")
     
-    total_profit = transactions.aggregate(total=Sum('profit'))['total'] or 0
-    total_sales = transactions.aggregate(total=Sum(F('unit_price') * F('quantity')))['total'] or 0
-    total_cost = transactions.aggregate(total=Sum(F('product__cost_price') * F('quantity')))['total'] or 0
+    aggs = transactions.aggregate(
+        total_profit=Coalesce(Sum('profit', output_field=DecimalField(max_digits=14, decimal_places=2)), Value(Decimal('0.00'), output_field=DecimalField(max_digits=14, decimal_places=2))),
+        total_sales=Coalesce(Sum(F('unit_price') * F('quantity'), output_field=DecimalField(max_digits=14, decimal_places=2)), Value(Decimal('0.00'), output_field=DecimalField(max_digits=14, decimal_places=2))),
+        total_cost=Coalesce(Sum(F('product__cost_price') * F('quantity'), output_field=DecimalField(max_digits=14, decimal_places=2)), Value(Decimal('0.00'), output_field=DecimalField(max_digits=14, decimal_places=2)))
+    )
+    total_profit = aggs['total_profit']
+    total_sales = aggs['total_sales']
+    total_cost = aggs['total_cost']
     
+    from inventory.utils import paginate_queryset
+    page_obj = paginate_queryset(request, transactions, 50)
+
     context = {
-        "transactions": transactions,
+        "transactions": page_obj,
+        "page_obj": page_obj,
         "warehouses": Warehouse.objects.order_by("name"),
         "warehouse_filter": warehouse_filter,
         "month_filter": int(month_filter) if month_filter.isdigit() else "",

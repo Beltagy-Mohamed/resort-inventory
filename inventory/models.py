@@ -70,7 +70,7 @@ class Warehouse(models.Model):
     location = models.CharField(max_length=250, blank=True, null=True)
     manager  = models.CharField(max_length=150, blank=True, null=True)
     is_leader_only = models.BooleanField(default=False, db_index=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     objects     = PublicWarehouseManager()
     all_objects = models.Manager()
     def __str__(self):
@@ -82,7 +82,7 @@ class Partner(models.Model):
     partner_type = models.CharField(max_length=20, choices=PARTNER_TYPES, default='CLIENT')
     contact_info = models.TextField(blank=True, null=True)
     is_leader_only = models.BooleanField(default=False, db_index=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     objects     = PublicPartnerManager()
     all_objects = models.Manager()
     def __str__(self):
@@ -110,7 +110,7 @@ class LeadershipAccessLog(models.Model):
     action     = models.CharField(max_length=20, choices=ACTION_CHOICES)
     product    = models.ForeignKey('Product', null=True, blank=True, on_delete=models.SET_NULL)
     ip_address = models.GenericIPAddressField(null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     class Meta:
         ordering = ['-created_at']
 
@@ -136,10 +136,19 @@ class Product(models.Model):
 
     @property
     def availability_percentage(self):
-        curr_qty = getattr(self, 'display_quantity', self.quantity)
+        # Use total_supplied (sum of IN transactions) if annotated by the view,
+        # otherwise fall back to current quantity.
+        # This ensures: نسبة التوريد = (ما تم توريده ÷ التنميط) × 100
+        supplied = getattr(self, 'total_supplied', None)
+        if supplied is None:
+            # Fallback: calculate from transactions directly (avoids wrong current-stock logic)
+            from django.db.models import Sum
+            supplied = self.transactions.filter(transaction_type='IN').aggregate(
+                total=Sum('quantity')
+            )['total'] or 0
         if self.target_quantity and self.target_quantity > 0:
-            return int((curr_qty / self.target_quantity) * 100)
-        return 0
+            return min(int((supplied / self.target_quantity) * 100), 100)
+        return 0 if supplied == 0 else 100
 
     @property
     def stock_status(self):
@@ -181,7 +190,7 @@ class InventoryTransaction(models.Model):
     unit_price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     quantity   = models.PositiveIntegerField()
     notes      = models.TextField(blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
     class Meta:
         ordering = ['-created_at']
         indexes  = [models.Index(fields=['product','created_at'])]

@@ -130,11 +130,11 @@
         <tbody>
             {% for product in products %}
             <tr>
-                <td data-label="اسم الصنف"><strong>{{ product.name }}</strong></td>
-                <td data-label="كود" style="color: var(--text-muted);">{{ product.id }}</td>
-                <td data-label="الفئة">{{ product.category|default:"-" }}</td>
-                <td data-label="الكمية">{{ product.quantity }}</td>
-                <td data-label="حالة المخزون">
+                <td><strong>{{ product.name }}</strong></td>
+                <td style="color: var(--text-muted);">{{ product.id }}</td>
+                <td>{{ product.category|default:"-" }}</td>
+                <td>{{ product.quantity }}</td>
+                <td>
                     {% if product.quantity == 0 %}
                         <span class="status-pill status-danger">{{ product.stock_status_text }}</span>
                     {% elif product.quantity <= product.minimum_stock %}
@@ -143,8 +143,8 @@
                         <span class="status-pill status-success">{{ product.stock_status_text }}</span>
                     {% endif %}
                 </td>
-                <td data-label="السعر">{{ product.cost_price|floatformat:2|intcomma }}</td>
-                <td data-label="القيمة"><strong>{{ product.total_value|humanize_arabic }}</strong></td>
+                <td>{{ product.cost_price|floatformat:2|intcomma }}</td>
+                <td><strong>{{ product.total_value|humanize_arabic }}</strong></td>
             </tr>
             {% empty %}
             <tr>
@@ -156,5 +156,20 @@
         </tbody>
     </table>
 </div>
+
+
+{% if page_obj.has_other_pages %}
+<div class="pagination" style="margin-top: 20px; display: flex; justify-content: center; gap: 10px;">
+    {% if page_obj.has_previous %}
+        <a href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ page_obj.previous_page_number }}" style="padding: 8px 16px; border: 1px solid #ddd; background: #fff; text-decoration: none; border-radius: 4px; color: #333;">&laquo; السابق</a>
+    {% endif %}
+    
+    <span style="padding: 8px 16px; background: #f9f9f9; border-radius: 4px; font-weight: bold;">صفحة {{ page_obj.number }} من {{ page_obj.paginator.num_pages }}</span>
+    
+    {% if page_obj.has_next %}
+        <a href="?{% for key, value in request.GET.items %}{% if key != 'page' %}{{ key }}={{ value }}&{% endif %}{% endfor %}page={{ page_obj.next_page_number }}" style="padding: 8px 16px; border: 1px solid #ddd; background: #fff; text-decoration: none; border-radius: 4px; color: #333;">التالي &raquo;</a>
+    {% endif %}
+</div>
+{% endif %}
 
 {% endblock %}
