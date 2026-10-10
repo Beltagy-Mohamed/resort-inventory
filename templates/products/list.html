@@ -100,13 +100,13 @@
 <td data-label="ما تم توريده">{{ p.total_supplied }}</td>
 <td data-label="المتبقي">{{ p.remaining_target }}</td>
 <td data-label="الحالة">
-                {% if p.display_quantity <= 0 %}
-                    <span class="badge" style="background-color: #dc3545; color: white;">نفد</span>
-                {% elif p.display_quantity <= p.minimum_stock %}
-                    <span class="badge" style="background-color: #ffc107; color: black;">منخفض</span>
+                {% if p.availability_percentage == 0 %}
+                    <span class="badge" style="background-color: #dc3545; color: white;">لم يُورَّد</span>
+                {% elif p.availability_percentage < 100 %}
+                    <span class="badge" style="background-color: #ffc107; color: black;">توريد جزئي</span>
                 {% else %}
-                    <span class="badge" style="background-color: #198754; color: white;">متوفر</span>
-                  {% endif %}
+                    <span class="badge" style="background-color: #198754; color: white;">اكتمل التوريد</span>
+                {% endif %}
               </td>
 <td data-label="نسبة التوريد">
 <div style="background: #e9ecef; border-radius: 4px; width: 100%; height: 22px; overflow: hidden; position: relative; border: 1px solid #ced4da; box-shadow: inset 0 1px 2px rgba(0,0,0,0.1);">
