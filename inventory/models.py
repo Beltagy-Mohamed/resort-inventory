@@ -136,10 +136,19 @@ class Product(models.Model):
 
     @property
     def availability_percentage(self):
-        curr_qty = getattr(self, 'display_quantity', self.quantity)
+        # Use total_supplied (sum of IN transactions) if annotated by the view,
+        # otherwise fall back to current quantity.
+        # This ensures: نسبة التوريد = (ما تم توريده ÷ التنميط) × 100
+        supplied = getattr(self, 'total_supplied', None)
+        if supplied is None:
+            # Fallback: calculate from transactions directly (avoids wrong current-stock logic)
+            from django.db.models import Sum
+            supplied = self.transactions.filter(transaction_type='IN').aggregate(
+                total=Sum('quantity')
+            )['total'] or 0
         if self.target_quantity and self.target_quantity > 0:
-            return int((curr_qty / self.target_quantity) * 100)
-        return 0
+            return min(int((supplied / self.target_quantity) * 100), 100)
+        return 0 if supplied == 0 else 100
 
     @property
     def stock_status(self):
